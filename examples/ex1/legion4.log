@@ -1,0 +1,9 @@
+GUID-4 2018/10/11 00:04:17 A Legionnaire is Born! - uuid:GUID-4 port:10003 title:Legion
+GUID-4 2018/10/11 00:04:17 Listening for broadcasts...
+GUID-4 2018/10/11 00:04:17 Found broadcast - uuid:GUID-7 ip:192.168.1.2 port:10006
+GUID-4 2018/10/11 00:04:17 rpc_ExchangeLegion  -> uuid:GUID-7 ip:192.168.1.2 port:10006
+GUID-4 2018/10/11 00:04:19 rpc_ExchangeLegion  -> uuid:GUID-7 ip:192.168.1.2 port:10006
+GUID-4 2018/10/11 00:04:20 rpc_ExchangeLegion  -> uuid:GUID-7 ip:192.168.1.2 port:10006
+GUID-4 2018/10/11 00:04:22 rpc_ExchangeLegion  -> uuid:GUID-7 ip:192.168.1.2 port:10006
+GUID-4 2018/10/11 00:04:24 rpc_ExchangeLegion  -> uuid:GUID-7 ip:192.168.1.2 port:10006
+GUID-4 2018/10/11 00:04:25 rpc_ExchangeLegion  -> uuid:GUID-7 ip:192.168.1.2 port:10006

@@ -1,0 +1,28 @@
+GUID-0 2018/10/11 00:14:47 A Legionnaire is Born! - uuid:GUID-0 port:9999 title:Legion
+GUID-0 2018/10/11 00:14:47 Listening for broadcasts...
+GUID-0 2018/10/11 00:14:48 rpc_ExchangeLegion <-  uuid:GUID-2
+GUID-0 2018/10/11 00:14:48 rpc_ExchangeLegion <-  uuid:GUID-1
+GUID-0 2018/10/11 00:14:48 Found broadcast - uuid:GUID-1 ip:192.168.1.2 port:10000
+GUID-0 2018/10/11 00:14:48 rpc_ExchangeLegion  -> uuid:GUID-1 ip:192.168.1.2 port:10000
+GUID-0 2018/10/11 00:14:50 rpc_ExchangeLegion  -> uuid:GUID-1 ip:192.168.1.2 port:10000
+GUID-0 2018/10/11 00:14:50 rpc_ExchangeLegion <-  uuid:GUID-2
+GUID-0 2018/10/11 00:14:50 rpc_ExchangeLegion <-  uuid:GUID-1
+GUID-0 2018/10/11 00:14:52 rpc_ExchangeLegion  -> uuid:GUID-1 ip:192.168.1.2 port:10000
+GUID-0 2018/10/11 00:14:52 rpc_ExchangeLegion <-  uuid:GUID-2
+GUID-0 2018/10/11 00:14:52 rpc_ExchangeLegion <-  uuid:GUID-1
+GUID-0 2018/10/11 00:14:53 rpc_ExchangeLegion  -> uuid:GUID-1 ip:192.168.1.2 port:10000
+GUID-0 2018/10/11 00:14:53 rpc_ExchangeLegion <-  uuid:GUID-2
+GUID-0 2018/10/11 00:14:54 rpc_ExchangeLegion <-  uuid:GUID-1
+GUID-0 2018/10/11 00:14:55 rpc_ExchangeLegion <-  uuid:GUID-1
+GUID-0 2018/10/11 00:14:55 rpc_ExchangeLegion  -> uuid:GUID-1 ip:192.168.1.2 port:10000
+GUID-0 2018/10/11 00:14:56 rpc_ExchangeLegion <-  uuid:GUID-2
+GUID-0 2018/10/11 00:14:57 rpc_ExchangeLegion <-  uuid:GUID-1
+GUID-0 2018/10/11 00:14:57 rpc_ExchangeLegion  -> uuid:GUID-1 ip:192.168.1.2 port:10000
+GUID-0 2018/10/11 00:14:57 rpc_ExchangeLegion <-  uuid:GUID-2
+GUID-0 2018/10/11 00:14:59 rpc_ExchangeLegion  -> uuid:GUID-1 ip:192.168.1.2 port:10000
+GUID-0 2018/10/11 00:14:59 rpc_ExchangeLegion <-  uuid:GUID-2
+GUID-0 2018/10/11 00:14:59 rpc_ExchangeLegion <-  uuid:GUID-1
+GUID-0 2018/10/11 00:15:01 rpc_ExchangeLegion  -> uuid:GUID-1 ip:192.168.1.2 port:10000
+GUID-0 2018/10/11 00:15:01 rpc_ExchangeLegion <-  uuid:GUID-2
+GUID-0 2018/10/11 00:15:01 rpc_ExchangeLegion <-  uuid:GUID-1
+GUID-0 2018/10/11 00:15:02 rpc_ExchangeLegion  -> uuid:GUID-1 ip:192.168.1.2 port:10000

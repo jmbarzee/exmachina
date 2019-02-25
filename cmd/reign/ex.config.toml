@@ -1,0 +1,40 @@
+# Example Config to create a domain/dominion
+
+
+uuid = "<Insert Different Per Domain>" # TODO @user, insert the unique UUIDs here
+title = "Dominion" # Should Be identical between domains
+
+port =  9000
+dialtimeout = 3000	# In Milliseconds
+
+logfilename = "domain.log"
+
+traits = [
+	"compute", # TODO @jmbarzee consider changing to allow for types of compute
+	"lights",
+]
+[services]
+	[services.light]
+		priority = "always"
+		depends = [
+			"lightFeed",
+		]
+		traits = [
+			"lights",
+		]
+	[services.lightFeed]
+		priority = "as needed"
+		depends = [] # TODO @jmbarzee insert music-info after testing
+		traits = [
+			"compute",
+		]
+	[services.musicInfo]
+		priority = "as needed"
+		depends = []
+		traits = [
+			"compute",
+		]
+
+# domain specifies the traits of this instance (a part of the dominion)
+[domain]
+

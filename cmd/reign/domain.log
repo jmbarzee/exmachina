@@ -1,0 +1,129 @@
+2019/02/24 21:31:30 I seek to join the Dominion
+2019/02/24 21:31:30 	UUID:GUID-0
+2019/02/24 21:31:30 	Title:Dominion
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 	Version:0.1.0
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 	Address:192.168.1.2:9000
+2019/02/24 21:31:30 	DialTimeout:3µs
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 The Dominion ever expands!
+2019/02/24 21:31:30 Long grow the dominion!
+2019/02/24 21:31:30 I seek to join the Dominion
+2019/02/24 21:31:30 	UUID:GUID-1
+2019/02/24 21:31:30 	Title:Dominion
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 	Version:0.1.0
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 	Address:192.168.1.2:9001
+2019/02/24 21:31:30 	DialTimeout:3µs
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 The Dominion ever expands!
+2019/02/24 21:31:30 Long grow the dominion!
+2019/02/24 21:31:30 I seek to join the Dominion
+2019/02/24 21:31:30 	UUID:GUID-2
+2019/02/24 21:31:30 	Title:Dominion
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 	Version:0.1.0
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 	Address:192.168.1.2:9003
+2019/02/24 21:31:30 	DialTimeout:3µs
+2019/02/24 21:31:30 
+2019/02/24 21:31:30 The Dominion ever expands!
+2019/02/24 21:31:30 Long grow the dominion!
+2019/02/24 21:31:30 Listening for broadcasts...
+2019/02/24 21:31:30 Listening for broadcasts...
+2019/02/24 21:31:30 Listening for broadcasts...
+2019/02/24 21:31:31 Started broadcasting .oO 
+2019/02/24 21:31:31 Started broadcasting .oO 
+2019/02/24 21:31:31 Started broadcasting .oO 
+2019/02/24 21:31:31 Found broadcast - uuid:GUID-2 ip:192.168.1.2 port:9003
+2019/02/24 21:31:31 Found broadcast - uuid:GUID-2 ip:192.168.1.2 port:9003
+2019/02/24 21:31:31 rpc_ShareIdentityList   -> uuid:GUID-2 192.168.1.2:9003
+2019/02/24 21:31:31 rpc_ShareIdentityList   -> uuid:GUID-2 192.168.1.2:9003
+2019/02/24 21:31:31 rpc_ShareIdentityList <-   uuid:GUID-1
+2019/02/24 21:31:31 found new peer: GUID-1
+2019/02/24 21:31:31 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:31 found new peer: GUID-0
+2019/02/24 21:31:31 found new peer: GUID-1
+2019/02/24 21:31:31 Stopped broadcasting
+2019/02/24 21:31:31 Found broadcast - uuid:GUID-1 ip:192.168.1.2 port:9001
+2019/02/24 21:31:31 Found broadcast - uuid:GUID-1 ip:192.168.1.2 port:9001
+2019/02/24 21:31:31 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:31 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:31 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:31 found new peer: GUID-0
+2019/02/24 21:31:31 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:31 GUID-2 changed version form 0.0.0 to 0.1.0
+2019/02/24 21:31:31 Found broadcast - uuid:GUID-0 ip:192.168.1.2 port:9000
+2019/02/24 21:31:31 Found broadcast - uuid:GUID-0 ip:192.168.1.2 port:9000
+2019/02/24 21:31:31 rpc_ShareIdentityList   -> uuid:GUID-0 192.168.1.2:9000
+2019/02/24 21:31:31 rpc_ShareIdentityList   -> uuid:GUID-0 192.168.1.2:9000
+2019/02/24 21:31:31 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:31 GUID-2 changed version form 0.0.0 to 0.1.0
+2019/02/24 21:31:31 rpc_ShareIdentityList <-   uuid:GUID-1
+2019/02/24 21:31:31 GUID-1 changed version form 0.0.0 to 0.1.0
+2019/02/24 21:31:32 Stopped broadcasting
+2019/02/24 21:31:32 Stopped broadcasting
+2019/02/24 21:31:33 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:33 rpc_ShareIdentityList   -> uuid:GUID-2 192.168.1.2:9003
+2019/02/24 21:31:33 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:33 GUID-0 changed version form 0.0.0 to 0.1.0
+2019/02/24 21:31:33 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:33 GUID-0 changed version form 0.0.0 to 0.1.0
+2019/02/24 21:31:33 GUID-1 changed version form 0.0.0 to 0.1.0
+2019/02/24 21:31:33 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:33 rpc_ShareIdentityList   -> uuid:GUID-2 192.168.1.2:9003
+2019/02/24 21:31:33 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:33 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:33 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:33 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:34 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:34 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:34 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:34 rpc_ShareIdentityList   -> uuid:GUID-2 192.168.1.2:9003
+2019/02/24 21:31:34 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:34 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:35 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:35 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:35 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:35 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:35 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:35 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:36 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:36 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:36 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:36 rpc_ShareIdentityList   -> uuid:GUID-2 192.168.1.2:9003
+2019/02/24 21:31:36 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:36 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:36 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:36 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:37 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:37 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:37 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:37 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:37 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:37 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:38 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:38 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:38 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:38 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:38 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:38 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:38 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:38 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:39 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:39 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:39 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:39 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:39 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:39 rpc_ShareIdentityList <-   uuid:GUID-2
+2019/02/24 21:31:40 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:40 rpc_ShareIdentityList   -> uuid:GUID-2 192.168.1.2:9003
+2019/02/24 21:31:40 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:40 rpc_ShareIdentityList <-   uuid:GUID-0
+2019/02/24 21:31:40 rpc_ShareIdentityList   -> uuid:GUID-1 192.168.1.2:9001
+2019/02/24 21:31:40 rpc_ShareIdentityList <-   uuid:GUID-2
