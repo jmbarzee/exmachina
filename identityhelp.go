@@ -24,10 +24,17 @@ func (d *Domain) generatePBI() (*pb.Identity, error) {
 		Port:        int32(d.config.Port),
 	}
 
-	for name, service := range d.Services {
-		service := &pb.Service{Name: name, Port: int32(service.Port)}
-		pbIdent.Services = append(pbIdent.Services, service)
+	d.debugf(debugLocks, "generatePBI() pre-lock(%v)\n", "ServicesLock")
+	d.ServicesLock.Lock()
+	{
+		d.debugf(debugLocks, "generatePBI() in-lock(%v)\n", "ServicesLock")
+		for name, service := range d.services {
+			service := &pb.Service{Name: name, Port: int32(service.Port)}
+			pbIdent.Services = append(pbIdent.Services, service)
+		}
 	}
+	d.ServicesLock.Unlock()
+	d.debugf(debugLocks, "generatePBI() post-lock(%v)\n", "ServicesLock")
 
 	return pbIdent, nil
 }
@@ -75,21 +82,22 @@ func (d *Domain) grabPBIMultiple() []*pb.Identity {
 	d.peerMap.Range(func(uuid string, peer *peer) bool {
 		var pbIdent *pb.Identity
 		d.debugf(debugLocks, "ShareIdentityList() pre-lock(%v)\n", peer.UUID)
-		peer.RLock() // Dirty Lock
+		peer.RLock()
 		{
 			d.debugf(debugLocks, "ShareIdentityList() in-lock(%v)\n", peer.UUID)
 			var err error
 			pbIdent, err = convertItoPBI(peer.Identity)
 			if err != nil {
-				peer.RUnlock() // Dirty Lock
-				d.debugf(debugLocks, "updateLegion() post-lock(%v)\n", peer.UUID)
-				return true
+				goto Unlock
 			}
+
+			pbIdentities = append(pbIdentities, pbIdent)
+
+		Unlock:
 		}
-		peer.RUnlock() // Dirty Lock
+		peer.RUnlock()
 		d.debugf(debugLocks, "updateLegion() post-lock(%v)\n", peer.UUID)
 
-		pbIdentities = append(pbIdentities, pbIdent)
 		return true
 	})
 

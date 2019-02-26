@@ -1,4 +1,4 @@
-package domain
+package services
 
 import (
 	"fmt"
@@ -8,8 +8,29 @@ import (
 	"github.com/jmbarzee/domain/services/musicinfo"
 )
 
+type (
+	Service struct {
+		Port          int
+		ServiceConfig ServiceConfig
+	}
+
+	ServiceConfig struct {
+		Name     string
+		Priority Priority
+		Depends  []string
+		Traits   []string
+	}
+)
+
+type Priority string
+
+const (
+	Required   Priority = "required"
+	Dependency Priority = "dependency"
+)
+
 func (d *Domain) startRequiredServices() {
-	for _, serviceConfig := range d.config.Services {
+	for serviceName, serviceConfig := range d.config.Services {
 		if serviceConfig.Priority != Required {
 			continue
 		}
@@ -24,7 +45,7 @@ func (d *Domain) startRequiredServices() {
 		}
 
 		// Domain CAN and MUST start the service
-		d.startService(serviceConfig)
+		d.startService(serviceName)
 	}
 }
 
@@ -37,34 +58,29 @@ func (d *Domain) hasTrait(trait string) bool {
 	return false
 }
 
-func (d *Domain) startService(config ServiceConfig) error {
+func (d *Domain) startService(serviceName string) error {
+
 	var err error
 	d.debugf(debugLocks, "startService() pre-lock(%v)\n", "ServicesLock")
 	d.ServicesLock.Lock()
 	{
+		port := d.config.Port + len(d.Services)
 		d.debugf(debugLocks, "startService() in-lock(%v)\n", "ServicesLock")
-
-		port := d.config.Port + len(d.services)
-		if _, ok := d.services[config.Name]; ok {
-			err = fmt.Errorf("Service already exists! (%s)", config.Name)
-			goto Unlock
+		for name := range d.Services {
+			if name == serviceName {
+				err = fmt.Errorf("Service already exists! (%s)", serviceName)
+				goto Unlock
+			}
 		}
 
-		switch config.Name {
+		switch serviceName {
 		case "light":
-			err = light.Start(port, d.Log)
+			light.Start(port)
 		case "lightFeed":
-			err = lightfeed.Start(port, d.Log)
+			lightfeed.Start(port)
 		case "musicInfo":
-			err = musicinfo.Start(port, d.Log)
-		default:
-			err = fmt.Errorf("Unknown service! (%s)", config.Name)
+			musicinfo.Start(port)
 		}
-		if err != nil {
-			goto Unlock
-		}
-
-		d.services[config.Name] = Service{Port: port, ServiceConfig: config}
 
 	Unlock:
 	}

@@ -62,7 +62,7 @@ func (d *Domain) checkConnection(peer *peer) error {
 		d.debugf(debugLocks, "peer.checkConnection() in-lock(%v)\n", peer.UUID)
 
 		if peer.conn == nil {
-			ctx, cancel := context.WithTimeout(context.Background(), d.config.DialTimeout)
+			ctx, cancel := context.WithTimeout(context.Background(), d.config.TimingConfig.DialTimeout)
 			defer cancel()
 			err = peer.reconnect(ctx)
 		} else {

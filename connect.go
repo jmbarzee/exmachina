@@ -16,11 +16,15 @@ import (
 func (d *Domain) watchIsolation(ctx context.Context) {
 	d.debugf(debugRoutines, "watchIsolation()\n")
 
-	randMillisecond := func(max, min int64) time.Duration {
-		return time.Millisecond * time.Duration(rand.Int63n(max-min)+min)
+	randMillisecond := func(max, min time.Duration) time.Duration {
+		intMax := int64(max)
+		intMin := int64(min)
+		return time.Millisecond * time.Duration(rand.Int63n(intMax-intMin)+intMin)
 	}
 
-	ticker := time.NewTicker(randMillisecond(1000, 500))
+	ticker := time.NewTicker(randMillisecond(
+		d.config.TimingConfig.IsolationCheck.Upper,
+		d.config.TimingConfig.IsolationCheck.Lower))
 
 	var stopBroadcastSelf context.CancelFunc
 	stopBroadcastSelf = nil
@@ -32,8 +36,12 @@ Loop:
 			// review all connections and check that we've heard recently enough
 			//d.debugf(debugLegion, "watchIsolation() reviewing connections \n")
 
-			heartbeatTimeout := randMillisecond(2000, 1000)
-			isolationTimeout := randMillisecond(10000, 9001)
+			heartbeatTimeout := randMillisecond(
+				d.config.TimingConfig.HeartbeatCheck.Upper,
+				d.config.TimingConfig.HeartbeatCheck.Lower)
+			isolationTimeout := randMillisecond(
+				d.config.TimingConfig.IsolationTimeout.Upper,
+				d.config.TimingConfig.IsolationTimeout.Lower)
 
 			lonely := true
 			d.peerMap.Range(func(uuid string, peer *peer) bool {

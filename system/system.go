@@ -2,6 +2,7 @@ package system
 
 import (
 	"context"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -12,17 +13,13 @@ type (
 		// halt is used to kill all goroutines in a call to Legionnaire.panic()
 		Halt context.CancelFunc
 		// log is where normal & debugging messages are dumped to
-		Log printable
-	}
-
-	printable interface {
-		Printf(fmt string, args ...interface{})
+		Log *log.Logger
 	}
 )
 
-func NewSystem(ctx context.Context, p printable) (context.Context, System) {
+func NewSystem(ctx context.Context, l *log.Logger) (context.Context, System) {
 	s := System{
-		Log: p,
+		Log: l,
 	}
 	go s.HandleSignals(ctx)
 	ctx, cancel := context.WithCancel(ctx)

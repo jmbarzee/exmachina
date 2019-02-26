@@ -80,7 +80,7 @@ func (d *Domain) updateIdentity(identity Identity) error {
 				// TODO consider just closing connection instead of restarting it
 				d.Logf("%v changed IP form %v to %v\n", peer.UUID, peer.IP, identity.IP)
 				peer.IP = identity.IP
-				ctx, cancel := context.WithTimeout(context.Background(), d.config.DialTimeout)
+				ctx, cancel := context.WithTimeout(context.Background(), d.config.TimingConfig.DialTimeout)
 				defer cancel()
 				err := peer.reconnect(ctx)
 				if err != nil {
@@ -93,7 +93,7 @@ func (d *Domain) updateIdentity(identity Identity) error {
 			if peer.Port != identity.Port && identity.Port != 0 {
 				d.Logf("%v changed IP form %v to %v\n", peer.UUID, peer.IP, identity.IP)
 				peer.IP = identity.IP
-				ctx, cancel := context.WithTimeout(context.Background(), d.config.DialTimeout)
+				ctx, cancel := context.WithTimeout(context.Background(), d.config.TimingConfig.DialTimeout)
 				defer cancel()
 				err := peer.reconnect(ctx)
 				if err != nil {

@@ -23,10 +23,19 @@ func ConfigFromTOML(bytes []byte) (DomainConfig, error) {
 		}
 	)
 
+	// Comprehend TOML
 	config := domainConfigExtra{}
 	err := toml.Unmarshal(bytes, &config)
 	if err != nil {
 		return DomainConfig{}, err
+	}
+
+	// Duplicate Service names
+	for serviceName, serviceConfig := range config.Services {
+		// Strange copy magic...
+		// can't modify the struct member directly, so modify the copy from the range, then set.
+		serviceConfig.Name = serviceName
+		config.Services[serviceName] = serviceConfig
 	}
 
 	// Initialize LogFile
