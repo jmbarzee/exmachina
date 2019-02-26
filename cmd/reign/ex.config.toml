@@ -4,18 +4,30 @@
 uuid = "<Insert Different Per Domain>" # TODO @user, insert the unique UUIDs here
 title = "Dominion" # Should Be identical between domains
 
-port =  9000
-dialtimeout = 3000	# In Milliseconds
-
 logfilename = "domain.log"
+
+port = 9000 # doesn't matter for the most part, the domain will find other domains on any functioning port
 
 traits = [
 	"compute", # TODO @jmbarzee consider changing to allow for types of compute
 	"lights",
 ]
+
+[timingConfig]
+	dialtimeout = 3000	# All timings are in Milliseconds
+	[timingConfig.isolationCheck]
+		upper = 1000
+		lower = 500
+	[timingConfig.isolationTimeout]
+		upper = 10000
+		lower = 9000
+	[timingConfig.heartbeatCheck]
+		upper = 2000
+		lower = 1000
+
 [services]
 	[services.light]
-		priority = "always"
+		priority = "required"
 		depends = [
 			"lightFeed",
 		]
@@ -23,13 +35,13 @@ traits = [
 			"lights",
 		]
 	[services.lightFeed]
-		priority = "as needed"
+		priority = "dependency"
 		depends = [] # TODO @jmbarzee insert music-info after testing
 		traits = [
 			"compute",
 		]
 	[services.musicInfo]
-		priority = "as needed"
+		priority = "dependency"
 		depends = []
 		traits = [
 			"compute",
