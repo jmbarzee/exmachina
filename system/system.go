@@ -2,10 +2,14 @@ package system
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
+	"runtime/pprof"
+	"sync/atomic"
 	"syscall"
+	"time"
 )
 
 type (
@@ -28,6 +32,8 @@ func NewSystem(ctx context.Context, l *log.Logger) (context.Context, System) {
 	return ctx, s
 }
 
+var hackySignalDelay = int32(0)
+
 func (s *System) HandleSignals(ctx context.Context) {
 	// setup signal handling
 	sigChan := make(chan os.Signal, 1)
@@ -35,12 +41,14 @@ func (s *System) HandleSignals(ctx context.Context) {
 
 	select {
 	case <-sigChan:
-		s.Logf("received signal\n")
-		s.Halt()
-		// TODO end all connections
+		s.Logf("System: received signal\n")
 	case <-ctx.Done():
-		// Do nothing, just let the routine die
+		s.Logf("System: context cancled\n")
 	}
+	s.Halt()
+	time.Sleep(time.Duration(atomic.AddInt32(&hackySignalDelay, 2)) * time.Second)
+	pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
+	fmt.Printf("######################################\n\n\n")
 }
 
 func (s *System) Panic(err error) {

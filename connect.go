@@ -3,7 +3,6 @@ package domain
 import (
 	"context"
 	"fmt"
-	"math/rand"
 	"net"
 	"time"
 
@@ -16,15 +15,7 @@ import (
 func (d *Domain) watchIsolation(ctx context.Context) {
 	d.debugf(debugRoutines, "watchIsolation()\n")
 
-	randMillisecond := func(max, min time.Duration) time.Duration {
-		intMax := int64(max)
-		intMin := int64(min)
-		return time.Millisecond * time.Duration(rand.Int63n(intMax-intMin)+intMin)
-	}
-
-	ticker := time.NewTicker(randMillisecond(
-		d.config.TimingConfig.IsolationCheck.Upper,
-		d.config.TimingConfig.IsolationCheck.Lower))
+	ticker := time.NewTicker(d.config.TimingConfig.IsolationCheck.Get())
 
 	var stopBroadcastSelf context.CancelFunc
 	stopBroadcastSelf = nil
@@ -36,12 +27,8 @@ Loop:
 			// review all connections and check that we've heard recently enough
 			//d.debugf(debugLegion, "watchIsolation() reviewing connections \n")
 
-			heartbeatTimeout := randMillisecond(
-				d.config.TimingConfig.HeartbeatCheck.Upper,
-				d.config.TimingConfig.HeartbeatCheck.Lower)
-			isolationTimeout := randMillisecond(
-				d.config.TimingConfig.IsolationTimeout.Upper,
-				d.config.TimingConfig.IsolationTimeout.Lower)
+			heartbeatTimeout := d.config.TimingConfig.HeartbeatCheck.Get()
+			isolationTimeout := d.config.TimingConfig.IsolationTimeout.Get()
 
 			lonely := true
 			d.peerMap.Range(func(uuid string, peer *peer) bool {
@@ -51,7 +38,7 @@ Loop:
 					d.debugf(debugLocks, "watchIsolation() in-lock(%v)\n", uuid)
 					if time.Since(peer.LastContact) > heartbeatTimeout {
 						// its been a while, make sure they are still alive
-						go d.rpcShareIdentityList(peer)
+						go d.rpcShareIdentityList(ctx, peer)
 					}
 
 					if time.Since(peer.LastContact) < isolationTimeout {
@@ -130,9 +117,14 @@ func (d *Domain) listenForBroadcasts(ctx context.Context) {
 Loop:
 	for {
 		select {
-		case entry := <-entries:
+		case entry, ok := <-entries:
+			if !ok {
+				break Loop
+			}
 
-			if entry.Instance == d.config.UUID {
+			duuid := d.config.UUID
+			dinst := entry.Instance
+			if dinst == duuid {
 				// don't connect to self
 				break
 			}
@@ -185,7 +177,7 @@ Loop:
 			d.peerMap.Store(uuid, newPeer)
 
 			// Let peer know our state
-			go d.rpcShareIdentityList(newPeer)
+			go d.rpcShareIdentityList(ctx, newPeer)
 
 		case <-ctx.Done():
 			break Loop
@@ -208,8 +200,14 @@ func (d *Domain) serveInLegion(ctx context.Context) {
 	}
 
 	server := grpc.NewServer()
-	pb.RegisterLegionServer(server, d)
+	pb.RegisterDomainServer(server, d)
 	// Register reflection service on gRPC server.
+	go func() {
+		<-ctx.Done()
+		server.GracefulStop()
+		d.Logf("Stopped grpc server gracefully. ")
+	}()
+
 	reflection.Register(server)
 	if err := server.Serve(lis); err != nil {
 		d.debugf(debugFatal, "serveInLegion() Failed to serve: %v\n", err)

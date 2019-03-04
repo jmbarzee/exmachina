@@ -2,18 +2,31 @@ package domain
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
 	pb "github.com/jmbarzee/domain/grpc"
 )
 
-// ShareIdentityList implements protocolBuffers and allows the legion to use grpc.
-// ShareIdentityList serves as the heartbeat between Legionnaires.
+// GetServices implements grpc and allows the domains to use grpc.
+// GetServices serves as the directory of services hosted on all domains.
+// GetServices is called by services hosted on a single domain to find their dependencies.
+func (d *Domain) GetServices(ctx context.Context, request *pb.GetServicesRequest) (*pb.GetServicesReply, error) {
+	return nil, errors.New("UnImplemented!")
+}
+
+// rpcGetServices calls the grpc GetServices on the provided peer.
+func (d *Domain) rpcGetServices(ctx context.Context, peer *peer) error {
+	return errors.New("UnImplemented!")
+}
+
+// ShareIdentityList implements grpc and allows the domain to use grpc.
+// ShareIdentityList serves as the heartbeat between domains.
 func (d *Domain) ShareIdentityList(ctx context.Context, request *pb.IdentityListRequest) (*pb.IdentityListReply, error) {
 	d.debugf(debugRPCs, "ShareIdentityList(ctx, %v)\n", request.GetIdentity().GetUUID())
 
-	d.Logf("rpc_ShareIdentityList <-   uuid:%v\n", request.GetIdentity().GetUUID())
+	d.Logf("rpcShareIdentityList <-   uuid:%v\n", request.GetIdentity().GetUUID())
 
 	// Parse request
 	identity, err := convertPBItoI(request.GetIdentity())
@@ -51,7 +64,8 @@ func (d *Domain) ShareIdentityList(ctx context.Context, request *pb.IdentityList
 	return reply, nil
 }
 
-func (d *Domain) rpcShareIdentityList(peer *peer) error {
+// rpcShareIdentityList calls the grpc ShareIdentityList on the provided peer.
+func (d *Domain) rpcShareIdentityList(ctx context.Context, peer *peer) error {
 	d.debugf(debugRPCs, "rpcShareIdentityList(%v)\n", peer.UUID)
 	err := d.checkConnection(peer)
 	if err != nil {
@@ -78,9 +92,9 @@ func (d *Domain) rpcShareIdentityList(peer *peer) error {
 		}
 
 		// Send RPC
-		d.Logf("rpc_ShareIdentityList   -> uuid:%v %v\n", peer.UUID, peer.addr())
-		client := pb.NewLegionClient(peer.conn)
-		reply, err = client.ShareIdentityList(context.TODO(), request)
+		d.Logf("rpcShareIdentityList   -> uuid:%v %v\n", peer.UUID, peer.addr())
+		client := pb.NewDomainClient(peer.conn)
+		reply, err = client.ShareIdentityList(ctx, request)
 		if err != nil {
 			peer.LastContact = time.Now()
 		}
@@ -106,4 +120,26 @@ func (d *Domain) rpcShareIdentityList(peer *peer) error {
 
 	d.debugf(debugRPCs, "rpcShareIdentityList(%v) returning\n", peer.UUID)
 	return nil
+}
+
+// OpenPosition implements grpc and allows the domains to use grpc.
+// OpenPosition serves as the begining of an election for domains.
+func (d *Domain) OpenPosition(ctx context.Context, request *pb.OpenPositionRequest) (*pb.OpenPositionReply, error) {
+	return nil, errors.New("UnImplemented!")
+}
+
+// rpcOpenPosition calls the grpc OpenPosition on the provided peer.
+func (d *Domain) rpcOpenPosition(ctx context.Context, peer *peer) error {
+	return errors.New("UnImplemented!")
+}
+
+// OfferPosition implements grpc and allows the domains to use grpc.
+// OfferPosition serves as the begining of an election for domains.
+func (d *Domain) OfferPosition(ctx context.Context, request *pb.OfferPositionRequest) (*pb.OfferPositionReply, error) {
+	return nil, errors.New("UnImplemented!")
+}
+
+// rpcOfferPosition calls the grpc OfferPosition on the provided peer.
+func (d *Domain) rpcOfferPosition(ctx context.Context, peer *peer) error {
+	return errors.New("UnImplemented!")
 }

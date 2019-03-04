@@ -3,11 +3,8 @@ package domain
 import (
 	"context"
 	"fmt"
-	"log"
 	"net"
-	"strconv"
 	"sync"
-	"time"
 
 	"github.com/blang/semver"
 	"github.com/jmbarzee/domain/system"
@@ -32,52 +29,6 @@ type (
 		// config does what it is. See DomainConfig for a clear understanding.
 		// It is unchanged after NewDomain() completes
 		config DomainConfig
-	}
-
-	DomainConfig struct {
-		// UUID is a unique identifier for a domain
-		UUID string
-		// Title is the name of the Dominion which the domain belongs to
-		Title string
-
-		// Version is the version of Code which the domain is running
-		Version semver.Version
-
-		// Traits is the traits possesed by the domain.
-		Traits []string
-		// Services is the list of possible services.
-		Services map[string]ServiceConfig
-
-		// Port is the port which the domain will be responding on
-		Port int
-		// IP is the port which the domain will be responding on
-		IP net.IP
-
-		// TimingConfig specifies all the timings needed for autoconnecting and heartbeats
-		TimingConfig TimingConfig
-
-		// Log is where the logs from the domain are left.
-		Log *log.Logger
-	}
-
-	TimingConfig struct {
-		// DialTimeout is how long a domain will wait for a grpc.ClientConn to establish
-		DialTimeout time.Duration
-
-		// IsolationCheck is the range of possible durations between isolation checks
-		IsolationCheck RangeTiming
-		// IsolationTimeout is the range of possible durations after which a domain will determine it is isolated
-		IsolationTimeout RangeTiming
-
-		// HeartbeatCheck is the range of possible durations after which a domain will send a heartbeat
-		HeartbeatCheck RangeTiming
-	}
-
-	RangeTiming struct {
-		// DialTimeout is the top of the possible durations
-		Upper time.Duration
-		// DialTimeout is the bottom of the possible durations
-		Lower time.Duration
 	}
 )
 
@@ -121,109 +72,16 @@ func NewDomain(ctx context.Context, config DomainConfig) (*Domain, error) {
 
 	// Start Services
 	d.startRequiredServices()
+	go d.watchServicesDepnedencies(systemCtx)
 
 	// Dump Stats
 	startMsg := "I seek to join the Dominion\n" +
 		d.config.Dump() +
-		"\n" +
-		"The Dominion ever expands!\n" +
-		"Long grow the dominion!\n"
+		"The Dominion ever expands!\n"
 
 	d.Logf(startMsg)
 
 	return d, nil
-}
-
-func (c DomainConfig) Check() error {
-	if c.UUID == "" {
-		return fmt.Errorf("UUID was not set")
-	}
-	if c.Title == "" {
-		return fmt.Errorf("Title was not set")
-	}
-
-	if len(c.Traits) == 0 {
-		return fmt.Errorf("Traits were not set")
-	}
-	if len(c.Services) == 0 {
-		return fmt.Errorf("Services were not set")
-	}
-
-	if c.Port == 0 {
-		return fmt.Errorf("Port was not set")
-	}
-
-	err := c.TimingConfig.Check()
-	if err != nil {
-		return err
-	}
-
-	if c.Log == nil {
-		return fmt.Errorf("LogFileName was not set")
-	}
-	return nil
-}
-
-func (c DomainConfig) Dump() string {
-
-	dumpMsg := "\tUUID: " + c.UUID + "\n" +
-		"\tTitle: " + c.Title + "\n" +
-		"\tVersion: " + c.Version.String() + "\n" +
-		"\tTraits: \n"
-
-	dumpMsg += "\tTraits: ["
-	for _, trait := range c.Traits {
-		dumpMsg += trait + ", "
-	}
-	dumpMsg += "]\n"
-
-	dumpMsg += "\tServices: [\n"
-	for _, serviceConfig := range c.Services {
-		dumpMsg += "\t\t" + serviceConfig.String() + ", \n"
-	}
-	dumpMsg += "\t]\n"
-
-	dumpMsg += "\tAddress: " + c.IP.String() + ":" + strconv.Itoa(c.Port) + "\n" +
-		"\tTimingConfig: \n" +
-		c.TimingConfig.String()
-	return dumpMsg
-}
-
-func (c TimingConfig) Check() error {
-	if c.DialTimeout == 0 {
-		return fmt.Errorf("TimingConfig.DialTimeout was not set")
-	}
-	if c.IsolationCheck.Upper == 0 {
-		return fmt.Errorf("TimingConfig.IsolationCheck.Upper was not set")
-	}
-	if c.IsolationCheck.Lower == 0 {
-		return fmt.Errorf("TimingConfig.IsolationCheck.Lower was not set")
-	}
-	if c.IsolationTimeout.Upper == 0 {
-		return fmt.Errorf("TimingConfig.IsolationTimeout.Upper was not set")
-	}
-	if c.IsolationTimeout.Lower == 0 {
-		return fmt.Errorf("TimingConfig.IsolationTimeout.Lower was not set")
-	}
-	if c.HeartbeatCheck.Upper == 0 {
-		return fmt.Errorf("TimingConfig.HeartbeatCheck.Upper was not set")
-	}
-	if c.HeartbeatCheck.Lower == 0 {
-		return fmt.Errorf("TimingConfig.HeartbeatCheck.Lower was not set")
-	}
-	return nil
-}
-
-func (c TimingConfig) String() string {
-	dumpMsg := "\t\tDialTimeout: " + c.DialTimeout.String() + "\n" +
-		"\t\tIsolationCheck: " + c.IsolationCheck.String() + "\n" +
-		"\t\tIsolationTimeout: " + c.IsolationTimeout.String() + "\n" +
-		"\t\tHeartbeatCheck: " + c.HeartbeatCheck.String() + "\n"
-	return dumpMsg
-}
-
-func (r RangeTiming) String() string {
-	return "(" + r.Lower.String() + "," + r.Upper.String() + ")"
 }
 
 const (

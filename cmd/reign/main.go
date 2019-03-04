@@ -29,13 +29,13 @@ func main() {
 
 	for i := 0; i < 3; i++ {
 		config.UUID = "GUID-" + strconv.Itoa(i)
-		config.Port = config.Port + i
+		config.Port += 100
 		_, err = domain.NewDomain(context.TODO(), config)
 		if err != nil {
 			panic(err)
 		}
 	}
 
-	c := time.After(time.Second * 10)
+	c := time.After(time.Second * 20)
 	<-c
 }

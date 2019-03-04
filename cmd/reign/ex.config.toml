@@ -1,6 +1,4 @@
 # Example Config to create a domain/dominion
-
-
 uuid = "<Insert Different Per Domain>" # TODO @user, insert the unique UUIDs here
 title = "Dominion" # Should Be identical between domains
 
@@ -14,16 +12,19 @@ traits = [
 ]
 
 [timingConfig]
-	dialtimeout = 3000	# All timings are in Milliseconds
+	dialtimeout = 3000000	# All timings are in Nanoseconds
 	[timingConfig.isolationCheck]
-		upper = 1000
-		lower = 500
+		upper = 10000000
+		lower = 5000000
 	[timingConfig.isolationTimeout]
-		upper = 10000
-		lower = 9000
+		upper = 100000000
+		lower = 50000000
 	[timingConfig.heartbeatCheck]
-		upper = 2000
-		lower = 1000
+		upper = 40000000
+		lower = 10000000
+	[timingConfig.serviceDependsCheck]
+		upper = 10000000
+		lower = 5000000
 
 [services]
 	[services.light]
@@ -46,7 +47,4 @@ traits = [
 		traits = [
 			"compute",
 		]
-
-# domain specifies the traits of this instance (a part of the dominion)
-[domain]
 
