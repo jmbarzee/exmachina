@@ -13,13 +13,18 @@ import (
 // GetServices serves as the directory of services hosted on all domains.
 // GetServices is called by services hosted on a single domain to find their dependencies.
 func (d *Domain) GetServices(ctx context.Context, request *pb.GetServicesRequest) (*pb.GetServicesReply, error) {
-	return nil, errors.New("UnImplemented!")
+	serviceName := request.Name
+	addrs := d.findService(serviceName)
+	reply := &pb.GetServicesReply{
+		Services: addrs,
+	}
+	return reply, nil
 }
 
 // rpcGetServices calls the grpc GetServices on the provided peer.
-func (d *Domain) rpcGetServices(ctx context.Context, peer *peer) error {
-	return errors.New("UnImplemented!")
-}
+// func (d *Domain) rpcGetServices(ctx context.Context, peer *peer) error {
+// 	return errors.New("UnImplemented!")
+// }
 
 // ShareIdentityList implements grpc and allows the domain to use grpc.
 // ShareIdentityList serves as the heartbeat between domains.

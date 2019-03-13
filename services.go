@@ -57,7 +57,7 @@ Loop:
 			for dependency := range dependencies {
 				services := d.findService(dependency)
 				if len(services) == 0 {
-					go d.holdElection(ctx, dependency)
+					go d.fillPosition(ctx, dependency)
 				}
 			}
 
@@ -68,7 +68,7 @@ Loop:
 	d.debugf(debugRoutines, "watchServicesDepnedencies() stopping\n")
 }
 
-func (d *Domain) holdElection(ctx context.Context, serviceName string) {
+func (d *Domain) fillPosition(ctx context.Context, serviceName string) {
 	d.Logf("Holding Election for: %s", serviceName)
 }
 

@@ -3,7 +3,7 @@ syntax = "proto3";
 package grpcdomain;
 
 // Command to rebuild from parent directory
-//     protoc -I grpc/ legion.proto --go_out=plugins=grpc:grpc
+//     protoc -I grpc/ domain.proto --go_out=plugins=grpc:grpc
 
 service Domain {
 
@@ -29,16 +29,7 @@ message GetServicesRequest {
 // IdentityListRequest contains the list of known addresses hosting the requested service
 message GetServicesReply {
 	// Services is the list of services an Identity currently offers
-	repeated Address Services = 1;
-}
-
-// Address is a network address
-message Address {
-	// IP is the IP address of the full address
-	bytes IP = 2;
-	// Port is the port of the full address
-	int32 Port = 3;
-
+	repeated string Services = 1;
 }
 
 
