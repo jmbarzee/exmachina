@@ -3,6 +3,7 @@ package domain
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/jmbarzee/domain/services/light"
 	"github.com/jmbarzee/domain/services/lightfeed"
@@ -11,8 +12,13 @@ import (
 
 type (
 	Service struct {
-		Port          int
-		ServiceConfig ServiceConfig
+		ServiceIdentity ServiceIdentity
+		ServiceConfig   ServiceConfig
+	}
+
+	ServiceIdentity struct {
+		Port        int
+		LastContact time.Time
 	}
 
 	ServiceConfig struct {
@@ -56,14 +62,42 @@ func (s ServiceConfig) String() string {
 	return msg
 }
 
-func (d *Domain) startService(config ServiceConfig) error {
-	var err error
-	d.debugf(debugLocks, "startService() pre-lock(%v)\n", "ServicesLock")
-	d.ServicesLock.Lock()
-	{
-		d.debugf(debugLocks, "startService() in-lock(%v)\n", "ServicesLock")
+func (d *Domain) serviceConfigFromName(serviceName string) (ServiceConfig, error) {
+	for _, serviceConfig := range d.config.Services {
+		if serviceConfig.Name != serviceName {
+			continue
+		} else {
+			return serviceConfig, nil
+		}
+	}
+	return ServiceConfig{}, fmt.Errorf("serviceConfig '%v' not found", serviceName)
+}
 
-		port := d.config.Port + len(d.services)
+func (d *Domain) hasTraitsForService(serviceConfig ServiceConfig) bool {
+	hasAllTraits := true
+	for _, trait := range serviceConfig.Traits {
+		hasAllTraits = hasAllTraits && d.hasTrait(trait)
+	}
+	return hasAllTraits
+}
+
+func (d *Domain) getProficiencyForService(serviceConfig ServiceConfig) int32 {
+	// TODO @jmbarzee make this more intelligent
+	return 1
+}
+
+func (d *Domain) startService(config ServiceConfig) error {
+	if !d.hasTraitsForService(config) {
+		return errors.New("tried to start service without needed traits")
+	}
+
+	var err error
+	d.debugf(debugLocks, "startService() pre-lock(%v)\n", "servicesLock")
+	d.servicesLock.Lock()
+	{
+		d.debugf(debugLocks, "startService() in-lock(%v)\n", "servicesLock")
+
+		port := d.config.Port + len(d.services) // TODO @jmbarzee Hacky, find a way to make more durable
 		if _, ok := d.services[config.Name]; ok {
 			err = fmt.Errorf("Service already exists! (%s)", config.Name)
 			goto Unlock
@@ -82,12 +116,17 @@ func (d *Domain) startService(config ServiceConfig) error {
 		if err != nil {
 			goto Unlock
 		}
-		d.services[config.Name] = Service{Port: port, ServiceConfig: config}
+		d.services[config.Name] = Service{
+			ServiceIdentity: ServiceIdentity{
+				Port:        port,
+				LastContact: time.Now(),
+			},
+			ServiceConfig: config}
 		d.Logf("Started service: \"%v\" at port:%v", config.Name, port)
 
 	Unlock:
 	}
-	d.ServicesLock.Unlock()
-	d.debugf(debugLocks, "startService() post-lock(%v)\n", "ServicesLock")
+	d.servicesLock.Unlock()
+	d.debugf(debugLocks, "startService() post-lock(%v)\n", "servicesLock")
 	return err
 }

@@ -11,24 +11,24 @@ import (
 
 // Identity contains the all shareable information about a legionnaire
 type Identity struct {
-	// UUID is a unique identifier for a Leggionnair
+	// UUID is a unique identifier for a Domain
 	UUID string
-	// Version is the version of Code which the Legioonnaire is running
+	// Version is the version of Code which the Domain is running
 	Version semver.Version
-	// Services is the list of services the Legionnaire currently offers
-	Services map[string]int
+	// Services is the list of services the Domain currently offers
+	Services map[string]ServiceIdentity
 
 	// LastContact is when the legion last heard from this Identity
 	LastContact time.Time
 
-	// IP is the port which the Legionnaire will be responding on
+	// IP is the port which the Domain will be responding on
 	IP net.IP
-	// Port is the port which the Legionnaire will be responding on
+	// Port is the port which the Domain will be responding on
 	Port int
 }
 
 func (d *Domain) updateIdentities(identities []Identity) error {
-	d.debugf(debugLegion, "updateIdentities()\n")
+	d.debugf(debugDomain, "updateIdentities()\n")
 
 	for _, identity := range identities {
 
@@ -43,12 +43,12 @@ func (d *Domain) updateIdentities(identities []Identity) error {
 		}
 	}
 
-	d.debugf(debugLegion, "updateIdentities()\n")
+	d.debugf(debugDomain, "updateIdentities()\n")
 	return nil
 }
 
 func (d *Domain) updateIdentity(identity Identity) error {
-	d.debugf(debugLegion, "updateIdentity()\n")
+	d.debugf(debugDomain, "updateIdentity()\n")
 
 	// check if we have peer already
 	peer, ok := d.peerMap.Load(identity.UUID)
@@ -64,7 +64,7 @@ func (d *Domain) updateIdentity(identity Identity) error {
 	peer, ok = d.peerMap.Load(identity.UUID)
 	if !ok {
 		err := fmt.Errorf("updateIdentity() - failed to find peer, should have existed. %v\n", identity.UUID)
-		d.debugf(debugLegion, err.Error())
+		d.debugf(debugDomain, err.Error())
 		return err
 	}
 
@@ -80,7 +80,7 @@ func (d *Domain) updateIdentity(identity Identity) error {
 				// TODO consider just closing connection instead of restarting it
 				d.Logf("%v changed IP form %v to %v\n", peer.UUID, peer.IP, identity.IP)
 				peer.IP = identity.IP
-				ctx, cancel := context.WithTimeout(context.Background(), d.config.TimingConfig.DialTimeout)
+				ctx, cancel := context.WithTimeout(context.Background(), d.config.ConnectionConfig.DialTimeout)
 				defer cancel()
 				err := peer.reconnect(ctx)
 				if err != nil {
@@ -93,7 +93,7 @@ func (d *Domain) updateIdentity(identity Identity) error {
 			if peer.Port != identity.Port && identity.Port != 0 {
 				d.Logf("%v changed IP form %v to %v\n", peer.UUID, peer.IP, identity.IP)
 				peer.IP = identity.IP
-				ctx, cancel := context.WithTimeout(context.Background(), d.config.TimingConfig.DialTimeout)
+				ctx, cancel := context.WithTimeout(context.Background(), d.config.ConnectionConfig.DialTimeout)
 				defer cancel()
 				err := peer.reconnect(ctx)
 				if err != nil {
@@ -108,7 +108,18 @@ func (d *Domain) updateIdentity(identity Identity) error {
 				peer.Version = identity.Version
 			}
 
-			// TODO handle service changes
+			for serviceName, serviceIdent := range identity.Services {
+				if knownServiceIdent, ok := peer.Services[serviceName]; ok {
+					if knownServiceIdent.Port != serviceIdent.Port {
+						d.Logf("%v moved \"%v\" from %v to %v\n", peer.UUID, serviceName, knownServiceIdent.Port, serviceIdent.Port)
+					}
+					peer.Services[serviceName] = serviceIdent
+
+				} else {
+					d.Logf("%v started a new service \"%v\"\n", peer.UUID, serviceName)
+					peer.Services[serviceName] = serviceIdent
+				}
+			}
 
 		}
 	}
@@ -116,7 +127,5 @@ func (d *Domain) updateIdentity(identity Identity) error {
 Unlock:
 	peer.Unlock()
 	d.debugf(debugLocks, "updateIdentity() post-lock(%v)\n", peer.UUID)
-
-	d.debugf(debugLegion, "updateIdentity()\n")
 	return nil
 }

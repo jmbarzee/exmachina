@@ -2,8 +2,24 @@ syntax = "proto3";
 
 package grpcdomain;
 
-// Command to rebuild from parent directory
-//     protoc -I grpc/ domain.proto --go_out=plugins=grpc:grpc
+import "get_services.proto";
+import "share_identity_list.proto";
+import "open_position.proto";
+import "close_position.proto";
+
+/*		Command to rebuild from parent directory
+=========================================================
+
+protoc -I grpc/ --go_out=plugins=grpc:grpc \
+	domain.proto \
+	get_services.proto \
+	share_identity_list.proto \
+	open_position.proto \
+	close_position.proto \
+	objects.proto
+
+=========================================================
+*/
 
 service Domain {
 
@@ -16,90 +32,6 @@ service Domain {
 	// OpenPosition declares the new service which is needed and requests Appointments
 	rpc OpenPosition (OpenPositionRequest) returns (OpenPositionReply) {}
 
-	// OfferPosition appoints the server to host a service
-	rpc OfferPosition (OfferPositionRequest) returns (OfferPositionReply) {}
-}
-
-// IdentityListRequest contains the name of the service the client is searching for
-message GetServicesRequest {
-	// Name is the name of the service which is requested
-	string Name = 1;
-}
-
-// IdentityListRequest contains the list of known addresses hosting the requested service
-message GetServicesReply {
-	// Services is the list of services an Identity currently offers
-	repeated string Services = 1;
-}
-
-
-// IdentityListRequest contains the client's & peers' identities
-message IdentityListRequest {
-	// Identity is the identity of the client
-	Identity Identity = 1;
-
-	// IdentityList is a list of all domains known to the client
-	repeated Identity IdentityList = 2;
-}
-
-// IdentityListReply contains the server's & peers' identities
-message IdentityListReply {
-	// Identity is the identity of the server
-	Identity Identity = 1;
-
-	// IdentityList is a list of all domains known to the server
-	repeated Identity IdentityList = 2;
-}
-
-// Identity represents a domain
-message Identity {
-	// UUID is a Unique Identifier for the domain
-	string UUID = 1;
-	// Version is the version of code being run by the domain
-	string Version = 2;
-	// Services is the list of services an Identity currently offers
-	repeated Service Services = 3;
-
-	// LastContact is the time of the last heard communication (UnixNano)
-	int64 LastContact = 4;
-
-	// IP is the IP address which the domain was last known to communicate over
-	bytes IP = 5;
-	// Port is the port which the domain was last known to belong communicate over
-	int32 Port = 6;
-}
-
-message Service {
-	// Name is the name of the service
-	string Name = 1;
-	// Port is the port which the service is availible at
-	int32 Port = 2;
-
-}
-
-
-// OpenPositionRequest contains the name of the new open position
-message OpenPositionRequest {
-	// Name is the name of the service which is open
-	string Name = 1;
-} 
-
-// OpenPositionReply contains the consent and proficiency of the servir
-message OpenPositionReply {
-	// Sustain is the port which the service is availible at
-	bool Sustain = 1;
-	// Proficiency is the self determined
-	int32 Proficiency = 2;
-}
-
-
-// OfferAppointmentRequest contains the name of the new open position
-message OfferPositionRequest {
-	// Name is the name of the service which is open
-	string Name = 1;
-}
-
-message OfferPositionReply {
-	// Accept is the servers acceptance of the position
-	bool Accept = 1;
+	// ClosePosition ends an election and informs if the position was awarded
+	rpc ClosePosition (ClosePositionRequest) returns (ClosePositionReply) {}
 }

@@ -4,10 +4,12 @@
 package grpcdomain
 
 import (
+	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	context "golang.org/x/net/context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -20,543 +22,27 @@ var _ = math.Inf
 // is compatible with the proto package it is being compiled against.
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
-
-// IdentityListRequest contains the name of the service the client is searching for
-type GetServicesRequest struct {
-	// Name is the name of the service which is requested
-	Name                 string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GetServicesRequest) Reset()         { *m = GetServicesRequest{} }
-func (m *GetServicesRequest) String() string { return proto.CompactTextString(m) }
-func (*GetServicesRequest) ProtoMessage()    {}
-func (*GetServicesRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73e6234e76dbdb84, []int{0}
-}
-
-func (m *GetServicesRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetServicesRequest.Unmarshal(m, b)
-}
-func (m *GetServicesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetServicesRequest.Marshal(b, m, deterministic)
-}
-func (m *GetServicesRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetServicesRequest.Merge(m, src)
-}
-func (m *GetServicesRequest) XXX_Size() int {
-	return xxx_messageInfo_GetServicesRequest.Size(m)
-}
-func (m *GetServicesRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetServicesRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetServicesRequest proto.InternalMessageInfo
-
-func (m *GetServicesRequest) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-// IdentityListRequest contains the list of known addresses hosting the requested service
-type GetServicesReply struct {
-	// Services is the list of services an Identity currently offers
-	Services             []string `protobuf:"bytes,1,rep,name=Services,proto3" json:"Services,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GetServicesReply) Reset()         { *m = GetServicesReply{} }
-func (m *GetServicesReply) String() string { return proto.CompactTextString(m) }
-func (*GetServicesReply) ProtoMessage()    {}
-func (*GetServicesReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73e6234e76dbdb84, []int{1}
-}
-
-func (m *GetServicesReply) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetServicesReply.Unmarshal(m, b)
-}
-func (m *GetServicesReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetServicesReply.Marshal(b, m, deterministic)
-}
-func (m *GetServicesReply) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetServicesReply.Merge(m, src)
-}
-func (m *GetServicesReply) XXX_Size() int {
-	return xxx_messageInfo_GetServicesReply.Size(m)
-}
-func (m *GetServicesReply) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetServicesReply.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetServicesReply proto.InternalMessageInfo
-
-func (m *GetServicesReply) GetServices() []string {
-	if m != nil {
-		return m.Services
-	}
-	return nil
-}
-
-// IdentityListRequest contains the client's & peers' identities
-type IdentityListRequest struct {
-	// Identity is the identity of the client
-	Identity *Identity `protobuf:"bytes,1,opt,name=Identity,proto3" json:"Identity,omitempty"`
-	// IdentityList is a list of all domains known to the client
-	IdentityList         []*Identity `protobuf:"bytes,2,rep,name=IdentityList,proto3" json:"IdentityList,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
-	XXX_unrecognized     []byte      `json:"-"`
-	XXX_sizecache        int32       `json:"-"`
-}
-
-func (m *IdentityListRequest) Reset()         { *m = IdentityListRequest{} }
-func (m *IdentityListRequest) String() string { return proto.CompactTextString(m) }
-func (*IdentityListRequest) ProtoMessage()    {}
-func (*IdentityListRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73e6234e76dbdb84, []int{2}
-}
-
-func (m *IdentityListRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_IdentityListRequest.Unmarshal(m, b)
-}
-func (m *IdentityListRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_IdentityListRequest.Marshal(b, m, deterministic)
-}
-func (m *IdentityListRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_IdentityListRequest.Merge(m, src)
-}
-func (m *IdentityListRequest) XXX_Size() int {
-	return xxx_messageInfo_IdentityListRequest.Size(m)
-}
-func (m *IdentityListRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_IdentityListRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_IdentityListRequest proto.InternalMessageInfo
-
-func (m *IdentityListRequest) GetIdentity() *Identity {
-	if m != nil {
-		return m.Identity
-	}
-	return nil
-}
-
-func (m *IdentityListRequest) GetIdentityList() []*Identity {
-	if m != nil {
-		return m.IdentityList
-	}
-	return nil
-}
-
-// IdentityListReply contains the server's & peers' identities
-type IdentityListReply struct {
-	// Identity is the identity of the server
-	Identity *Identity `protobuf:"bytes,1,opt,name=Identity,proto3" json:"Identity,omitempty"`
-	// IdentityList is a list of all domains known to the server
-	IdentityList         []*Identity `protobuf:"bytes,2,rep,name=IdentityList,proto3" json:"IdentityList,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
-	XXX_unrecognized     []byte      `json:"-"`
-	XXX_sizecache        int32       `json:"-"`
-}
-
-func (m *IdentityListReply) Reset()         { *m = IdentityListReply{} }
-func (m *IdentityListReply) String() string { return proto.CompactTextString(m) }
-func (*IdentityListReply) ProtoMessage()    {}
-func (*IdentityListReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73e6234e76dbdb84, []int{3}
-}
-
-func (m *IdentityListReply) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_IdentityListReply.Unmarshal(m, b)
-}
-func (m *IdentityListReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_IdentityListReply.Marshal(b, m, deterministic)
-}
-func (m *IdentityListReply) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_IdentityListReply.Merge(m, src)
-}
-func (m *IdentityListReply) XXX_Size() int {
-	return xxx_messageInfo_IdentityListReply.Size(m)
-}
-func (m *IdentityListReply) XXX_DiscardUnknown() {
-	xxx_messageInfo_IdentityListReply.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_IdentityListReply proto.InternalMessageInfo
-
-func (m *IdentityListReply) GetIdentity() *Identity {
-	if m != nil {
-		return m.Identity
-	}
-	return nil
-}
-
-func (m *IdentityListReply) GetIdentityList() []*Identity {
-	if m != nil {
-		return m.IdentityList
-	}
-	return nil
-}
-
-// Identity represents a domain
-type Identity struct {
-	// UUID is a Unique Identifier for the domain
-	UUID string `protobuf:"bytes,1,opt,name=UUID,proto3" json:"UUID,omitempty"`
-	// Version is the version of code being run by the domain
-	Version string `protobuf:"bytes,2,opt,name=Version,proto3" json:"Version,omitempty"`
-	// Services is the list of services an Identity currently offers
-	Services []*Service `protobuf:"bytes,3,rep,name=Services,proto3" json:"Services,omitempty"`
-	// LastContact is the time of the last heard communication (UnixNano)
-	LastContact int64 `protobuf:"varint,4,opt,name=LastContact,proto3" json:"LastContact,omitempty"`
-	// IP is the IP address which the domain was last known to communicate over
-	IP []byte `protobuf:"bytes,5,opt,name=IP,proto3" json:"IP,omitempty"`
-	// Port is the port which the domain was last known to belong communicate over
-	Port                 int32    `protobuf:"varint,6,opt,name=Port,proto3" json:"Port,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Identity) Reset()         { *m = Identity{} }
-func (m *Identity) String() string { return proto.CompactTextString(m) }
-func (*Identity) ProtoMessage()    {}
-func (*Identity) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73e6234e76dbdb84, []int{4}
-}
-
-func (m *Identity) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Identity.Unmarshal(m, b)
-}
-func (m *Identity) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Identity.Marshal(b, m, deterministic)
-}
-func (m *Identity) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Identity.Merge(m, src)
-}
-func (m *Identity) XXX_Size() int {
-	return xxx_messageInfo_Identity.Size(m)
-}
-func (m *Identity) XXX_DiscardUnknown() {
-	xxx_messageInfo_Identity.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Identity proto.InternalMessageInfo
-
-func (m *Identity) GetUUID() string {
-	if m != nil {
-		return m.UUID
-	}
-	return ""
-}
-
-func (m *Identity) GetVersion() string {
-	if m != nil {
-		return m.Version
-	}
-	return ""
-}
-
-func (m *Identity) GetServices() []*Service {
-	if m != nil {
-		return m.Services
-	}
-	return nil
-}
-
-func (m *Identity) GetLastContact() int64 {
-	if m != nil {
-		return m.LastContact
-	}
-	return 0
-}
-
-func (m *Identity) GetIP() []byte {
-	if m != nil {
-		return m.IP
-	}
-	return nil
-}
-
-func (m *Identity) GetPort() int32 {
-	if m != nil {
-		return m.Port
-	}
-	return 0
-}
-
-type Service struct {
-	// Name is the name of the service
-	Name string `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	// Port is the port which the service is availible at
-	Port                 int32    `protobuf:"varint,2,opt,name=Port,proto3" json:"Port,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Service) Reset()         { *m = Service{} }
-func (m *Service) String() string { return proto.CompactTextString(m) }
-func (*Service) ProtoMessage()    {}
-func (*Service) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73e6234e76dbdb84, []int{5}
-}
-
-func (m *Service) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Service.Unmarshal(m, b)
-}
-func (m *Service) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Service.Marshal(b, m, deterministic)
-}
-func (m *Service) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Service.Merge(m, src)
-}
-func (m *Service) XXX_Size() int {
-	return xxx_messageInfo_Service.Size(m)
-}
-func (m *Service) XXX_DiscardUnknown() {
-	xxx_messageInfo_Service.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Service proto.InternalMessageInfo
-
-func (m *Service) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *Service) GetPort() int32 {
-	if m != nil {
-		return m.Port
-	}
-	return 0
-}
-
-// OpenPositionRequest contains the name of the new open position
-type OpenPositionRequest struct {
-	// Name is the name of the service which is open
-	Name                 string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *OpenPositionRequest) Reset()         { *m = OpenPositionRequest{} }
-func (m *OpenPositionRequest) String() string { return proto.CompactTextString(m) }
-func (*OpenPositionRequest) ProtoMessage()    {}
-func (*OpenPositionRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73e6234e76dbdb84, []int{6}
-}
-
-func (m *OpenPositionRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_OpenPositionRequest.Unmarshal(m, b)
-}
-func (m *OpenPositionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_OpenPositionRequest.Marshal(b, m, deterministic)
-}
-func (m *OpenPositionRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_OpenPositionRequest.Merge(m, src)
-}
-func (m *OpenPositionRequest) XXX_Size() int {
-	return xxx_messageInfo_OpenPositionRequest.Size(m)
-}
-func (m *OpenPositionRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_OpenPositionRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_OpenPositionRequest proto.InternalMessageInfo
-
-func (m *OpenPositionRequest) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-// OpenPositionReply contains the consent and proficiency of the servir
-type OpenPositionReply struct {
-	// Sustain is the port which the service is availible at
-	Sustain bool `protobuf:"varint,1,opt,name=Sustain,proto3" json:"Sustain,omitempty"`
-	// Proficiency is the self determined
-	Proficiency          int32    `protobuf:"varint,2,opt,name=Proficiency,proto3" json:"Proficiency,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *OpenPositionReply) Reset()         { *m = OpenPositionReply{} }
-func (m *OpenPositionReply) String() string { return proto.CompactTextString(m) }
-func (*OpenPositionReply) ProtoMessage()    {}
-func (*OpenPositionReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73e6234e76dbdb84, []int{7}
-}
-
-func (m *OpenPositionReply) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_OpenPositionReply.Unmarshal(m, b)
-}
-func (m *OpenPositionReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_OpenPositionReply.Marshal(b, m, deterministic)
-}
-func (m *OpenPositionReply) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_OpenPositionReply.Merge(m, src)
-}
-func (m *OpenPositionReply) XXX_Size() int {
-	return xxx_messageInfo_OpenPositionReply.Size(m)
-}
-func (m *OpenPositionReply) XXX_DiscardUnknown() {
-	xxx_messageInfo_OpenPositionReply.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_OpenPositionReply proto.InternalMessageInfo
-
-func (m *OpenPositionReply) GetSustain() bool {
-	if m != nil {
-		return m.Sustain
-	}
-	return false
-}
-
-func (m *OpenPositionReply) GetProficiency() int32 {
-	if m != nil {
-		return m.Proficiency
-	}
-	return 0
-}
-
-// OfferAppointmentRequest contains the name of the new open position
-type OfferPositionRequest struct {
-	// Name is the name of the service which is open
-	Name                 string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *OfferPositionRequest) Reset()         { *m = OfferPositionRequest{} }
-func (m *OfferPositionRequest) String() string { return proto.CompactTextString(m) }
-func (*OfferPositionRequest) ProtoMessage()    {}
-func (*OfferPositionRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73e6234e76dbdb84, []int{8}
-}
-
-func (m *OfferPositionRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_OfferPositionRequest.Unmarshal(m, b)
-}
-func (m *OfferPositionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_OfferPositionRequest.Marshal(b, m, deterministic)
-}
-func (m *OfferPositionRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_OfferPositionRequest.Merge(m, src)
-}
-func (m *OfferPositionRequest) XXX_Size() int {
-	return xxx_messageInfo_OfferPositionRequest.Size(m)
-}
-func (m *OfferPositionRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_OfferPositionRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_OfferPositionRequest proto.InternalMessageInfo
-
-func (m *OfferPositionRequest) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-type OfferPositionReply struct {
-	// Accept is the servers acceptance of the position
-	Accept               bool     `protobuf:"varint,1,opt,name=Accept,proto3" json:"Accept,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *OfferPositionReply) Reset()         { *m = OfferPositionReply{} }
-func (m *OfferPositionReply) String() string { return proto.CompactTextString(m) }
-func (*OfferPositionReply) ProtoMessage()    {}
-func (*OfferPositionReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_73e6234e76dbdb84, []int{9}
-}
-
-func (m *OfferPositionReply) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_OfferPositionReply.Unmarshal(m, b)
-}
-func (m *OfferPositionReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_OfferPositionReply.Marshal(b, m, deterministic)
-}
-func (m *OfferPositionReply) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_OfferPositionReply.Merge(m, src)
-}
-func (m *OfferPositionReply) XXX_Size() int {
-	return xxx_messageInfo_OfferPositionReply.Size(m)
-}
-func (m *OfferPositionReply) XXX_DiscardUnknown() {
-	xxx_messageInfo_OfferPositionReply.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_OfferPositionReply proto.InternalMessageInfo
-
-func (m *OfferPositionReply) GetAccept() bool {
-	if m != nil {
-		return m.Accept
-	}
-	return false
-}
-
-func init() {
-	proto.RegisterType((*GetServicesRequest)(nil), "grpcdomain.GetServicesRequest")
-	proto.RegisterType((*GetServicesReply)(nil), "grpcdomain.GetServicesReply")
-	proto.RegisterType((*IdentityListRequest)(nil), "grpcdomain.IdentityListRequest")
-	proto.RegisterType((*IdentityListReply)(nil), "grpcdomain.IdentityListReply")
-	proto.RegisterType((*Identity)(nil), "grpcdomain.Identity")
-	proto.RegisterType((*Service)(nil), "grpcdomain.Service")
-	proto.RegisterType((*OpenPositionRequest)(nil), "grpcdomain.OpenPositionRequest")
-	proto.RegisterType((*OpenPositionReply)(nil), "grpcdomain.OpenPositionReply")
-	proto.RegisterType((*OfferPositionRequest)(nil), "grpcdomain.OfferPositionRequest")
-	proto.RegisterType((*OfferPositionReply)(nil), "grpcdomain.OfferPositionReply")
-}
+const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 func init() { proto.RegisterFile("domain.proto", fileDescriptor_73e6234e76dbdb84) }
 
 var fileDescriptor_73e6234e76dbdb84 = []byte{
-	// 453 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x54, 0x51, 0x6f, 0xd3, 0x30,
-	0x10, 0x5e, 0xd2, 0xad, 0xed, 0xae, 0x05, 0xd1, 0xeb, 0x84, 0xac, 0x0a, 0x86, 0xe5, 0xa7, 0x80,
-	0x50, 0x81, 0xf1, 0xc2, 0x2b, 0x62, 0x12, 0xaa, 0x34, 0x68, 0xe4, 0xaa, 0xbc, 0x87, 0xcc, 0x05,
-	0x4b, 0x9b, 0x1d, 0x1c, 0x0f, 0xa9, 0x4f, 0x88, 0x5f, 0xc4, 0xaf, 0xe1, 0xff, 0xa0, 0x78, 0x49,
-	0x6b, 0xb3, 0xb4, 0xe2, 0x89, 0x37, 0xdf, 0xf9, 0xbb, 0xef, 0xbb, 0x7c, 0x77, 0x0e, 0x0c, 0x2f,
-	0xf5, 0x75, 0x26, 0xd5, 0xb4, 0x30, 0xda, 0x6a, 0x84, 0x2f, 0xa6, 0xc8, 0x6f, 0x33, 0x2c, 0x01,
-	0x7c, 0x2f, 0xec, 0x42, 0x98, 0xef, 0x32, 0x17, 0x25, 0x17, 0xdf, 0x6e, 0x44, 0x69, 0x11, 0xe1,
-	0xf0, 0x63, 0x76, 0x2d, 0x48, 0x44, 0xa3, 0xe4, 0x98, 0xbb, 0x33, 0x9b, 0xc2, 0x83, 0x00, 0x59,
-	0x5c, 0xad, 0x71, 0x02, 0xfd, 0x26, 0x41, 0x22, 0xda, 0x49, 0x8e, 0xf9, 0x26, 0x66, 0x3f, 0x23,
-	0x18, 0xcf, 0x2e, 0x85, 0xb2, 0xd2, 0xae, 0x2f, 0x64, 0x69, 0x1b, 0xee, 0x97, 0xd0, 0x6f, 0xd2,
-	0x8e, 0x7f, 0x70, 0x76, 0x32, 0xdd, 0x36, 0x34, 0x6d, 0xee, 0xf8, 0x06, 0x85, 0x6f, 0x60, 0xe8,
-	0x13, 0x91, 0x98, 0x76, 0x76, 0x56, 0x05, 0x48, 0xf6, 0x03, 0x46, 0x61, 0x0b, 0x55, 0xd3, 0xff,
-	0xb3, 0x81, 0x5f, 0xd1, 0x56, 0xac, 0x72, 0x75, 0xb9, 0x9c, 0x9d, 0x37, 0xae, 0x56, 0x67, 0x24,
-	0xd0, 0xfb, 0x24, 0x4c, 0x29, 0xb5, 0x22, 0xb1, 0x4b, 0x37, 0x21, 0xbe, 0xf0, 0xbc, 0xed, 0x38,
-	0xc1, 0xb1, 0x2f, 0x58, 0xdf, 0x6d, 0x0d, 0x47, 0x0a, 0x83, 0x8b, 0xac, 0xb4, 0xef, 0xb4, 0xb2,
-	0x59, 0x6e, 0xc9, 0x21, 0x8d, 0x92, 0x0e, 0xf7, 0x53, 0x78, 0x1f, 0xe2, 0x59, 0x4a, 0x8e, 0x68,
-	0x94, 0x0c, 0x79, 0x3c, 0x4b, 0xab, 0x86, 0x52, 0x6d, 0x2c, 0xe9, 0xd2, 0x28, 0x39, 0xe2, 0xee,
-	0xcc, 0x5e, 0x41, 0xaf, 0x66, 0x6c, 0xdb, 0x82, 0x4d, 0x49, 0xec, 0x95, 0x3c, 0x85, 0xf1, 0xbc,
-	0x10, 0x2a, 0xd5, 0xa5, 0xb4, 0x52, 0xab, 0x7d, 0x4b, 0x34, 0x87, 0x51, 0x08, 0xad, 0x06, 0x42,
-	0xa0, 0xb7, 0xb8, 0x29, 0x6d, 0x26, 0x95, 0xc3, 0xf6, 0x79, 0x13, 0x56, 0x9f, 0x94, 0x1a, 0xbd,
-	0x92, 0xb9, 0x14, 0x2a, 0x5f, 0xd7, 0xa2, 0x7e, 0x8a, 0x3d, 0x83, 0x93, 0xf9, 0x6a, 0x25, 0xcc,
-	0xbf, 0x88, 0x3f, 0x07, 0xfc, 0x0b, 0x5b, 0xa9, 0x3f, 0x84, 0xee, 0xdb, 0x3c, 0x17, 0x85, 0xad,
-	0xc5, 0xeb, 0xe8, 0xec, 0x77, 0x0c, 0xdd, 0x73, 0xe7, 0x35, 0x7e, 0x80, 0x81, 0xb7, 0xfa, 0x78,
-	0xea, 0xcf, 0xe1, 0xee, 0xeb, 0x99, 0x3c, 0xda, 0x79, 0x5f, 0x5c, 0xad, 0xd9, 0x01, 0x2e, 0x61,
-	0xb4, 0xf8, 0x9a, 0x19, 0xe1, 0x6f, 0x0a, 0x3e, 0x69, 0xdb, 0x26, 0xef, 0xdd, 0x4c, 0x1e, 0xef,
-	0x06, 0xdc, 0xd2, 0xa6, 0x30, 0xf4, 0xbd, 0x0d, 0x19, 0x5b, 0x06, 0x14, 0x32, 0xde, 0x19, 0x0b,
-	0x3b, 0xc0, 0x05, 0xdc, 0x0b, 0x0c, 0x43, 0x1a, 0x54, 0xb4, 0xf8, 0x3e, 0x39, 0xdd, 0x83, 0x70,
-	0xa4, 0x9f, 0xbb, 0xee, 0x27, 0xf4, 0xfa, 0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x4c, 0x7a, 0xc2,
-	0x0e, 0x94, 0x04, 0x00, 0x00,
+	// 226 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x90, 0x41, 0x4a, 0xc5, 0x30,
+	0x10, 0x86, 0xc5, 0xc5, 0x5b, 0xc4, 0xba, 0x30, 0xba, 0x31, 0x68, 0x15, 0x0f, 0xd0, 0x85, 0x1e,
+	0x41, 0x41, 0x04, 0xc5, 0x62, 0x71, 0x1d, 0x6a, 0x3b, 0xd4, 0x81, 0x9a, 0xc4, 0xcc, 0x28, 0xf4,
+	0xa0, 0xde, 0x47, 0xda, 0xa4, 0x9a, 0x8a, 0x7d, 0xdb, 0x7c, 0xff, 0x7c, 0xf3, 0x67, 0x44, 0xd6,
+	0xda, 0xb7, 0x1a, 0x4d, 0xe1, 0xbc, 0x65, 0x2b, 0x45, 0xe7, 0x5d, 0x13, 0x5e, 0x94, 0xec, 0x80,
+	0x35, 0x81, 0xff, 0xc4, 0x06, 0x28, 0x70, 0x75, 0x4c, 0xaf, 0xb5, 0x07, 0x8d, 0x2d, 0x18, 0x46,
+	0x1e, 0x74, 0x8f, 0xc4, 0x11, 0x1d, 0x5a, 0x07, 0x46, 0x3b, 0x4b, 0xc8, 0x68, 0xa3, 0x4f, 0x1d,
+	0x35, 0xbd, 0x25, 0xf8, 0xf3, 0x7a, 0xf9, 0xb5, 0x2b, 0x36, 0x37, 0xd3, 0x12, 0xf9, 0x20, 0xf6,
+	0x6e, 0x81, 0xab, 0xb8, 0x45, 0xe6, 0xc5, 0x6f, 0x81, 0x22, 0x01, 0x4f, 0xf0, 0xfe, 0x01, 0xc4,
+	0xea, 0x64, 0x95, 0xbb, 0x7e, 0xb8, 0xd8, 0x91, 0xcf, 0xe2, 0xa0, 0x1a, 0x1b, 0xde, 0xc5, 0x82,
+	0xf7, 0x48, 0x2c, 0xcf, 0xd2, 0xa1, 0x94, 0xcc, 0xd6, 0xd3, 0xf5, 0x40, 0xd0, 0x96, 0x22, 0x7b,
+	0x74, 0x60, 0xca, 0xf8, 0x8d, 0xa5, 0x31, 0x25, 0xff, 0x1a, 0x97, 0x81, 0x60, 0xac, 0xc4, 0xfe,
+	0xf5, 0x78, 0x9a, 0x1f, 0xe5, 0x79, 0x3a, 0xb1, 0x40, 0xb3, 0x33, 0xdf, 0x92, 0x98, 0xa4, 0x2f,
+	0x9b, 0xe9, 0xbc, 0x57, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x47, 0x85, 0x81, 0x1e, 0xd4, 0x01,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -577,8 +63,8 @@ type DomainClient interface {
 	ShareIdentityList(ctx context.Context, in *IdentityListRequest, opts ...grpc.CallOption) (*IdentityListReply, error)
 	// OpenPosition declares the new service which is needed and requests Appointments
 	OpenPosition(ctx context.Context, in *OpenPositionRequest, opts ...grpc.CallOption) (*OpenPositionReply, error)
-	// OfferPosition appoints the server to host a service
-	OfferPosition(ctx context.Context, in *OfferPositionRequest, opts ...grpc.CallOption) (*OfferPositionReply, error)
+	// ClosePosition ends an election and informs if the position was awarded
+	ClosePosition(ctx context.Context, in *ClosePositionRequest, opts ...grpc.CallOption) (*ClosePositionReply, error)
 }
 
 type domainClient struct {
@@ -616,9 +102,9 @@ func (c *domainClient) OpenPosition(ctx context.Context, in *OpenPositionRequest
 	return out, nil
 }
 
-func (c *domainClient) OfferPosition(ctx context.Context, in *OfferPositionRequest, opts ...grpc.CallOption) (*OfferPositionReply, error) {
-	out := new(OfferPositionReply)
-	err := c.cc.Invoke(ctx, "/grpcdomain.Domain/OfferPosition", in, out, opts...)
+func (c *domainClient) ClosePosition(ctx context.Context, in *ClosePositionRequest, opts ...grpc.CallOption) (*ClosePositionReply, error) {
+	out := new(ClosePositionReply)
+	err := c.cc.Invoke(ctx, "/grpcdomain.Domain/ClosePosition", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -633,8 +119,25 @@ type DomainServer interface {
 	ShareIdentityList(context.Context, *IdentityListRequest) (*IdentityListReply, error)
 	// OpenPosition declares the new service which is needed and requests Appointments
 	OpenPosition(context.Context, *OpenPositionRequest) (*OpenPositionReply, error)
-	// OfferPosition appoints the server to host a service
-	OfferPosition(context.Context, *OfferPositionRequest) (*OfferPositionReply, error)
+	// ClosePosition ends an election and informs if the position was awarded
+	ClosePosition(context.Context, *ClosePositionRequest) (*ClosePositionReply, error)
+}
+
+// UnimplementedDomainServer can be embedded to have forward compatible implementations.
+type UnimplementedDomainServer struct {
+}
+
+func (*UnimplementedDomainServer) GetServices(ctx context.Context, req *GetServicesRequest) (*GetServicesReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetServices not implemented")
+}
+func (*UnimplementedDomainServer) ShareIdentityList(ctx context.Context, req *IdentityListRequest) (*IdentityListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ShareIdentityList not implemented")
+}
+func (*UnimplementedDomainServer) OpenPosition(ctx context.Context, req *OpenPositionRequest) (*OpenPositionReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OpenPosition not implemented")
+}
+func (*UnimplementedDomainServer) ClosePosition(ctx context.Context, req *ClosePositionRequest) (*ClosePositionReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClosePosition not implemented")
 }
 
 func RegisterDomainServer(s *grpc.Server, srv DomainServer) {
@@ -695,20 +198,20 @@ func _Domain_OpenPosition_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Domain_OfferPosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(OfferPositionRequest)
+func _Domain_ClosePosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClosePositionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DomainServer).OfferPosition(ctx, in)
+		return srv.(DomainServer).ClosePosition(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpcdomain.Domain/OfferPosition",
+		FullMethod: "/grpcdomain.Domain/ClosePosition",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DomainServer).OfferPosition(ctx, req.(*OfferPositionRequest))
+		return srv.(DomainServer).ClosePosition(ctx, req.(*ClosePositionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -730,8 +233,8 @@ var _Domain_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Domain_OpenPosition_Handler,
 		},
 		{
-			MethodName: "OfferPosition",
-			Handler:    _Domain_OfferPosition_Handler,
+			MethodName: "ClosePosition",
+			Handler:    _Domain_ClosePosition_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

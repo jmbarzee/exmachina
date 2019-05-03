@@ -15,7 +15,7 @@ import (
 func (d *Domain) watchIsolation(ctx context.Context) {
 	d.debugf(debugRoutines, "watchIsolation()\n")
 
-	ticker := time.NewTicker(d.config.TimingConfig.IsolationCheck.Get())
+	ticker := time.NewTicker(d.config.ConnectionConfig.IsolationCheck.Get())
 
 	var stopBroadcastSelf context.CancelFunc
 	stopBroadcastSelf = nil
@@ -25,13 +25,13 @@ Loop:
 		select {
 		case <-ticker.C:
 			// review all connections and check that we've heard recently enough
-			//d.debugf(debugLegion, "watchIsolation() reviewing connections \n")
+			//d.debugf(debugDomain, "watchIsolation() reviewing connections \n")
 
-			heartbeatTimeout := d.config.TimingConfig.HeartbeatCheck.Get()
-			isolationTimeout := d.config.TimingConfig.IsolationTimeout.Get()
+			heartbeatTimeout := d.config.ConnectionConfig.HeartbeatCheck.Get()
+			isolationTimeout := d.config.ConnectionConfig.IsolationTimeout.Get()
 
 			lonely := true
-			d.peerMap.Range(func(uuid string, peer *peer) bool {
+			d.peerMap.Range(func(uuid string, peer *Peer) bool {
 				d.debugf(debugLocks, "watchIsolation() pre-lock(%v)\n", uuid)
 				peer.RLock()
 				{
@@ -55,14 +55,14 @@ Loop:
 
 			if lonely && stopBroadcastSelf == nil {
 				// Look for a legion
-				d.debugf(debugLegion, "watchIsolation() discovered loneliness \n")
+				d.debugf(debugDomain, "watchIsolation() discovered loneliness \n")
 				var ctxBroadcast context.Context
 				ctxBroadcast, stopBroadcastSelf = context.WithCancel(ctx)
 
 				go d.broadcastSelf(ctxBroadcast)
 			} else if !lonely && stopBroadcastSelf != nil {
 				// Stop looking for a legion
-				d.debugf(debugLegion, "watchIsolation() no longer lonely \n")
+				d.debugf(debugDomain, "watchIsolation() no longer lonely \n")
 				stopBroadcastSelf()
 				stopBroadcastSelf = nil
 
@@ -119,6 +119,7 @@ Loop:
 		select {
 		case entry, ok := <-entries:
 			if !ok {
+				// channel closed
 				break Loop
 			}
 
@@ -162,9 +163,10 @@ Loop:
 			}
 			d.debugf(debugDefault, "listenForBroadcasts() connected to %v \n", entry.Instance)
 
-			newPeer := &peer{
+			newPeer := &Peer{
 				Identity: Identity{
 					UUID:        uuid,
+					Services:    make(map[string]ServiceIdentity),
 					IP:          ip,
 					Port:        port,
 					LastContact: time.Now(),

@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"time"
@@ -9,34 +10,37 @@ import (
 	pb "github.com/jmbarzee/domain/grpc"
 )
 
-func (d *Domain) generatePBI() (*pb.Identity, error) {
+func (d *Domain) generatePBI() *pb.Identity {
 	ip, err := d.config.IP.MarshalText()
 	if err != nil {
-		return nil, fmt.Errorf("couldn't marshal IP of self!\n")
+		d.Panic(errors.New("couldn't marshal IP of self"))
 	}
 
 	pbIdent := &pb.Identity{
 		UUID:        d.config.UUID,
 		Version:     d.config.Version.String(),
-		Services:    make([]*pb.Service, 0),
+		Services:    make([]*pb.ServiceIdentity, 0),
 		LastContact: time.Now().UnixNano(),
 		IP:          ip,
 		Port:        int32(d.config.Port),
 	}
 
-	d.debugf(debugLocks, "generatePBI() pre-lock(%v)\n", "ServicesLock")
-	d.ServicesLock.Lock()
+	d.debugf(debugLocks, "generatePBI() pre-lock(%v)\n", "servicesLock")
+	d.servicesLock.Lock()
 	{
-		d.debugf(debugLocks, "generatePBI() in-lock(%v)\n", "ServicesLock")
+		d.debugf(debugLocks, "generatePBI() in-lock(%v)\n", "servicesLock")
 		for name, service := range d.services {
-			service := &pb.Service{Name: name, Port: int32(service.Port)}
+			service := &pb.ServiceIdentity{
+				Name:        name,
+				Port:        int32(service.ServiceIdentity.Port),
+				LastContact: service.ServiceIdentity.LastContact.UnixNano()}
 			pbIdent.Services = append(pbIdent.Services, service)
 		}
 	}
-	d.ServicesLock.Unlock()
-	d.debugf(debugLocks, "generatePBI() post-lock(%v)\n", "ServicesLock")
+	d.servicesLock.Unlock()
+	d.debugf(debugLocks, "generatePBI() post-lock(%v)\n", "servicesLock")
 
-	return pbIdent, nil
+	return pbIdent
 }
 
 func (d *Domain) convertPBItoIMultiple(pbIdents []*pb.Identity) []Identity {
@@ -63,14 +67,17 @@ func convertPBItoI(pbIdent *pb.Identity) (Identity, error) {
 	ident := Identity{
 		UUID:        pbIdent.GetUUID(),
 		Version:     version,
-		Services:    make(map[string]int),
+		Services:    make(map[string]ServiceIdentity),
 		LastContact: time.Unix(0, pbIdent.GetLastContact()),
 		IP:          net.ParseIP(string(pbIdent.GetIP())),
 		Port:        int(pbIdent.GetPort()),
 	}
 
 	for _, service := range pbIdent.GetServices() {
-		ident.Services[service.GetName()] = int(service.GetPort())
+		ident.Services[service.GetName()] = ServiceIdentity{
+			Port:        int(pbIdent.GetPort()),
+			LastContact: time.Unix(0, service.GetLastContact()),
+		}
 	}
 	return ident, nil
 }
@@ -79,7 +86,7 @@ func convertPBItoI(pbIdent *pb.Identity) (Identity, error) {
 func (d *Domain) grabPBIMultiple() []*pb.Identity {
 	pbIdentities := make([]*pb.Identity, 0)
 
-	d.peerMap.Range(func(uuid string, peer *peer) bool {
+	d.peerMap.Range(func(uuid string, peer *Peer) bool {
 		var pbIdent *pb.Identity
 		d.debugf(debugLocks, "ShareIdentityList() pre-lock(%v)\n", peer.UUID)
 		peer.RLock()
@@ -112,14 +119,17 @@ func convertItoPBI(ident Identity) (*pb.Identity, error) {
 	pbIdent := &pb.Identity{
 		UUID:        ident.UUID,
 		Version:     ident.Version.String(),
-		Services:    make([]*pb.Service, 0),
+		Services:    make([]*pb.ServiceIdentity, 0),
 		LastContact: ident.LastContact.UnixNano(),
 		IP:          ip,
 		Port:        int32(ident.Port),
 	}
 
-	for name, port := range ident.Services {
-		service := &pb.Service{Name: name, Port: int32(port)}
+	for name, serviceIdentity := range ident.Services {
+		service := &pb.ServiceIdentity{
+			Name:        name,
+			Port:        int32(serviceIdentity.Port),
+			LastContact: serviceIdentity.LastContact.UnixNano()}
 		pbIdent.Services = append(pbIdent.Services, service)
 	}
 

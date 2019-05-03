@@ -11,40 +11,116 @@ traits = [
 	"lights",
 ]
 
-[timingConfig]
+[connectionConfig]
 	dialtimeout = 3000000	# All timings are in Nanoseconds
-	[timingConfig.isolationCheck]
-		upper = 10000000
-		lower = 5000000
-	[timingConfig.isolationTimeout]
-		upper = 100000000
-		lower = 50000000
-	[timingConfig.heartbeatCheck]
-		upper = 40000000
-		lower = 10000000
-	[timingConfig.serviceDependsCheck]
-		upper = 10000000
-		lower = 5000000
+	[connectionConfig.isolationCheck]
+		max = 1000000000
+		min = 50000000
+	[connectionConfig.isolationTimeout]
+		max = 10000000000
+		min = 500000000
+	[connectionConfig.heartbeatCheck]
+		max = 4000000000
+		min = 100000000
+
+[serviceHierarchyConfig]
+	requiredVotePercentage = 0.90
+	electionTimeout = 10000000000
+	[serviceHierarchyConfig.electionBackoff]
+		max = 10000000000
+		min = 1000000000
+	[serviceHierarchyConfig.dependencyCheck]
+		max = 10000000000
+		min = 500000000
 
 [services]
-	[services.light]
-		priority = "required"
-		depends = [
-			"lightFeed",
-		]
-		traits = [
-			"lights",
-		]
-	[services.lightFeed]
-		priority = "dependency"
-		depends = [] # TODO @jmbarzee insert music-info after testing
-		traits = [
-			"compute",
-		]
-	[services.musicInfo]
+	[services.webServer]
 		priority = "dependency"
 		depends = []
 		traits = [
 			"compute",
 		]
 
+	[services.musicInformationRetrival]
+		priority = "dependency"
+		depends = []
+		traits = [
+			"compute",
+		]
+
+	[services.experienceOrchastrator]
+		priority = "dependency"
+		depends = [
+			"musicInformationRetrival",
+			"webServer",
+		]
+		traits = [
+			"compute",
+		]
+
+	[services.lightOrchastrator]
+		priority = "dependency"
+		depends = [
+			"experienceOrchastrator",
+		]
+		traits = [
+			"compute",
+		]
+	[services.neoPixelBar]
+		priority = "required"
+		depends = [
+			"lightOrchastrator",
+		]
+		traits = [
+			"NeoPixelBar",
+		]
+
+	[services.soundOrchastrator]
+		priority = "dependency"
+		depends = [
+			"experienceOrchastrator",
+		]
+		traits = [
+			"compute",
+		]
+	[services.dmlSpeaker]
+		priority = "required"
+		depends = [
+			"soundOrchastrator",
+		]
+		traits = [
+			"dmlSpeaker",
+		]
+
+	[services.enviornmentOrchastrator]
+		priority = "dependency"
+		depends = [
+			"webServer",
+		]
+		traits = [
+			"compute",
+		]
+	[services.thermostat]
+		priority = "dependency"
+		depends = [
+			"enviornmentOrchastrator"
+		]
+		traits = [
+			"thermostat",
+		]
+	[services.shade]
+		priority = "dependency"
+		depends = [
+			"enviornmentOrchastrator"
+		]
+		traits = [
+			"shade",
+		]
+	[services.desk]
+		priority = "dependency"
+		depends = [
+			"enviornmentOrchastrator"
+		]
+		traits = [
+			"desk",
+		]

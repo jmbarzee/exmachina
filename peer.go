@@ -12,7 +12,7 @@ import (
 
 // peer represents another legionnaire in the Legion
 // all methods of peer assume that the lock is held by the caller
-type peer struct {
+type Peer struct {
 	Identity
 	// RWMutex locks everypart of a member except for the UUID (which is always read)
 	sync.RWMutex
@@ -21,14 +21,14 @@ type peer struct {
 }
 
 // newPeer returns a new peer with the passed identity
-func newPeer(identity Identity) *peer {
-	return &peer{
+func newPeer(identity Identity) *Peer {
+	return &Peer{
 		Identity: identity,
 	}
 }
 
 // reconnect assumes caller holds lock !!!
-func (p *peer) reconnect(ctx context.Context) error {
+func (p *Peer) reconnect(ctx context.Context) error {
 	if p.conn != nil {
 		err := p.conn.Close()
 		if err != nil {
@@ -49,11 +49,11 @@ func (p *peer) reconnect(ctx context.Context) error {
 }
 
 // addr assumes caller holds lock !!!
-func (p *peer) addr() string {
+func (p *Peer) addr() string {
 	return fmt.Sprintf("%s:%v", p.IP.String(), p.Port)
 }
 
-func (d *Domain) checkConnection(peer *peer) error {
+func (d *Domain) checkConnection(peer *Peer) error {
 	var err error
 
 	d.debugf(debugLocks, "peer.checkConnection() pre-lock(%v)\n", peer.UUID)
@@ -62,7 +62,7 @@ func (d *Domain) checkConnection(peer *peer) error {
 		d.debugf(debugLocks, "peer.checkConnection() in-lock(%v)\n", peer.UUID)
 
 		if peer.conn == nil {
-			ctx, cancel := context.WithTimeout(context.Background(), d.config.TimingConfig.DialTimeout)
+			ctx, cancel := context.WithTimeout(context.Background(), d.config.ConnectionConfig.DialTimeout)
 			defer cancel()
 			err = peer.reconnect(ctx)
 		} else {

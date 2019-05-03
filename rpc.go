@@ -3,7 +3,6 @@ package domain
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	pb "github.com/jmbarzee/domain/grpc"
@@ -16,22 +15,22 @@ func (d *Domain) GetServices(ctx context.Context, request *pb.GetServicesRequest
 	serviceName := request.Name
 	addrs := d.findService(serviceName)
 	reply := &pb.GetServicesReply{
-		Services: addrs,
+		Addresses: addrs,
 	}
 	return reply, nil
 }
 
 // rpcGetServices calls the grpc GetServices on the provided peer.
-// func (d *Domain) rpcGetServices(ctx context.Context, peer *peer) error {
-// 	return errors.New("UnImplemented!")
-// }
+func (d *Domain) rpcGetServices(ctx context.Context, peer *Peer) error {
+	return errors.New("UnImplemented!")
+}
 
 // ShareIdentityList implements grpc and allows the domain to use grpc.
 // ShareIdentityList serves as the heartbeat between domains.
 func (d *Domain) ShareIdentityList(ctx context.Context, request *pb.IdentityListRequest) (*pb.IdentityListReply, error) {
-	d.debugf(debugRPCs, "ShareIdentityList(ctx, %v)\n", request.GetIdentity().GetUUID())
+	// d.debugf(debugRPCs, "ShareIdentityList(ctx, %v)\n", request.GetIdentity().GetUUID())
 
-	d.Logf("rpcShareIdentityList <-   uuid:%v\n", request.GetIdentity().GetUUID())
+	// d.Logf("rpcShareIdentityList <-   uuid:%v\n", request.GetIdentity().GetUUID())
 
 	// Parse request
 	identity, err := convertPBItoI(request.GetIdentity())
@@ -55,13 +54,8 @@ func (d *Domain) ShareIdentityList(ctx context.Context, request *pb.IdentityList
 	}
 
 	// Prepare reply
-	pbIdent, err := d.generatePBI()
-	if err != nil {
-		d.Panic(fmt.Errorf("Couldn't convert own Identity to pb.Identity: %v", err.Error()))
-	}
-
 	reply := &pb.IdentityListReply{
-		Identity:     pbIdent,
+		Identity:     d.generatePBI(),
 		IdentityList: d.grabPBIMultiple(),
 	}
 
@@ -70,8 +64,8 @@ func (d *Domain) ShareIdentityList(ctx context.Context, request *pb.IdentityList
 }
 
 // rpcShareIdentityList calls the grpc ShareIdentityList on the provided peer.
-func (d *Domain) rpcShareIdentityList(ctx context.Context, peer *peer) error {
-	d.debugf(debugRPCs, "rpcShareIdentityList(%v)\n", peer.UUID)
+func (d *Domain) rpcShareIdentityList(ctx context.Context, peer *Peer) error {
+	// d.debugf(debugRPCs, "rpcShareIdentityList(%v)\n", peer.UUID)
 	err := d.checkConnection(peer)
 	if err != nil {
 		d.Logf("failed to checkConnection(%v) - %v\n", peer.UUID, err.Error())
@@ -86,18 +80,13 @@ func (d *Domain) rpcShareIdentityList(ctx context.Context, peer *peer) error {
 		d.debugf(debugLocks, "rpcShareIdentityList() in-lock(%v)\n", peer.UUID)
 
 		// Prepare request
-		pbIdent, err := d.generatePBI()
-		if err != nil {
-			d.Panic(fmt.Errorf("Couldn't convert own Identity to pb.Identity: %v", err.Error()))
-		}
-
 		request := &pb.IdentityListRequest{
-			Identity:     pbIdent,
+			Identity:     d.generatePBI(),
 			IdentityList: d.grabPBIMultiple(),
 		}
 
 		// Send RPC
-		d.Logf("rpcShareIdentityList   -> uuid:%v %v\n", peer.UUID, peer.addr())
+		// d.Logf("rpcShareIdentityList   -> uuid:%v %v\n", peer.UUID, peer.addr())
 		client := pb.NewDomainClient(peer.conn)
 		reply, err = client.ShareIdentityList(ctx, request)
 		if err != nil {
@@ -115,8 +104,14 @@ func (d *Domain) rpcShareIdentityList(ctx context.Context, peer *peer) error {
 	}
 
 	// Parse reply
-	// TODO handle reply Identity
 	identities := d.convertPBItoIMultiple(reply.GetIdentityList())
+	var identity Identity
+	identity, err = convertPBItoI(reply.GetIdentity())
+	if err != nil {
+		d.Logf(err.Error())
+	} else {
+		identities = append(identities, identity)
+	}
 	err = d.updateIdentities(identities)
 	if err != nil {
 		d.Logf("rpcShareIdentityList(%v) updateIdentities failed: %v\n", peer.UUID, err)
@@ -130,21 +125,157 @@ func (d *Domain) rpcShareIdentityList(ctx context.Context, peer *peer) error {
 // OpenPosition implements grpc and allows the domains to use grpc.
 // OpenPosition serves as the begining of an election for domains.
 func (d *Domain) OpenPosition(ctx context.Context, request *pb.OpenPositionRequest) (*pb.OpenPositionReply, error) {
-	return nil, errors.New("UnImplemented!")
+	// d.Logf("rpcOpenPosition <-   uuid:%v\n", request.GetIdentity().GetUUID())
+
+	reply := &pb.OpenPositionReply{}
+	var err error
+
+	d.debugf(debugLocks, "OpenPosition() pre-lock()\n")
+	d.electionsLock.Lock()
+	{
+		d.debugf(debugLocks, "OpenPosition() in-lock()\n")
+
+		if election, ok := d.elections[request.GetName()]; ok {
+			d.debugf(debugDefault, "  rejecting, found a pending election: %+v\n", election)
+			reply.Accept = false
+		} else {
+			election := Election{
+				Start:   time.Now(),
+				SelfRun: false,
+			} // Just acts as a tracking device
+			d.beginElection(context.Background(), request.GetName(), &election)
+			serviceConfig, err := d.serviceConfigFromName(request.GetName())
+			if err != nil {
+				d.Logf("election proposed for unknown service: %s\n", request.GetName())
+			} else {
+				reply.Proficiency = d.getProficiencyForService(serviceConfig)
+				reply.Accept = true
+			}
+		}
+	}
+	d.electionsLock.Unlock()
+	d.debugf(debugLocks, "OpenPosition() post-lock()\n")
+	return reply, err
 }
 
 // rpcOpenPosition calls the grpc OpenPosition on the provided peer.
-func (d *Domain) rpcOpenPosition(ctx context.Context, peer *peer) error {
-	return errors.New("UnImplemented!")
+func (d *Domain) rpcOpenPosition(ctx context.Context, peer *Peer, serviceName string, ballots chan<- Ballot) error {
+	d.debugf(debugRPCs, "rpcOpenPosition(%v)\n", peer.UUID)
+	err := d.checkConnection(peer)
+	if err != nil {
+		d.Logf("failed to checkConnection(%v) - %v\n", peer.UUID, err.Error())
+		return err
+	}
+
+	d.debugf(debugLocks, "rpcOpenPosition() pre-lock(%v)\n", peer.UUID)
+	peer.RLock()
+	{
+
+		request := &pb.OpenPositionRequest{
+			Identity: d.generatePBI(),
+			Name:     serviceName,
+		}
+
+		// Send RPC
+		// d.Logf("rpcOpenPosition   -> uuid:%v %v\n", peer.UUID, peer.addr())
+		client := pb.NewDomainClient(peer.conn)
+		reply, err := client.OpenPosition(ctx, request)
+		if err != nil {
+			d.debugf(debugDefault, "  ballot had error: %v\n", err)
+		} else {
+			peer.LastContact = time.Now()
+			ballots <- Ballot{
+				Accept:      reply.GetAccept(),
+				Proficiency: reply.GetProficiency(),
+				UUID:        peer.UUID,
+			}
+		}
+
+	}
+	peer.RUnlock()
+	d.debugf(debugLocks, "rpcOpenPosition() post-lock(%v)\n", peer.UUID)
+
+	if err != nil {
+		d.Logf("failed to rpcOpenPosition(%v) - %v\n", peer.UUID, err.Error())
+		return err
+	}
+
+	d.debugf(debugRPCs, "rpcOpenPosition(%v) returning\n", peer.UUID)
+	return nil
 }
 
-// OfferPosition implements grpc and allows the domains to use grpc.
-// OfferPosition serves as the begining of an election for domains.
-func (d *Domain) OfferPosition(ctx context.Context, request *pb.OfferPositionRequest) (*pb.OfferPositionReply, error) {
-	return nil, errors.New("UnImplemented!")
+// ClosePosition implements grpc and allows the domains to use grpc.
+// ClosePosition serves as the begining of an election for domains.
+func (d *Domain) ClosePosition(ctx context.Context, request *pb.ClosePositionRequest) (*pb.ClosePositionReply, error) {
+	// d.Logf("rpcClosePosition <-   uuid:%v\n", request.GetIdentity().GetUUID())
+	reply := &pb.ClosePositionReply{}
+	var err error
+
+	d.debugf(debugLocks, "ClosePosition() pre-lock()\n")
+	d.electionsLock.Lock()
+	{
+		d.debugf(debugLocks, "ClosePosition() in-lock()\n")
+
+		if _, ok := d.elections[request.GetName()]; ok {
+			delete(d.elections, request.GetName())
+			if request.GetElected() {
+				serviceConfig, err := d.serviceConfigFromName(request.GetName())
+				if err == nil {
+					err = d.startService(serviceConfig)
+					if err != nil {
+						d.Logf("Failed to start service after acceptance: %v", err)
+					} else {
+						reply.Accept = true
+					}
+				}
+			}
+		} else if request.GetElected() {
+			err = errors.New("Was elected with no knowledge of election process! did the election expire?")
+			d.Logf("%v", err)
+		}
+	}
+	d.electionsLock.Unlock()
+	d.debugf(debugLocks, "ClosePosition() post-lock()\n")
+
+	return reply, err
 }
 
-// rpcOfferPosition calls the grpc OfferPosition on the provided peer.
-func (d *Domain) rpcOfferPosition(ctx context.Context, peer *peer) error {
-	return errors.New("UnImplemented!")
+// rpcClosePosition calls the grpc ClosePosition on the provided peer.
+func (d *Domain) rpcClosePosition(ctx context.Context, peer *Peer, serviceName string, elected bool) error {
+	d.debugf(debugRPCs, "rpcClosePosition(%v)\n", peer.UUID)
+	err := d.checkConnection(peer)
+	if err != nil {
+		d.Logf("failed to rpcClosePosition(%v) - %v\n", peer.UUID, err.Error())
+		return err
+	}
+
+	d.debugf(debugLocks, "rpcClosePosition() pre-lock(%v)\n", peer.UUID)
+	peer.RLock()
+	{
+		request := &pb.ClosePositionRequest{
+			Identity: d.generatePBI(),
+			Name:     serviceName,
+			Elected:  elected,
+		}
+
+		// Send RPC
+		// d.Logf("rpcClosePosition   -> uuid:%v %v\n", peer.UUID, peer.addr())
+		client := pb.NewDomainClient(peer.conn)
+		_, err = client.ClosePosition(ctx, request)
+		if err != nil {
+			peer.LastContact = time.Now()
+			// TODO @jmbarzee check reply from ClosePosition
+		}
+
+	}
+	peer.RUnlock()
+	d.debugf(debugLocks, "rpcClosePosition() post-lock(%v)\n", peer.UUID)
+
+	if err != nil {
+		d.Logf("failed to rpcClosePosition(%v) - %v\n", peer.UUID, err.Error())
+		return err
+	}
+
+	d.debugf(debugRPCs, "rpcClosePosition(%v) returning\n", peer.UUID)
+	return nil
 }

@@ -31,14 +31,16 @@ type (
 		// IP is the port which the domain will be responding on
 		IP net.IP
 
-		// TimingConfig specifies all the timings needed for autoconnecting and heartbeats
-		TimingConfig TimingConfig
+		// ConnectionConfig specifies all the values needed for autoconnecting and heartbeats
+		ConnectionConfig ConnectionConfig
+		// ServiceHierarchyConfig specifies all the values needed for service elections
+		ServiceHierarchyConfig ServiceHierarchyConfig
 
 		// Log is where the logs from the domain are left.
 		Log *log.Logger
 	}
 
-	TimingConfig struct {
+	ConnectionConfig struct {
 		// DialTimeout is how long a domain will wait for a grpc.ClientConn to establish
 		DialTimeout time.Duration
 
@@ -49,16 +51,25 @@ type (
 
 		// HeartbeatCheck is the range of possible durations after which a domain will send a heartbeat
 		HeartbeatCheck RangeTiming
+	}
 
-		// ServiceDependsCheck is the range of possible durations between service dependency checks
-		ServiceDependsCheck RangeTiming
+	ServiceHierarchyConfig struct {
+		// ElectionTimeout is how long a domain will wait for an election to conclude
+		ElectionTimeout time.Duration
+		// RequiredPercentage is the number of nodes required for an election to move forward and select a nominee
+		RequiredVotePercentage float64
+		// ElectionTimeout is the range of possible durations after which a domain will cancel a pending election for a service
+		ElectionBackoff RangeTiming
+
+		// DependencyCheck is the range of possible durations between service dependency checks
+		DependencyCheck RangeTiming
 	}
 
 	RangeTiming struct {
-		// DialTimeout is the top of the possible durations
-		Upper time.Duration
-		// DialTimeout is the bottom of the possible durations
-		Lower time.Duration
+		// Max is the top of the possible durations
+		Max time.Duration
+		// Min is the bottom of the possible durations
+		Min time.Duration
 	}
 )
 
@@ -81,7 +92,7 @@ func (c DomainConfig) Check() error {
 		return fmt.Errorf("Port was not set")
 	}
 
-	err := c.TimingConfig.Check()
+	err := c.ConnectionConfig.Check()
 	if err != nil {
 		return err
 	}
@@ -111,36 +122,34 @@ func (c DomainConfig) Dump() string {
 	dumpMsg += "\t]\n"
 
 	dumpMsg += "\tAddress: " + c.IP.String() + ":" + strconv.Itoa(c.Port) + "\n" +
-		"\tTimingConfig: \n" +
-		c.TimingConfig.String()
+		"\tConnectionConfig: \n" +
+		c.ConnectionConfig.String() +
+		"\tServiceHierarchyConfig: \n" +
+		c.ServiceHierarchyConfig.String()
 	return dumpMsg
 }
 
-func (c TimingConfig) Check() error {
+func (c ConnectionConfig) Check() error {
 	if c.DialTimeout == 0 {
-		return fmt.Errorf("TimingConfig.DialTimeout was not set")
+		return fmt.Errorf("ConnectionConfig.DialTimeout was not set")
 	}
 
 	err := c.IsolationCheck.Check()
 	if err != nil {
-		return fmt.Errorf("TimingConfig.IsolationCheck.%v", err)
+		return fmt.Errorf("ConnectionConfig.IsolationCheck.%v", err)
 	}
 	err = c.IsolationTimeout.Check()
 	if err != nil {
-		return fmt.Errorf("TimingConfig.IsolationTimeout.%v", err)
+		return fmt.Errorf("ConnectionConfig.IsolationTimeout.%v", err)
 	}
 	err = c.HeartbeatCheck.Check()
 	if err != nil {
-		return fmt.Errorf("TimingConfig.HeartbeatCheck.%v", err)
-	}
-	err = c.ServiceDependsCheck.Check()
-	if err != nil {
-		return fmt.Errorf("TimingConfig.ServiceDependsCheck.%v", err)
+		return fmt.Errorf("ConnectionConfig.HeartbeatCheck.%v", err)
 	}
 	return nil
 }
 
-func (c TimingConfig) String() string {
+func (c ConnectionConfig) String() string {
 	dumpMsg := "\t\tDialTimeout: " + c.DialTimeout.String() + "\n" +
 		"\t\tIsolationCheck: " + c.IsolationCheck.String() + "\n" +
 		"\t\tIsolationTimeout: " + c.IsolationTimeout.String() + "\n" +
@@ -148,22 +157,48 @@ func (c TimingConfig) String() string {
 	return dumpMsg
 }
 
+func (c ServiceHierarchyConfig) Check() error {
+	if c.ElectionTimeout == 0 {
+		return fmt.Errorf("ServiceHierarchyConfig.ElectionTimeout was not set")
+	}
+	if c.RequiredVotePercentage == 0 {
+		return fmt.Errorf("ServiceHierarchyConfig.RequiredVotePercentage was not set")
+	}
+	err := c.ElectionBackoff.Check()
+	if err != nil {
+		return fmt.Errorf("ServiceHierarchyConfig.ElectionBackoff.%v", err)
+	}
+
+	err = c.DependencyCheck.Check()
+	if err != nil {
+		return fmt.Errorf("ServiceHierarchyConfig.DependencyCheck.%v", err)
+	}
+	return nil
+}
+
+func (c ServiceHierarchyConfig) String() string {
+	dumpMsg := "\t\tRequiredVotePercentage: " + strconv.FormatFloat(c.RequiredVotePercentage, 'f', 6, 64) + "\n" +
+		"\t\tElectionBackoff: " + c.ElectionBackoff.String() + "\n" +
+		"\t\tDependencyCheck: " + c.DependencyCheck.String() + "\n"
+	return dumpMsg
+}
+
 func (r RangeTiming) Check() error {
-	if r.Upper == 0 {
+	if r.Max == 0 {
 		return fmt.Errorf("Upper was not set")
 	}
-	if r.Lower == 0 {
+	if r.Min == 0 {
 		return fmt.Errorf("Lower was not set")
 	}
 	return nil
 }
 
 func (r RangeTiming) String() string {
-	return "(" + r.Lower.String() + "," + r.Upper.String() + ")"
+	return "(" + r.Min.String() + "," + r.Max.String() + ")"
 }
 
 func (r RangeTiming) Get() time.Duration {
-	intMax := int64(r.Upper)
-	intMin := int64(r.Lower)
+	intMax := int64(r.Max)
+	intMin := int64(r.Min)
 	return time.Duration(rand.Int63n(intMax-intMin) + intMin)
 }

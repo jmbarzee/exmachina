@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package grpcdomain;
+
+import "objects.proto";
+
+// OpenPositionRequest contains the name of the new open position
+message OpenPositionRequest {
+	// Identity is the identity of the client
+	Identity Identity = 1;
+
+	// Name is the name of the service which is open
+	string Name = 2;
+} 
+
+// OpenPositionReply contains the consent and proficiency of the servir
+message OpenPositionReply {
+	// Accept is whether or not the domain is willing to take the position
+	bool Accept = 1;
+	// Proficiency is the measure of the servers effectiveness of performing the task
+	int32 Proficiency = 2;
+}

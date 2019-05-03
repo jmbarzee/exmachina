@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package grpcdomain;
+
+import "objects.proto";
+
+
+// GetServicesRequest contains the name of the service the client is searching for
+message GetServicesRequest {
+	// Identity is the identity of the client
+	Identity Identity = 1;
+
+	// Name is the name of the service which is requested
+	string Name = 2;
+}
+
+// GetServicesReply contains the list of known addresses hosting the requested service
+message GetServicesReply {
+	// Addresses is the list of addresses of the requested service
+	repeated string Addresses = 1;
+}

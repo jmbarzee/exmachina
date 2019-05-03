@@ -19,11 +19,18 @@ type (
 		// System offers `system.Logf` and `system.Panic`.
 		system.System
 
-		// services is the list of services the domain currently offers
+		// services is the list of services the domain currently offers as
+		//    serviceName -> Service
 		services     map[string]Service
-		ServicesLock sync.Mutex
+		servicesLock sync.Mutex
 
-		// peerMap stores the members of a Dominion in a wrapped sync.map
+		// electionMap stores the current running elections as
+		//     serviceName -> Election
+		elections     map[string]*Election
+		electionsLock sync.Mutex
+
+		// peerMap stores the members of a Dominion in a wrapped sync.map as
+		//     GUID -> peer
 		peerMap *peerMap
 
 		// config does what it is. See DomainConfig for a clear understanding.
@@ -54,11 +61,12 @@ func NewDomain(ctx context.Context, config DomainConfig) (*Domain, error) {
 	}
 
 	d := &Domain{
-		config: config,
+		config:    config,
+		services:  make(map[string]Service, 0),
+		elections: make(map[string]*Election, 0),
 		peerMap: &peerMap{
 			sMap: &sync.Map{},
 		},
-		services: make(map[string]Service, 0),
 	}
 
 	// Initilize System (logging, context, and signals)
@@ -85,22 +93,24 @@ func NewDomain(ctx context.Context, config DomainConfig) (*Domain, error) {
 }
 
 const (
-	debugRoutines = "Routine"
-	debugRPCs     = "RPC"
-	debugLegion   = "Legion"
-	debugLocks    = "Locks"
-	debugFatal    = "Fatal"
-	debugDefault  = "Default"
+	debugRoutines       = "Routine"
+	debugRPCs           = "RPC"
+	debugDomain         = "Domain"
+	debugLocks          = "Locks"
+	debugLocksElections = "LocksElections"
+	debugFatal          = "Fatal"
+	debugDefault        = "Default"
 )
 
 func (d Domain) debugf(class, fmt string, args ...interface{}) {
 	const (
-		debug       = false
-		logRoutines = false
-		logRPCs     = false
-		logLegion   = true
-		logLocks    = false
-		logFatal    = true
+		debug             = true
+		logRoutines       = false
+		logRPCs           = false
+		logDomain         = false
+		logLocks          = false
+		logLocksElections = false
+		logFatal          = true
 	)
 
 	if !debug {
@@ -110,29 +120,37 @@ func (d Domain) debugf(class, fmt string, args ...interface{}) {
 	switch class {
 	case debugRoutines:
 		if logRoutines {
-			d.Logf(fmt, args...)
+			d.LogfGUID(fmt, args...)
 		}
 	case debugRPCs:
 		if logRPCs {
-			d.Logf(fmt, args...)
+			d.LogfGUID(fmt, args...)
 		}
-	case debugLegion:
-		if logLegion {
-			d.Logf(fmt, args...)
+	case debugDomain:
+		if logDomain {
+			d.LogfGUID(fmt, args...)
 		}
 	case debugLocks:
 		if logLocks {
-			d.Logf(fmt, args...)
+			d.LogfGUID(fmt, args...)
+		}
+	case debugLocksElections:
+		if logLocksElections {
+			d.LogfGUID(fmt, args...)
 		}
 	case debugFatal:
 		if logFatal {
-			d.Logf(fmt, args...)
+			d.LogfGUID(fmt, args...)
 		}
 	case debugDefault:
-		d.Logf(fmt, args...)
+		d.LogfGUID(fmt, args...)
 	default:
-		d.Logf("debugf, unknown class:"+fmt, args...)
+		d.LogfGUID("debugf, unknown class:"+fmt, args...)
 	}
+}
+
+func (d Domain) LogfGUID(fmt string, args ...interface{}) {
+	d.Logf(" - "+d.config.UUID+" - "+fmt, args...)
 }
 
 func getOutboundIP() (net.IP, error) {

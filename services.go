@@ -14,16 +14,15 @@ func (d *Domain) startRequiredServices() {
 		}
 
 		// Check to see if domain posses the nessecarry traits
-		hasAllTraits := true
-		for _, trait := range serviceConfig.Traits {
-			hasAllTraits = hasAllTraits && d.hasTrait(trait)
-		}
-		if !hasAllTraits {
+		if !d.hasTraitsForService(serviceConfig) {
 			continue
 		}
 
 		// Domain CAN and MUST start the service
-		d.startService(serviceConfig)
+		err := d.startService(serviceConfig)
+		if err != nil {
+			d.Logf("startRequiredServices(): startService() failed: %v", err)
+		}
 	}
 }
 
@@ -31,7 +30,7 @@ func (d *Domain) watchServicesDepnedencies(ctx context.Context) {
 	d.debugf(debugRoutines, "watchServicesDepnedencies()\n")
 	d.Logf("Starting required services")
 
-	ticker := time.NewTicker(d.config.TimingConfig.ServiceDependsCheck.Get())
+	ticker := time.NewTicker(d.config.ServiceHierarchyConfig.DependencyCheck.Get())
 
 Loop:
 	for {
@@ -40,24 +39,26 @@ Loop:
 			dependencies := make(map[string]int)
 
 			// Collect all dependencies
-			d.debugf(debugLocks, "watchServicesDepnedencies() pre-lock(%v)\n", "ServicesLock")
-			d.ServicesLock.Lock()
+			d.debugf(debugLocks, "watchServicesDepnedencies() pre-lock(%v)\n", "servicesLock")
+			d.servicesLock.Lock()
 			{
-				d.debugf(debugLocks, "watchServicesDepnedencies() in-lock(%v)\n", "ServicesLock")
+				d.debugf(debugLocks, "watchServicesDepnedencies() in-lock(%v)\n", "servicesLock")
 				for _, service := range d.services {
 					for _, dependency := range service.ServiceConfig.Depends {
 						dependencies[dependency]++
 					}
 				}
 			}
-			d.ServicesLock.Unlock()
-			d.debugf(debugLocks, "watchServicesDepnedencies() post-lock(%v)\n", "ServicesLock")
+			d.servicesLock.Unlock()
+			d.debugf(debugLocks, "watchServicesDepnedencies() post-lock(%v)\n", "servicesLock")
 
 			// Check that dependencies exist
 			for dependency := range dependencies {
 				services := d.findService(dependency)
 				if len(services) == 0 {
-					go d.fillPosition(ctx, dependency)
+					if _, ok := d.elections[dependency]; !ok {
+						go d.hostElection(ctx, dependency)
+					}
 				}
 			}
 
@@ -67,11 +68,6 @@ Loop:
 	}
 	d.debugf(debugRoutines, "watchServicesDepnedencies() stopping\n")
 }
-
-func (d *Domain) fillPosition(ctx context.Context, serviceName string) {
-	d.Logf("Holding Election for: %s", serviceName)
-}
-
 func (d *Domain) hasTrait(trait string) bool {
 	for _, ownTrait := range d.config.Traits {
 		if ownTrait == trait {
@@ -84,10 +80,10 @@ func (d *Domain) hasTrait(trait string) bool {
 func (d *Domain) findService(serviceName string) []string {
 	serviceAddrs := make([]string, 0)
 
-	d.debugf(debugLocks, "watchServicesDepnedencies() pre-lock(%v)\n", "ServicesLock")
-	d.ServicesLock.Lock()
+	d.debugf(debugLocks, "watchServicesDepnedencies() pre-lock(%v)\n", "servicesLock")
+	d.servicesLock.Lock()
 	{
-		d.debugf(debugLocks, "watchServicesDepnedencies() in-lock(%v)\n", "ServicesLock")
+		d.debugf(debugLocks, "watchServicesDepnedencies() in-lock(%v)\n", "servicesLock")
 		for ownedServiceName := range d.services {
 			if serviceName == ownedServiceName {
 				addr := fmt.Sprintf("%s:%v", d.config.IP.String(), d.config.Port)
@@ -95,10 +91,10 @@ func (d *Domain) findService(serviceName string) []string {
 			}
 		}
 	}
-	d.ServicesLock.Unlock()
-	d.debugf(debugLocks, "watchServicesDepnedencies() post-lock(%v)\n", "ServicesLock")
+	d.servicesLock.Unlock()
+	d.debugf(debugLocks, "watchServicesDepnedencies() post-lock(%v)\n", "servicesLock")
 
-	d.peerMap.Range(func(uuid string, peer *peer) bool {
+	d.peerMap.Range(func(uuid string, peer *Peer) bool {
 		d.debugf(debugLocks, "ShareIdentityList() pre-lock(%v)\n", peer.UUID)
 		peer.RLock()
 		{
