@@ -8,20 +8,20 @@ port = 9000 # doesn't matter for the most part, the domain will find other domai
 
 traits = [
 	"compute", # TODO @jmbarzee consider changing to allow for types of compute
-	"lights",
+	"neoPixelBar",
 ]
 
 [connectionConfig]
 	dialtimeout = 3000000	# All timings are in Nanoseconds
 	[connectionConfig.isolationCheck]
-		max = 1000000000
-		min = 50000000
-	[connectionConfig.isolationTimeout]
 		max = 10000000000
 		min = 500000000
+	[connectionConfig.isolationTimeout]
+		max = 100000000000
+		min = 5000000000
 	[connectionConfig.heartbeatCheck]
-		max = 4000000000
-		min = 100000000
+		max = 40000000000
+		min = 1000000000
 
 [serviceHierarchyConfig]
 	requiredVotePercentage = 0.90
@@ -72,7 +72,7 @@ traits = [
 			"lightOrchastrator",
 		]
 		traits = [
-			"NeoPixelBar",
+			"neoPixelBar",
 		]
 
 	[services.soundOrchastrator]
@@ -101,25 +101,25 @@ traits = [
 			"compute",
 		]
 	[services.thermostat]
-		priority = "dependency"
+		priority = "required"
 		depends = [
-			"enviornmentOrchastrator"
+			"enviornmentOrchastrator",
 		]
 		traits = [
 			"thermostat",
 		]
 	[services.shade]
-		priority = "dependency"
+		priority = "required"
 		depends = [
-			"enviornmentOrchastrator"
+			"enviornmentOrchastrator",
 		]
 		traits = [
 			"shade",
 		]
 	[services.desk]
-		priority = "dependency"
+		priority = "required"
 		depends = [
-			"enviornmentOrchastrator"
+			"enviornmentOrchastrator",
 		]
 		traits = [
 			"desk",

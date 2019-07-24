@@ -54,6 +54,16 @@ func (s *System) HandleSignals(ctx context.Context) {
 func (s *System) Panic(err error) {
 	s.Logf("System Panic!!! %v", err)
 	s.Halt()
+
+	// kill -pgid (-pid)
+	// ends all child processes. 90% certain (negative means groupID?)
+	// TODO @jmbarzee consider killing services individually after saving command objects
+	pgid, err := syscall.Getpgid(syscall.Getpid())
+	if err != nil {
+		panic(err)
+	}
+	syscall.Kill(-pgid, syscall.SIGKILL)
+
 	//panic(err)
 }
 

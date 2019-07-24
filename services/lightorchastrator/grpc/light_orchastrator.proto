@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package grpcdomain;
+
+/*		Command to rebuild from parent directory
+=========================================================
+
+protoc -I grpc/ --go_out=plugins=grpc:grpc \
+	light_orchastrator.proto 
+=========================================================
+*/
+
+service LightOrcharstrator {
+	// DisplayLights initiates 
+	rpc SubscribeLights(SubscribeLightsRequest) returns (stream SubscribeLightsReply) {}
+}
+
+// SubscribeLightsRequest contains the identifying information from the subscriber
+message SubscribeLightsRequest {
+	// ServiceName identifies the service which is subscribing to the service
+	string ServiceName = 1;
+
+} 
+
+// SubscribeLightsReply contains the time and series of RGBA colors which should be displayed
+message SubscribeLightsReply {
+	// DisplayTime is the time which the lights should be applied (UnixNano)
+	int64 DisplayTime = 1;
+
+	// Colors are the series of colors which should be displayed
+	repeated int32 Colors = 2;
+} 

@@ -9,6 +9,7 @@ import (
 func (d *Domain) startRequiredServices() {
 	d.Logf("Starting required services")
 	for _, serviceConfig := range d.config.Services {
+
 		if serviceConfig.Priority != Required {
 			continue
 		}
@@ -28,7 +29,6 @@ func (d *Domain) startRequiredServices() {
 
 func (d *Domain) watchServicesDepnedencies(ctx context.Context) {
 	d.debugf(debugRoutines, "watchServicesDepnedencies()\n")
-	d.Logf("Starting required services")
 
 	ticker := time.NewTicker(d.config.ServiceHierarchyConfig.DependencyCheck.Get())
 

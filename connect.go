@@ -189,15 +189,14 @@ Loop:
 	d.debugf(debugRoutines, "listenForOthers() stopping\n")
 }
 
-func (d *Domain) serveInLegion(ctx context.Context) {
-	d.debugf(debugRoutines, "serveInLegion()\n")
-	// TODO use or handle context
+func (d *Domain) buildDomain(ctx context.Context) {
+	d.debugf(debugRoutines, "buildDomain()\n")
 
 	address := fmt.Sprintf("%s:%v", "", d.config.Port)
 
 	lis, err := net.Listen("tcp", address)
 	if err != nil {
-		d.debugf(debugFatal, "serveInLegion() Failed to listen: %v\n", err)
+		d.debugf(debugFatal, "buildDomain() Failed to listen: %v\n", err)
 		d.Panic(err)
 	}
 
@@ -212,9 +211,9 @@ func (d *Domain) serveInLegion(ctx context.Context) {
 
 	reflection.Register(server)
 	if err := server.Serve(lis); err != nil {
-		d.debugf(debugFatal, "serveInLegion() Failed to serve: %v\n", err)
+		d.debugf(debugFatal, "buildDomain() Failed to serve: %v\n", err)
 		d.Panic(err)
 	}
 
-	d.debugf(debugRoutines, "serveInLegion() stopping\n")
+	d.debugf(debugRoutines, "buildDomain() stopping\n")
 }

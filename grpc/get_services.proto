@@ -7,11 +7,8 @@ import "objects.proto";
 
 // GetServicesRequest contains the name of the service the client is searching for
 message GetServicesRequest {
-	// Identity is the identity of the client
-	Identity Identity = 1;
-
 	// Name is the name of the service which is requested
-	string Name = 2;
+	string Name = 1;
 }
 
 // GetServicesReply contains the list of known addresses hosting the requested service

@@ -73,21 +73,21 @@ func NewDomain(ctx context.Context, config DomainConfig) (*Domain, error) {
 	var systemCtx context.Context
 	systemCtx, d.System = system.NewSystem(ctx, config.Log)
 
-	// Start Auto Connecting Routines
-	go d.watchIsolation(systemCtx)
-	go d.listenForBroadcasts(systemCtx)
-	go d.serveInLegion(systemCtx)
-
-	// Start Services
-	d.startRequiredServices()
-	go d.watchServicesDepnedencies(systemCtx)
-
 	// Dump Stats
 	startMsg := "I seek to join the Dominion\n" +
 		d.config.Dump() +
 		"The Dominion ever expands!\n"
 
 	d.Logf(startMsg)
+
+	// Start Auto Connecting Routines
+	go d.watchIsolation(systemCtx)
+	go d.listenForBroadcasts(systemCtx)
+	go d.buildDomain(systemCtx)
+
+	// Start Services
+	d.startRequiredServices()
+	go d.watchServicesDepnedencies(systemCtx)
 
 	return d, nil
 }

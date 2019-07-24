@@ -75,7 +75,7 @@ func (d *Domain) rpcShareIdentityList(ctx context.Context, peer *Peer) error {
 	var reply *pb.IdentityListReply
 
 	d.debugf(debugLocks, "rpcShareIdentityList() pre-lock(%v)\n", peer.UUID)
-	peer.RLock() // Dirty Lock
+	peer.RLock()
 	{
 		d.debugf(debugLocks, "rpcShareIdentityList() in-lock(%v)\n", peer.UUID)
 

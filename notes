@@ -1,0 +1,24 @@
+Group by:
+ - Position
+ - Oriontation
+ - Device
+ - Super Device
+
+
+
+
+
+ Effect.Evaluate(Device, Time) {
+
+     if (...) { // Filter
+         Device.Render(Effect, Time)
+     }
+ }
+
+ Device.Render(Effect, Time) {
+     if (Subdevice) {
+         Effect.Evaluate(Subdevice, Time)
+     } else {
+         // Gather
+     }
+ }

@@ -1,10 +1,10 @@
-package musicinfo
+package webserver
 
 import (
-	"errors"
 	"log"
 )
 
 func Start(port int, log *log.Logger) error {
-	return errors.New("Unimplemented!")
+	log.Printf("Starting webserver!")
+	return nil
 }

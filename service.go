@@ -5,9 +5,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jmbarzee/domain/services/light"
-	"github.com/jmbarzee/domain/services/lightfeed"
-	"github.com/jmbarzee/domain/services/musicinfo"
+	"github.com/jmbarzee/domain/services/dmlspeaker"
+	"github.com/jmbarzee/domain/services/envorchastrator"
+	"github.com/jmbarzee/domain/services/exporchastrator"
+	"github.com/jmbarzee/domain/services/lightorchastrator"
+	"github.com/jmbarzee/domain/services/musicinforet"
+	neopixelbar "github.com/jmbarzee/domain/services/neopixelbar/start"
+	"github.com/jmbarzee/domain/services/soundorchastrator"
+	"github.com/jmbarzee/domain/services/webserver"
 )
 
 type (
@@ -104,12 +109,34 @@ func (d *Domain) startService(config ServiceConfig) error {
 		}
 
 		switch config.Name {
-		case "light":
-			err = light.Start(port, d.Log)
-		case "lightFeed":
-			err = lightfeed.Start(port, d.Log)
-		case "musicInfo":
-			err = musicinfo.Start(port, d.Log)
+		case "webServer":
+			err = webserver.Start(port, d.Log)
+
+		case "musicInformationRetrival":
+			err = musicinforet.Start(port, d.Log)
+
+		case "experienceOrchastrator":
+			err = exporchastrator.Start(port, d.Log)
+
+		case "lightOrchastrator":
+			err = lightorchastrator.Start(port, d.Log)
+		case "neoPixelBar":
+			err = neopixelbar.Start(port, d.config.Port, d.Log)
+
+		case "soundOrchastrator":
+			err = soundorchastrator.Start(port, d.Log)
+		case "dmlSpeaker":
+			err = dmlspeaker.Start(port, d.Log)
+
+		case "enviornmentOrchastrator":
+			err = envorchastrator.Start(port, d.Log)
+		case "thermostat":
+			// err = neopixelbar.Start(port, d.Log)
+		case "shade":
+			// err = neopixelbar.Start(port, d.Log)
+		case "desk":
+			// err = neopixelbar.Start(port, d.Log)
+
 		default:
 			err = fmt.Errorf("Unknown service! (%s)", config.Name)
 		}
