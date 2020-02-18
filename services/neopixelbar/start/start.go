@@ -4,16 +4,20 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
+	"path"
 	"strconv"
 )
 
 func Start(port int, domainPort int, log *log.Logger) error {
 	log.Printf("Starting neopixelbar!")
 
-	cmdString := "go run $GOPATH/src/github.com/jmbarzee/domain/services/neopixelbar/cmd/run/main.go"
+	neoPixelPath := "src/github.com/jmbarzee/domain/services/neopixelbar/cmd/run/main.go"
+	path := path.Join(os.Getenv("GOPATH"), neoPixelPath)
+	gopath := "/usr/local/go/bin/go"
 
-	cmd := exec.Command(cmdString, strconv.Itoa(port), strconv.Itoa(domainPort))
+	cmd := exec.Command(gopath, "run", path, strconv.Itoa(port), strconv.Itoa(domainPort))
 	// pgid is same as parents by default
 
 	err := cmd.Start()

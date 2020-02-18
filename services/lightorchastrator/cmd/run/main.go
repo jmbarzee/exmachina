@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 	"strconv"
+
+	"github.com/jmbarzee/domain/services/lightorchastrator"
 )
 
 func main() {
@@ -19,4 +21,6 @@ func main() {
 		panic(err)
 	}
 
+	lo := lightorchastrator.NewLightOrch(port, domainPort)
+	lo.Run()
 }

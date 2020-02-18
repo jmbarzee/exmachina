@@ -28,7 +28,7 @@ traits = [
 	electionTimeout = 10000000000
 	[serviceHierarchyConfig.electionBackoff]
 		max = 10000000000
-		min = 1000000000
+		min = 1000000
 	[serviceHierarchyConfig.dependencyCheck]
 		max = 10000000000
 		min = 500000000

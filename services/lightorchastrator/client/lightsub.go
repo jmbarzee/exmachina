@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	displayFPS                = 60
+	displayFPS                = 30
 	displayRate time.Duration = time.Second / displayFPS
 
 	gpioPin    = 18

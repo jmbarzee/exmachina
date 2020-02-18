@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/jmbarzee/domain"
+	"github.com/jmbarzee/domain/server"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 		panic(err)
 	}
 
-	config, err := domain.ConfigFromTOML(tomlBytes)
+	config, err := server.ConfigFromTOML(tomlBytes)
 	if err != nil {
 		panic(err)
 	}
@@ -30,12 +30,12 @@ func main() {
 	for i := 0; i < 3; i++ {
 		config.UUID = "GUID-" + strconv.Itoa(i)
 		config.Port += 100
-		_, err = domain.NewDomain(context.TODO(), config)
+		_, err = server.NewDomain(context.TODO(), config)
 		if err != nil {
 			panic(err)
 		}
 	}
 
-	c := time.After(time.Second * 20)
+	c := time.After(time.Second * 60)
 	<-c
 }

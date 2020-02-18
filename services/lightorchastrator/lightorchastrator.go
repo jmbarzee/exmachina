@@ -1,4 +1,4 @@
-package lightorch
+package lightorchastrator
 
 import (
 	"context"
@@ -6,12 +6,19 @@ import (
 	"fmt"
 	"net"
 	"sync"
+	"time"
 
 	"github.com/jmbarzee/domain/services"
+	"github.com/jmbarzee/domain/services/lightorchastrator/effect"
+	"github.com/jmbarzee/domain/services/lightorchastrator/effect/devices"
 	pb "github.com/jmbarzee/domain/services/lightorchastrator/grpc"
-	"github.com/jmbarzee/domain/services/lightorchastrator/lightdevice"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+)
+
+const (
+	displayFPS                = 30
+	displayRate time.Duration = time.Second / displayFPS
 )
 
 type (
@@ -25,9 +32,6 @@ type (
 		Body   LightSub
 		Server pb.LightOrcharstrator_SubscribeLightsServer
 		Kill   context.CancelFunc
-	}
-
-	LightSub interface {
 	}
 )
 
@@ -49,7 +53,14 @@ func (l *LightOrch) Run() {
 }
 
 func (l *LightOrch) orchastrate() {
-	
+	ticker := time.NewTicker(displayRate)
+
+	for <-ticker {
+		for _, sub := l.Subs {
+			
+		}
+	}
+
 }
 
 func (l *LightOrch) listen() {
@@ -75,7 +86,8 @@ func (l *LightOrch) SubscribeLights(request *pb.SubscribeLightsRequest, server p
 	var body LightSub
 	switch serviceName {
 	case "neoPixelBar":
-		body = lightsubs.NewNeoPixelBar()
+		body = devices.NewNeoPixelBar()
+		// TODO @jmbarzee add other devices for start up here
 	}
 	if body == nil {
 		return errors.New("Unrecognized Service Name")
@@ -90,6 +102,7 @@ func (l *LightOrch) SubscribeLights(request *pb.SubscribeLightsRequest, server p
 	l.Subs = append(l.Subs, sub)
 	l.Unlock()
 
+	// hold connection open until it is ended elsewhere 
 	<-ctx.Done()
 	return nil //TODO @jmbarzee consider sending error message
 }
