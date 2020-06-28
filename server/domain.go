@@ -40,7 +40,7 @@ type (
 )
 
 // NewDomain creates a new Domain, to correctly build the Domain, just initilize
-func NewDomain(ctx context.Context, config DomainConfig) (*Domain, error) {
+func NewDomain(config DomainConfig) (*Domain, error) {
 
 	// Check config
 	err := config.Check()
@@ -60,18 +60,20 @@ func NewDomain(ctx context.Context, config DomainConfig) (*Domain, error) {
 		return nil, fmt.Errorf("failed to find Local IP: %v\n", err.Error())
 	}
 
-	d := &Domain{
+	return &Domain{
 		config:    config,
 		services:  make(map[string]Service, 0),
 		elections: make(map[string]*Election, 0),
 		peerMap: &peerMap{
 			sMap: &sync.Map{},
 		},
-	}
+	}, nil
+}
 
+func (d Domain) Run(ctx context.Context) {
 	// Initilize System (logging, context, and signals)
 	var systemCtx context.Context
-	systemCtx, d.System = system.NewSystem(ctx, config.Log)
+	systemCtx, d.System = system.NewSystem(ctx, d.config.Log)
 
 	// Dump Stats
 	startMsg := "I seek to join the Dominion\n" +
@@ -87,9 +89,7 @@ func NewDomain(ctx context.Context, config DomainConfig) (*Domain, error) {
 
 	// Start Services
 	d.startRequiredServices()
-	go d.watchServicesDepnedencies(systemCtx)
-
-	return d, nil
+	d.watchServicesDepnedencies(systemCtx)
 }
 
 const (

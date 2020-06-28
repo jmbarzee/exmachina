@@ -6,12 +6,14 @@ import (
 	"time"
 
 	pb "github.com/jmbarzee/domain/server/grpc"
+	"github.com/jmbarzee/domain/server/identity"
 )
 
 // GetServices implements grpc and allows the domains to use grpc.
 // GetServices serves as the directory of services hosted on all domains.
 // GetServices is called by services hosted on a single domain to find their dependencies.
 func (d *Domain) GetServices(ctx context.Context, request *pb.GetServicesRequest) (*pb.GetServicesReply, error) {
+	d.Logf("[RPC] GetServices")
 	serviceName := request.Name
 	addrs := d.findService(serviceName)
 	reply := &pb.GetServicesReply{
@@ -20,32 +22,44 @@ func (d *Domain) GetServices(ctx context.Context, request *pb.GetServicesRequest
 	return reply, nil
 }
 
-// rpcGetServices calls the grpc GetServices on the provided peer.
-func (d *Domain) rpcGetServices(ctx context.Context, peer *Peer) error {
-	return errors.New("UnImplemented!")
+// DumpIdentityList implements grpc and allows the domain to use grpc.
+// DumpIdentityList serves as the heartbeat between domains.
+func (d *Domain) DumpIdentityList(ctx context.Context, request *pb.DumpIdentityListRequest) (*pb.IdentityListReply, error) {
+	d.Logf("[RPC] DumpIdentityList")
+
+	// Prepare reply
+	reply := &pb.IdentityListReply{
+		Identity:     d.generatePBI(),
+		IdentityList: d.generatePeersPBI(),
+	}
+
+	d.debugf(debugRPCs, "DumpIdentityList(ctx) returning\n")
+	return reply, nil
 }
 
 // ShareIdentityList implements grpc and allows the domain to use grpc.
 // ShareIdentityList serves as the heartbeat between domains.
 func (d *Domain) ShareIdentityList(ctx context.Context, request *pb.IdentityListRequest) (*pb.IdentityListReply, error) {
-	// d.debugf(debugRPCs, "ShareIdentityList(ctx, %v)\n", request.GetIdentity().GetUUID())
-
-	// d.Logf("rpcShareIdentityList <-   uuid:%v\n", request.GetIdentity().GetUUID())
+	d.Logf("[RPC] ShareIdentityList from %v", request.GetIdentity().GetUUID())
 
 	// Parse request
-	identity, err := convertPBItoI(request.GetIdentity())
+	ident, err := identity.ConvertPBItoI(request.GetIdentity())
 	if err != nil {
 		d.Logf("Failed to parse identity from request: %v", err.Error())
 		return nil, err
 	}
-	identity.LastContact = time.Now()
-	err = d.updateIdentity(identity)
+	ident.LastContact = time.Now()
+	err = d.updateIdentity(ident)
 	if err != nil {
 		d.Logf("rpc failed to update identity of sender: %v", err)
 		return nil, err
 	}
 
-	identities := d.convertPBItoIMultiple(request.GetIdentityList())
+	identities, err := identity.ConvertPBItoIMultiple(request.GetIdentityList())
+	if err != nil {
+		d.Logf("rpc failed to convert identities of sender's peers: %v", err)
+		return nil, err
+	}
 
 	// Handle RPC
 	err = d.updateIdentities(identities)
@@ -56,7 +70,7 @@ func (d *Domain) ShareIdentityList(ctx context.Context, request *pb.IdentityList
 	// Prepare reply
 	reply := &pb.IdentityListReply{
 		Identity:     d.generatePBI(),
-		IdentityList: d.grabPBIMultiple(),
+		IdentityList: d.generatePeersPBI(),
 	}
 
 	d.debugf(debugRPCs, "ShareIdentityList(ctx, %v) returning\n", request.GetIdentity().GetUUID())
@@ -82,7 +96,7 @@ func (d *Domain) rpcShareIdentityList(ctx context.Context, peer *Peer) error {
 		// Prepare request
 		request := &pb.IdentityListRequest{
 			Identity:     d.generatePBI(),
-			IdentityList: d.grabPBIMultiple(),
+			IdentityList: d.generatePeersPBI(),
 		}
 
 		// Send RPC
@@ -104,13 +118,16 @@ func (d *Domain) rpcShareIdentityList(ctx context.Context, peer *Peer) error {
 	}
 
 	// Parse reply
-	identities := d.convertPBItoIMultiple(reply.GetIdentityList())
-	var identity Identity
-	identity, err = convertPBItoI(reply.GetIdentity())
+	identities, err := identity.ConvertPBItoIMultiple(reply.GetIdentityList())
+	if err != nil {
+		return err
+	}
+
+	ident, err := identity.ConvertPBItoI(reply.GetIdentity())
 	if err != nil {
 		d.Logf(err.Error())
 	} else {
-		identities = append(identities, identity)
+		identities = append(identities, ident)
 	}
 	err = d.updateIdentities(identities)
 	if err != nil {
@@ -125,7 +142,7 @@ func (d *Domain) rpcShareIdentityList(ctx context.Context, peer *Peer) error {
 // OpenPosition implements grpc and allows the domains to use grpc.
 // OpenPosition serves as the begining of an election for domains.
 func (d *Domain) OpenPosition(ctx context.Context, request *pb.OpenPositionRequest) (*pb.OpenPositionReply, error) {
-	// d.Logf("rpcOpenPosition <-   uuid:%v\n", request.GetIdentity().GetUUID())
+	d.Logf("[RPC] OpenPosition from %v", request.GetIdentity().GetUUID())
 
 	reply := &pb.OpenPositionReply{}
 	var err error
@@ -207,7 +224,8 @@ func (d *Domain) rpcOpenPosition(ctx context.Context, peer *Peer, serviceName st
 // ClosePosition implements grpc and allows the domains to use grpc.
 // ClosePosition serves as the begining of an election for domains.
 func (d *Domain) ClosePosition(ctx context.Context, request *pb.ClosePositionRequest) (*pb.ClosePositionReply, error) {
-	// d.Logf("rpcClosePosition <-   uuid:%v\n", request.GetIdentity().GetUUID())
+	d.Logf("[RPC] ClosePosition from %v", request.GetIdentity().GetUUID())
+
 	reply := &pb.ClosePositionReply{}
 	var err error
 

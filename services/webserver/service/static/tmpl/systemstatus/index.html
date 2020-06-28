@@ -1,0 +1,10 @@
+<h1>Identity</h1>
+{{template "service" .Identity}}
+<h1>Identities</h1>
+<ol>
+{{ range .Identities }}
+    <li>
+    {{ template "service" . }}
+    </li>
+{{ end }}
+</ol>

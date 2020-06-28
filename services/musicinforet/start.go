@@ -4,7 +4,7 @@ import (
 	"log"
 )
 
-func Start(port int, log *log.Logger) error {
+func Start(port int, domainPort int) error {
 	log.Printf("Starting musicinforet!")
 	return nil
 }

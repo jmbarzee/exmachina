@@ -71,6 +71,9 @@ func (d *Domain) endElectionAfter(ctx context.Context, serviceName string) {
 }
 
 func (d *Domain) hostElection(ctx context.Context, serviceName string) {
+	if len(d.findService(serviceName)) == 0 {
+		d.Logf("Found %s at another address", serviceName)
+	}
 	holdElection := false
 	var electionCtx context.Context
 	var closePolls context.CancelFunc

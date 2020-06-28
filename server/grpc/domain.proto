@@ -3,7 +3,7 @@ syntax = "proto3";
 package grpcdomain;
 
 import "get_services.proto";
-import "share_identity_list.proto";
+import "identity_list.proto";
 import "open_position.proto";
 import "close_position.proto";
 
@@ -13,7 +13,7 @@ import "close_position.proto";
 protoc -I grpc/ --go_out=plugins=grpc:grpc \
 	domain.proto \
 	get_services.proto \
-	share_identity_list.proto \
+	identity_list.proto \
 	open_position.proto \
 	close_position.proto \
 	objects.proto
@@ -26,8 +26,11 @@ service Domain {
 	// GetServices returns the availible services and their locations
 	rpc GetServices (GetServicesRequest) returns (GetServicesReply) {}
 
-	// ShareIdentityList Requests the IdentityList which the domain is aware of
+	// ShareIdentityList Exchanges the IdentityList which the domain is aware of
 	rpc ShareIdentityList (IdentityListRequest) returns (IdentityListReply) {}
+
+	// DumpIdentityList Dumps the IdentityList which the domain is aware of
+	rpc DumpIdentityList (DumpIdentityListRequest) returns (IdentityListReply) {}
 
 	// OpenPosition declares the new service which is needed and requests Appointments
 	rpc OpenPosition (OpenPositionRequest) returns (OpenPositionReply) {}

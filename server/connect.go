@@ -8,6 +8,7 @@ import (
 
 	"github.com/grandcat/zeroconf"
 	pb "github.com/jmbarzee/domain/server/grpc"
+	"github.com/jmbarzee/domain/server/identity"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -164,9 +165,9 @@ Loop:
 			d.debugf(debugDefault, "listenForBroadcasts() connected to %v \n", entry.Instance)
 
 			newPeer := &Peer{
-				Identity: Identity{
+				Identity: identity.Identity{
 					UUID:        uuid,
-					Services:    make(map[string]ServiceIdentity),
+					Services:    make(map[string]identity.ServiceIdentity),
 					IP:          ip,
 					Port:        port,
 					LastContact: time.Now(),

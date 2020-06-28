@@ -5,25 +5,21 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jmbarzee/domain/services/dmlspeaker"
+	"github.com/jmbarzee/domain/server/identity"
 	"github.com/jmbarzee/domain/services/envorchastrator"
 	"github.com/jmbarzee/domain/services/exporchastrator"
-	lightorchastrator "github.com/jmbarzee/domain/services/lightorchastrator/start"
+	"github.com/jmbarzee/domain/services/lightorchastrator"
 	"github.com/jmbarzee/domain/services/musicinforet"
-	neopixelbar "github.com/jmbarzee/domain/services/neopixelbar/start"
+	"github.com/jmbarzee/domain/services/nplight"
 	"github.com/jmbarzee/domain/services/soundorchastrator"
+	"github.com/jmbarzee/domain/services/speaker"
 	"github.com/jmbarzee/domain/services/webserver"
 )
 
 type (
 	Service struct {
-		ServiceIdentity ServiceIdentity
+		ServiceIdentity identity.ServiceIdentity
 		ServiceConfig   ServiceConfig
-	}
-
-	ServiceIdentity struct {
-		Port        int
-		LastContact time.Time
 	}
 
 	ServiceConfig struct {
@@ -110,26 +106,26 @@ func (d *Domain) startService(config ServiceConfig) error {
 
 		switch config.Name {
 		case "webServer":
-			err = webserver.Start(port, d.Log)
+			err = webserver.Start(port, d.config.Port)
 
 		case "musicInformationRetrival":
-			err = musicinforet.Start(port, d.Log)
+			err = musicinforet.Start(port, d.config.Port)
 
 		case "experienceOrchastrator":
-			err = exporchastrator.Start(port, d.Log)
+			err = exporchastrator.Start(port, d.config.Port)
 
 		case "lightOrchastrator":
-			err = lightorchastrator.Start(port, d.config.Port, d.Log)
-		case "neoPixelBar":
-			err = neopixelbar.Start(port, d.config.Port, d.Log)
+			err = lightorchastrator.Start(port, d.config.Port)
+		case "neoPixelLight":
+			err = nplight.Start(port, d.config.Port)
 
 		case "soundOrchastrator":
-			err = soundorchastrator.Start(port, d.Log)
+			err = soundorchastrator.Start(port, d.config.Port)
 		case "dmlSpeaker":
-			err = dmlspeaker.Start(port, d.Log)
+			err = speaker.Start(port, d.config.Port)
 
 		case "enviornmentOrchastrator":
-			err = envorchastrator.Start(port, d.Log)
+			err = envorchastrator.Start(port, d.config.Port)
 		case "thermostat":
 			// err = neopixelbar.Start(port, d.Log)
 		case "shade":
@@ -144,7 +140,7 @@ func (d *Domain) startService(config ServiceConfig) error {
 			goto Unlock
 		}
 		d.services[config.Name] = Service{
-			ServiceIdentity: ServiceIdentity{
+			ServiceIdentity: identity.ServiceIdentity{
 				Port:        port,
 				LastContact: time.Now(),
 			},

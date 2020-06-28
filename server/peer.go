@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/jmbarzee/domain/server/identity"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
 )
@@ -13,7 +14,7 @@ import (
 // peer represents another legionnaire in the Legion
 // all methods of peer assume that the lock is held by the caller
 type Peer struct {
-	Identity
+	identity.Identity
 	// RWMutex locks everypart of a member except for the UUID (which is always read)
 	sync.RWMutex
 	// conn is the protocol buffer connection to the member
@@ -21,7 +22,7 @@ type Peer struct {
 }
 
 // newPeer returns a new peer with the passed identity
-func newPeer(identity Identity) *Peer {
+func newPeer(identity identity.Identity) *Peer {
 	return &Peer{
 		Identity: identity,
 	}

@@ -4,7 +4,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/jmbarzee/domain/services/lightorchastrator"
+	"github.com/jmbarzee/domain/services/lightorchastrator/service"
 )
 
 func main() {

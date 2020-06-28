@@ -2,32 +2,77 @@ package server
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"net"
 	"time"
 
-	"github.com/blang/semver"
+	pb "github.com/jmbarzee/domain/server/grpc"
+	"github.com/jmbarzee/domain/server/identity"
 )
 
-// Identity contains the all shareable information about a legionnaire
-type Identity struct {
-	// UUID is a unique identifier for a Domain
-	UUID string
-	// Version is the version of Code which the Domain is running
-	Version semver.Version
-	// Services is the list of services the Domain currently offers
-	Services map[string]ServiceIdentity
+// grabPBIMultiple is used
+func (d *Domain) generatePeersPBI() []*pb.Identity {
+	pbIdentities := make([]*pb.Identity, 0)
 
-	// LastContact is when the legion last heard from this Identity
-	LastContact time.Time
+	d.peerMap.Range(func(uuid string, peer *Peer) bool {
+		var pbIdent *pb.Identity
+		d.debugf(debugLocks, "grabPBIMultiple() pre-lock(%v)\n", peer.UUID)
+		peer.RLock()
+		{
+			d.debugf(debugLocks, "grabPBIMultiple() in-lock(%v)\n", peer.UUID)
+			var err error
+			pbIdent, err = identity.ConvertItoPBI(peer.Identity)
+			if err != nil {
+				goto Unlock
+			}
 
-	// IP is the port which the Domain will be responding on
-	IP net.IP
-	// Port is the port which the Domain will be responding on
-	Port int
+			pbIdentities = append(pbIdentities, pbIdent)
+
+		Unlock:
+		}
+		peer.RUnlock()
+		d.debugf(debugLocks, "grabPBIMultiple() post-lock(%v)\n", peer.UUID)
+
+		return true
+	})
+
+	return pbIdentities
 }
 
-func (d *Domain) updateIdentities(identities []Identity) error {
+func (d *Domain) generatePBI() *pb.Identity {
+	ip, err := d.config.IP.MarshalText()
+	if err != nil {
+		d.Panic(errors.New("couldn't marshal IP of self"))
+	}
+
+	pbIdent := &pb.Identity{
+		UUID:        d.config.UUID,
+		Version:     d.config.Version.String(),
+		Services:    make([]*pb.ServiceIdentity, 0),
+		LastContact: time.Now().UnixNano(),
+		IP:          ip,
+		Port:        int32(d.config.Port),
+	}
+
+	d.debugf(debugLocks, "generatePBI() pre-lock(%v)\n", "servicesLock")
+	d.servicesLock.Lock()
+	{
+		d.debugf(debugLocks, "generatePBI() in-lock(%v)\n", "servicesLock")
+		for name, service := range d.services {
+			service := &pb.ServiceIdentity{
+				Name:        name,
+				Port:        int32(service.ServiceIdentity.Port),
+				LastContact: service.ServiceIdentity.LastContact.UnixNano()}
+			pbIdent.Services = append(pbIdent.Services, service)
+		}
+	}
+	d.servicesLock.Unlock()
+	d.debugf(debugLocks, "generatePBI() post-lock(%v)\n", "servicesLock")
+
+	return pbIdent
+}
+
+func (d *Domain) updateIdentities(identities []identity.Identity) error {
 	d.debugf(debugDomain, "updateIdentities()\n")
 
 	for _, identity := range identities {
@@ -47,7 +92,7 @@ func (d *Domain) updateIdentities(identities []Identity) error {
 	return nil
 }
 
-func (d *Domain) updateIdentity(identity Identity) error {
+func (d *Domain) updateIdentity(identity identity.Identity) error {
 	d.debugf(debugDomain, "updateIdentity()\n")
 
 	// check if we have peer already

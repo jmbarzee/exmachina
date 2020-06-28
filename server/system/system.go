@@ -7,14 +7,12 @@ import (
 	"os"
 	"os/signal"
 	"runtime/pprof"
-	"sync/atomic"
 	"syscall"
-	"time"
 )
 
 type (
 	System struct {
-		// halt is used to kill all goroutines in a call to Legionnaire.panic()
+		// halt is used to kill all goroutines in a call to Domain.panic()
 		Halt context.CancelFunc
 		// log is where normal & debugging messages are dumped to
 		Log *log.Logger
@@ -32,8 +30,6 @@ func NewSystem(ctx context.Context, l *log.Logger) (context.Context, System) {
 	return ctx, s
 }
 
-var hackySignalDelay = int32(0)
-
 func (s *System) HandleSignals(ctx context.Context) {
 	// setup signal handling
 	sigChan := make(chan os.Signal, 1)
@@ -46,7 +42,9 @@ func (s *System) HandleSignals(ctx context.Context) {
 		s.Logf("System: context cancled\n")
 	}
 	s.Halt()
-	time.Sleep(time.Duration(atomic.AddInt32(&hackySignalDelay, 2)) * time.Second)
+
+	// time.Sleep(time.Duration(1 * time.Second))
+
 	pprof.Lookup("goroutine").WriteTo(os.Stdout, 1)
 	fmt.Printf("######################################\n\n\n")
 }
@@ -58,13 +56,13 @@ func (s *System) Panic(err error) {
 	// kill -pgid (-pid)
 	// ends all child processes. 90% certain (negative means groupID?)
 	// TODO @jmbarzee consider killing services individually after saving command objects
-	pgid, err := syscall.Getpgid(syscall.Getpid())
-	if err != nil {
-		panic(err)
+	pgid, sysErr := syscall.Getpgid(syscall.Getpid())
+	if sysErr != nil {
+		panic(sysErr)
 	}
 	syscall.Kill(-pgid, syscall.SIGKILL)
 
-	//panic(err)
+	panic(err)
 }
 
 func (s *System) Logf(fmt string, args ...interface{}) {

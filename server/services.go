@@ -30,12 +30,12 @@ func (d *Domain) startRequiredServices() {
 func (d *Domain) watchServicesDepnedencies(ctx context.Context) {
 	d.debugf(debugRoutines, "watchServicesDepnedencies()\n")
 
-	ticker := time.NewTicker(d.config.ServiceHierarchyConfig.DependencyCheck.Get())
-
 Loop:
 	for {
+		timer := time.NewTimer(d.config.ServiceHierarchyConfig.DependencyCheck.Get())
+
 		select {
-		case <-ticker.C:
+		case <-timer.C:
 			dependencies := make(map[string]int)
 
 			// Collect all dependencies
@@ -54,8 +54,8 @@ Loop:
 
 			// Check that dependencies exist
 			for dependency := range dependencies {
-				services := d.findService(dependency)
-				if len(services) == 0 {
+
+				if len(d.findService(dependency)) == 0 {
 					if _, ok := d.elections[dependency]; !ok {
 						go d.hostElection(ctx, dependency)
 					}
@@ -80,10 +80,10 @@ func (d *Domain) hasTrait(trait string) bool {
 func (d *Domain) findService(serviceName string) []string {
 	serviceAddrs := make([]string, 0)
 
-	d.debugf(debugLocks, "watchServicesDepnedencies() pre-lock(%v)\n", "servicesLock")
+	d.debugf(debugLocks, "findService() pre-lock(%v)\n", "servicesLock")
 	d.servicesLock.Lock()
 	{
-		d.debugf(debugLocks, "watchServicesDepnedencies() in-lock(%v)\n", "servicesLock")
+		d.debugf(debugLocks, "findService() in-lock(%v)\n", "servicesLock")
 		for ownedServiceName := range d.services {
 			if serviceName == ownedServiceName {
 				addr := fmt.Sprintf("%s:%v", d.config.IP.String(), d.config.Port)
@@ -92,13 +92,13 @@ func (d *Domain) findService(serviceName string) []string {
 		}
 	}
 	d.servicesLock.Unlock()
-	d.debugf(debugLocks, "watchServicesDepnedencies() post-lock(%v)\n", "servicesLock")
+	d.debugf(debugLocks, "findService() post-lock(%v)\n", "servicesLock")
 
 	d.peerMap.Range(func(uuid string, peer *Peer) bool {
-		d.debugf(debugLocks, "ShareIdentityList() pre-lock(%v)\n", peer.UUID)
+		d.debugf(debugLocks, "findService() pre-lock(%v)\n", peer.UUID)
 		peer.RLock()
 		{
-			d.debugf(debugLocks, "ShareIdentityList() in-lock(%v)\n", peer.UUID)
+			d.debugf(debugLocks, "findService() in-lock(%v)\n", peer.UUID)
 			for peerServiceName, port := range peer.Services {
 				if serviceName == peerServiceName {
 					addr := fmt.Sprintf("%s:%v", peer.IP.String(), port)
@@ -107,7 +107,7 @@ func (d *Domain) findService(serviceName string) []string {
 			}
 		}
 		peer.RUnlock()
-		d.debugf(debugLocks, "updateLegion() post-lock(%v)\n", peer.UUID)
+		d.debugf(debugLocks, "findService() post-lock(%v)\n", peer.UUID)
 
 		return true
 	})

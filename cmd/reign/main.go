@@ -4,7 +4,6 @@ import (
 	"context"
 	"io/ioutil"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/jmbarzee/domain/server"
@@ -27,15 +26,12 @@ func main() {
 		panic(err)
 	}
 
-	for i := 0; i < 3; i++ {
-		config.UUID = "GUID-" + strconv.Itoa(i)
-		config.Port += 100
-		_, err = server.NewDomain(context.TODO(), config)
-		if err != nil {
-			panic(err)
-		}
+	server, err := server.NewDomain(config)
+	if err != nil {
+		panic(err)
 	}
 
-	c := time.After(time.Second * 20)
-	<-c
+	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
+	defer cancel()
+	server.Run(ctx)
 }
