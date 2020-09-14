@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package grpcd;
+
+import "identity.proto";
+
+service Domain {
+	// StartService requests a domain start a service
+	rpc StartService (StartServiceRequest) returns (StartServiceReply) {}
+
+	// Heartbeat verifies the status/identity of the domain
+	rpc Heartbeat (HeartbeatRequest) returns (HeartbeatReply) {}
+}
+
+
+// StartServiceRequest contains the type of service which needs started
+message StartServiceRequest {
+	// Type is the name of the service which is requested
+	string Type = 1;
+}
+
+// StartServiceRequest contains the type of service which needs started
+message StartServiceReply {
+	// Service is the newly started service
+	ServiceIdentity Service = 1;
+}
+
+
+
+// HeartbeatRequest contains the identity of the dominion
+message HeartbeatRequest {
+	// Dominion is the requesting dominion
+	DominionIdentity Dominion = 1;
+}
+
+message HeartbeatReply {
+	// Domain is the responding domainIdentity
+	DomainIdentity Domain = 1;
+}

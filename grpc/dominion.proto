@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package grpcd;
+
+import "identity.proto";
+
+service Dominion {
+	// GetServices returns the availible services and their locations
+	rpc GetServices (GetServicesRequest) returns (GetServicesReply) {}
+}
+
+
+
+// GetServicesRequest contains the type of the service the client is searching for
+message GetServicesRequest {
+	// Name is the name of the service which is requested
+	string Type = 1;
+}
+
+// GetServicesReply contains the list of known addresses hosting the requested service
+message GetServicesReply {
+	// Services is the list of services of the requested type
+	repeated ServiceIdentity Services = 1;
+}

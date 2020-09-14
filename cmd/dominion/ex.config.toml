@@ -1,0 +1,103 @@
+# Example Config to create a domain/dominion
+
+logfilepath = "/usr/local/dominion/logs/dominion.log"
+
+port = 9100 # doesn't matter for the most part, the domain will find other domains on any functioning port
+
+# All timings are in Nanoseconds
+dialtimeout = 100000000	
+domainCheck = 1000000000
+serviceCheck = 1000000000
+
+
+[services]
+	[services.webServer]
+		priority = "dependency"
+		dependencies = []
+		traits = [
+			"compute",
+		]
+
+	[services.musicInformationRetrival]
+		priority = "dependency"
+		dependencies = []
+		traits = [
+			"compute",
+		]
+
+	[services.experienceOrchastrator]
+		priority = "dependency"
+		dependencies = [
+			"musicInformationRetrival",
+			"webServer",
+		]
+		traits = [
+			"compute",
+		]
+
+	[services.lightOrchastrator]
+		priority = "dependency"
+		dependencies = [
+			"experienceOrchastrator",
+		]
+		traits = [
+			"compute",
+		]
+	[services.npLight]
+		priority = "required"
+		dependencies = [
+			"lightOrchastrator",
+		]
+		traits = [
+			"npLight",
+		]
+
+	[services.soundOrchastrator]
+		priority = "dependency"
+		dependencies = [
+			"experienceOrchastrator",
+		]
+		traits = [
+			"compute",
+		]
+	[services.dmlSpeaker]
+		priority = "required"
+		dependencies = [
+			"soundOrchastrator",
+		]
+		traits = [
+			"dmlSpeaker",
+		]
+
+	[services.enviornmentOrchastrator]
+		priority = "dependency"
+		dependencies = [
+			"webServer",
+		]
+		traits = [
+			"compute",
+		]
+	[services.thermostat]
+		priority = "required"
+		dependencies = [
+			"enviornmentOrchastrator",
+		]
+		traits = [
+			"thermostat",
+		]
+	[services.shade]
+		priority = "required"
+		dependencies = [
+			"enviornmentOrchastrator",
+		]
+		traits = [
+			"shade",
+		]
+	[services.desk]
+		priority = "required"
+		dependencies = [
+			"enviornmentOrchastrator",
+		]
+		traits = [
+			"desk",
+		]
