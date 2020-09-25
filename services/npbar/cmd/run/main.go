@@ -6,18 +6,18 @@ import (
 	"time"
 
 	"github.com/jmbarzee/dominion/service/config"
-	lightorch "github.com/jmbarzee/dominion/services/lightorchastrator/service"
+	"github.com/jmbarzee/dominion/services/npbar/service"
 )
 
 func main() {
 	runtime.GOMAXPROCS(4)
 
-	config, err := config.FromEnv("lightOrchastrator")
+	config, err := config.FromEnv("npBar")
 	if err != nil {
 		panic(err)
 	}
 
-	lightOrch, err := lightorch.NewLightOrch(config)
+	light, err := service.NewNPBar(config)
 	if err != nil {
 		panic(err)
 	}
@@ -25,7 +25,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 240*time.Second)
 	defer cancel()
 
-	if err := lightOrch.Run(ctx); err != nil {
+	if err := light.Run(ctx); err != nil {
 		panic(err)
 	}
 }
