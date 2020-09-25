@@ -18,7 +18,6 @@ func TestDomainConfigCheck(t *testing.T) {
 				Traits: []string{
 					"testTrait",
 				},
-				LogFilePath:    "/path/to/log/file.log",
 				Port:           8080,
 				DialTimeout:    time.Second,
 				ServiceCheck:   time.Second,

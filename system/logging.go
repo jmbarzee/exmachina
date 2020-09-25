@@ -6,22 +6,42 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"path"
 )
 
-const Version = "0.1.0"
+const (
+	// Version is the current version of the system
+	// TODO: use for auto updating
+	Version = "0.1.0"
+
+	// PathBase is the location of all dominion src files
+	PathBase = "/usr/local/dominion"
+	// PathLogs is the location of all dominion log files
+	PathLogs = PathBase + "/logs"
+	// PathServices is the location of all dominion services
+	PathServices = PathBase + "/services"
+)
 
 // log is where normal & debugging messages are dumped to
 var logger *log.Logger
 var closeFile func() error
 
-func Setup(logFilePath string) error {
+// Setup initializes logging and signal handling
+func Setup(uuid, fileName string) error {
 	if logger != nil {
 		return errors.New("system.Setup has already been called")
 	}
 
-	logFile, err := os.OpenFile(logFilePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	pathUUIDLogs := path.Join(PathLogs, uuid)
+	err := os.MkdirAll(pathUUIDLogs, 0755)
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to check ensure log directory \"%v\" exists: %w", pathUUIDLogs, err)
+	}
+
+	pathUUIDLogFile := path.Join(pathUUIDLogs, fileName+".log")
+	logFile, err := os.OpenFile(pathUUIDLogFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return fmt.Errorf("Failed to check open log file \"%v\" exists: %w", pathUUIDLogFile, err)
 	}
 	closeFile := logFile.Close
 	logger = log.New(logFile, "", log.LstdFlags)
@@ -70,9 +90,10 @@ func LogRPCf(rpcName, fmts string, args ...interface{}) {
 	logger.Printf(prefix+fmts, args...)
 }
 
-func Errorf(fmt string, args ...interface{}) {
+func Errorf(fmts string, args ...interface{}) {
 	if logger == nil {
 		panic(errors.New("system.Setup has not been called"))
 	}
-	logger.Printf("Error: "+fmt, args...)
+	err := fmt.Errorf(fmts, args)
+	logger.Printf("Error: %v", err)
 }

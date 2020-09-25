@@ -3,20 +3,31 @@ package main
 import (
 	"context"
 	"os"
+	"runtime"
 	"time"
 
 	"github.com/jmbarzee/dominion/dominion"
+	"github.com/jmbarzee/dominion/dominion/config"
 )
 
 func main() {
-	configFileName := os.Getenv("DOMINION_CONFIG_FILE")
+	runtime.GOMAXPROCS(4)
 
-	dominion, err := dominion.NewDominion(configFileName)
+	// Check config
+	configFileName := os.Getenv("DOMINION_CONFIG_FILE")
+	if err := config.SetupFromTOML(configFileName); err != nil {
+		panic(err)
+	}
+
+	dominion, err := dominion.NewDominion(config.GetDominionConfig())
 	if err != nil {
 		panic(err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 240*time.Second)
 	defer cancel()
-	dominion.Run(ctx)
+
+	if err := dominion.Run(ctx); err != nil {
+		panic(err)
+	}
 }

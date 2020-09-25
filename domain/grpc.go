@@ -6,11 +6,13 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/jmbarzee/dominion/domain/config"
 	"github.com/jmbarzee/dominion/domain/dominion"
 	service "github.com/jmbarzee/dominion/domain/service"
 	grpc "github.com/jmbarzee/dominion/grpc"
 	"github.com/jmbarzee/dominion/identity"
 	"github.com/jmbarzee/dominion/system"
+	"github.com/jmbarzee/dominion/system/connect"
 )
 
 // Heartbeat implements grpc and allows the domain to use grpc.
@@ -22,6 +24,7 @@ func (d *Domain) Heartbeat(ctx context.Context, request *grpc.HeartbeatRequest) 
 		return nil, err
 	}
 
+	fmt.Println(d.packageDomainIdentity())
 	// Prepare reply
 	reply := &grpc.HeartbeatReply{
 		Domain: identity.NewPBDomainIdentity(d.packageDomainIdentity()),
@@ -31,13 +34,12 @@ func (d *Domain) Heartbeat(ctx context.Context, request *grpc.HeartbeatRequest) 
 }
 
 func (d *Domain) rpcHeartbeat(ctx context.Context, serviceGuard *service.ServiceGuard) {
-	time.Sleep(time.Second * 3)
 	rpcName := "Heartbeat"
 	serviceType := ""
 	err := serviceGuard.LatchWrite(func(service *service.Service) error {
 		serviceType = service.Type
 
-		if err := service.CheckConnection(ctx); err != nil {
+		if err := connect.CheckConnection(ctx, service); err != nil {
 			return fmt.Errorf("Failed to check connection: %w", err)
 		}
 
@@ -73,7 +75,9 @@ func (d *Domain) StartService(ctx context.Context, request *grpc.StartServiceReq
 	system.LogRPCf(rpcName, "Receving request")
 	ident, err := d.startService(request.GetType())
 	if err != nil {
-		return nil, fmt.Errorf("Failed to start service: %w", err)
+		err := fmt.Errorf("Failed to start service: %w", err)
+		system.Errorf("Error starting service: %w", err)
+		return nil, err
 	}
 
 	reply := &grpc.StartServiceReply{
@@ -94,11 +98,13 @@ func (d *Domain) startService(serviceType string) (identity.ServiceIdentity, err
 		dominionAddr = dominion.Address
 		return nil
 	})
+	uint16Max := (1 << 16) - 1
 	dominionIP := dominionAddr.IP
 	dominionPort := dominionAddr.Port
-	servicePort := rand.Intn((1 << 16) - 1)
+	domainUUID := d.UUID
+	servicePort := (rand.Intn(uint16Max) + d.Address.Port) % uint16Max
 
-	err := service.Start(serviceType, dominionIP, dominionPort, servicePort)
+	err := service.Start(serviceType, dominionIP, dominionPort, domainUUID, servicePort)
 	if err != nil {
 		return identity.ServiceIdentity{}, err
 	}
@@ -110,6 +116,9 @@ func (d *Domain) startService(serviceType string) (identity.ServiceIdentity, err
 			Port: servicePort,
 		},
 	}
+
+	// Give the service a little bit of time to start
+	time.Sleep(config.GetDomainConfig().ServiceCheck * 3)
 
 	d.services.Store(serviceType, service.NewServiceGuard(serviceIdent))
 

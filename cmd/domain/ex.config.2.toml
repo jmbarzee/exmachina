@@ -1,13 +1,10 @@
 # Example Config to create a domain/dominion
-uuid = "GUID-1" # unique UUID
-
-logfilepath = "/usr/local/dominion/logs/domain.log"
+uuid = "GUID-2" # unique UUID
 
 port = 9200 # doesn't matter for the most part, the domain will find other domains on any functioning port
 
 traits = [
-	# "compute", # TODO @jmbarzee consider changing to allow for types of compute
-	"npLight",
+	"npBar",
 ]
 
 # All timings are in Nanoseconds

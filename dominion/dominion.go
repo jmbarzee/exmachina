@@ -20,18 +20,13 @@ type Dominion struct {
 }
 
 // NewDominion creates a new dominion, to correctly build the dominion, just initilize
-func NewDominion(configFilePath string) (*Dominion, error) {
+func NewDominion(config config.DominionConfig) (*Dominion, error) {
 
-	// Check config
-	if err := config.SetupFromTOML(configFilePath); err != nil {
+	if err := system.Setup("dominion", "dominion"); err != nil {
 		return nil, err
 	}
 
-	if err := system.Setup(config.GetDominionConfig().LogFilePath); err != nil {
-		return nil, err
-	}
-
-	ident, err := NewDominionIdentity(config.GetDominionConfig().Port)
+	ident, err := NewDominionIdentity(config.Port)
 	if err != nil {
 		return nil, err
 	}
@@ -73,8 +68,8 @@ func (d Dominion) Run(ctx context.Context) error {
 	system.Logf("The Dominion ever expands!\n")
 
 	// Start Routines
-	go d.routineCheck(ctx, "checkDomains", config.GetDominionConfig().DomainCheck, d.checkDomains)
-	go d.routineCheck(ctx, "checkServices", config.GetDominionConfig().ServiceCheck, d.checkServices)
+	go system.RoutineCheck(ctx, "checkDomains", config.GetDominionConfig().DomainCheck, d.checkDomains)
+	go system.RoutineCheck(ctx, "checkServices", config.GetDominionConfig().ServiceCheck, d.checkServices)
 	go d.listenForBroadcasts(ctx)
 
 	return d.hostDominion(ctx)

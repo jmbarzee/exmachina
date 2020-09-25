@@ -1,0 +1,13 @@
+# Example Config to create a domain/dominion
+uuid = "GUID-1" # unique UUID
+
+port = 9100 # doesn't matter for the most part, the domain will find other domains on any functioning port
+
+traits = [
+	"npBar", 
+]
+
+# All timings are in Nanoseconds
+dialtimeout = 100000000	
+isolationCheck = 5000000000
+serviceCheck = 1000000000

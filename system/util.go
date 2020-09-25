@@ -1,7 +1,9 @@
 package system
 
 import (
+	"context"
 	"net"
+	"time"
 )
 
 // func GetOutboundIP() (net.IP, error) {
@@ -42,4 +44,22 @@ func GetOutboundIP() (net.IP, error) {
 	localAddr := conn.LocalAddr().(*net.UDPAddr)
 
 	return localAddr.IP, nil
+}
+
+// RoutineCheck offers repeatedly runs check and then waits for wait.
+// cancleing ctx will end the check
+func RoutineCheck(ctx context.Context, routineName string, wait time.Duration, check func(context.Context)) {
+	LogRoutinef(routineName, "Starting routine")
+	ticker := time.NewTicker(wait)
+
+Loop:
+	for {
+		select {
+		case <-ticker.C:
+			check(ctx)
+		case <-ctx.Done():
+			break Loop
+		}
+	}
+	LogRoutinef(routineName, "Stopping routine")
 }

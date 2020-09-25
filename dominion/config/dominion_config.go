@@ -15,8 +15,6 @@ import (
 type (
 	// DominionConfig holds all the information required to start a Dominion
 	DominionConfig struct {
-		// LogFilePath
-		LogFilePath string
 		// Port is the port which the domain will be responding on
 		Port int
 
@@ -69,9 +67,6 @@ func setupDominionConfigFromTOML(configFilePath string) error {
 }
 
 func (c DominionConfig) check() error {
-	if len(c.LogFilePath) == 0 {
-		return fmt.Errorf("LogFilePath was not set")
-	}
 	if c.Port == 0 {
 		return fmt.Errorf("Port was not set")
 	}

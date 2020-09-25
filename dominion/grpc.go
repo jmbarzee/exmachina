@@ -9,6 +9,7 @@ import (
 	grpc "github.com/jmbarzee/dominion/grpc"
 	"github.com/jmbarzee/dominion/identity"
 	"github.com/jmbarzee/dominion/system"
+	"github.com/jmbarzee/dominion/system/connect"
 )
 
 // GetServices implements grpc and allows the domains to use grpc.
@@ -30,7 +31,7 @@ func (d *Dominion) rpcHeartbeat(ctx context.Context, domainGuard *domain.DomainG
 	err := domainGuard.LatchWrite(func(domain *domain.Domain) error {
 		uuid = domain.DomainIdentity.UUID
 
-		if err := domain.CheckConnection(ctx); err != nil {
+		if err := connect.CheckConnection(ctx, domain); err != nil {
 			return fmt.Errorf("Failed to check connection: %w", err)
 		}
 
@@ -50,6 +51,7 @@ func (d *Dominion) rpcHeartbeat(ctx context.Context, domainGuard *domain.DomainG
 
 		// Update domain
 		domain.LastContact = time.Now()
+		fmt.Println(identity.NewDomainIdentity(reply.GetDomain()))
 		domain.DomainIdentity = identity.NewDomainIdentity(reply.GetDomain())
 		return nil
 	})
@@ -63,7 +65,7 @@ func (d *Dominion) rpcStartService(ctx context.Context, domainGuard *domain.Doma
 	rpcName := "StartService"
 	return domainGuard.LatchWrite(func(domain *domain.Domain) error {
 
-		if err := domain.CheckConnection(ctx); err != nil {
+		if err := connect.CheckConnection(ctx, domain); err != nil {
 			return fmt.Errorf("Failed to check connection: %w", err)
 		}
 

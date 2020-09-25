@@ -136,7 +136,7 @@ func (d *Dominion) checkServices(ctx context.Context) {
 		if len(d.findService(dependency)) == 0 {
 			canidates := d.findServiceCanidates(dependency)
 			if len(canidates) == 0 {
-				system.Errorf("No canidates availible for new %v", dependency)
+				system.Errorf("No canidates availible for %v", dependency)
 				continue
 			}
 
@@ -144,7 +144,7 @@ func (d *Dominion) checkServices(ctx context.Context) {
 			canidate := canidates[0]
 			domainGuard, ok := d.domains.Load(canidate.UUID)
 			if !ok {
-				system.Errorf("Viable canidate no longer availible for new %v", dependency)
+				system.Errorf("Viable canidate no longer availible for %v", dependency)
 				continue
 			}
 

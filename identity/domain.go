@@ -30,14 +30,15 @@ func (i DomainIdentity) String() string {
 	UUID: ` + i.UUID + `
 	Traits: [`
 	for _, trait := range i.Traits {
-		s += `		` + trait
+		s += trait + ","
 	}
-	s += `	]
-	Services: {`
+	s += `]
+	Services: {
+`
 	for serviceType, service := range i.Services {
-		s += `		` + serviceType + ": " + service.String()
+		s += `		` + serviceType + ": " + service.String() + "\n"
 	}
-	s += `
+	s += `	}
 }`
 	return s
 }

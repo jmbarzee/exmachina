@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
-	"fmt"
 
 	pb "github.com/jmbarzee/dominion/grpc"
 	"github.com/jmbarzee/dominion/identity"
+	"github.com/jmbarzee/dominion/service/dominion"
 	"github.com/jmbarzee/dominion/system"
-	"google.golang.org/grpc"
+	"github.com/jmbarzee/dominion/system/connect"
 )
 
 // Heartbeat implements grpc and allows the domain to use grpc.
@@ -24,29 +24,34 @@ func (s *Service) Heartbeat(ctx context.Context, request *pb.ServiceHeartbeatReq
 	return reply, nil
 }
 
+// RPCGetServices requests a list of services from the dominion
 func (s Service) RPCGetServices(ctx context.Context, serviceType string) ([]identity.ServiceIdentity, error) {
 	rpcName := "GetServices"
+	services := []identity.ServiceIdentity{}
 
-	dominionConn, err := grpc.DialContext(ctx, s.DominionIdentity.Address.String(), grpc.WithInsecure(), grpc.WithBlock())
+	err := s.Dominion.LatchWrite(func(dominion *dominion.Dominion) error {
+		err := connect.CheckConnection(ctx, dominion)
+		if err != nil {
+			return err
+		}
+
+		serviceRequest := &pb.GetServicesRequest{
+			Type: serviceType,
+		}
+
+		system.LogRPCf(rpcName, "Sending request")
+		dominionClient := pb.NewDominionClient(dominion.Conn)
+		reply, err := dominionClient.GetServices(ctx, serviceRequest)
+		if err != nil {
+			return err
+		}
+		system.LogRPCf(rpcName, "Recieved reply")
+
+		services = identity.NewServiceIdentityList(reply.GetServices())
+		return nil
+	})
 	if err != nil {
 		return nil, err
-	}
-
-	serviceRequest := &pb.GetServicesRequest{
-		Type: serviceType,
-	}
-
-	system.LogRPCf(rpcName, "Sending request")
-	dominionClient := pb.NewDominionClient(dominionConn)
-	reply, err := dominionClient.GetServices(ctx, serviceRequest)
-	if err != nil {
-		return nil, err
-	}
-	system.LogRPCf(rpcName, "Recieved reply")
-
-	services := identity.NewServiceIdentityList(reply.GetServices())
-	if len(services) == 0 {
-		return nil, fmt.Errorf("No address found for %s", serviceType)
 	}
 
 	return services, nil

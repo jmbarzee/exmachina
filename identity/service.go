@@ -1,6 +1,8 @@
 package identity
 
-import pb "github.com/jmbarzee/dominion/grpc"
+import (
+	pb "github.com/jmbarzee/dominion/grpc"
+)
 
 // ServiceIdentity represents a service running under a domain
 type ServiceIdentity struct {
@@ -32,7 +34,7 @@ func NewPBServiceIdentity(sIdent ServiceIdentity) *pb.ServiceIdentity {
 
 // NewServiceIdentityMap creates a map of new ServiceIdentitys from a map of pb.ServiceIdentity
 func NewServiceIdentityMap(pbsIdents map[string]*pb.ServiceIdentity) map[string]ServiceIdentity {
-	sIdents := make(map[string]ServiceIdentity, len(pbsIdents))
+	sIdents := make(map[string]ServiceIdentity)
 	for _, pbsIdent := range pbsIdents {
 		sIdents[pbsIdent.GetType()] = NewServiceIdentity(pbsIdent)
 	}
@@ -51,17 +53,18 @@ func NewPBServiceIdentityMap(sIdents map[string]ServiceIdentity) map[string]*pb.
 // NewServiceIdentityList creates a list of new ServiceIdentitys from a list of pb.ServiceIdentity
 func NewServiceIdentityList(pbsIdents []*pb.ServiceIdentity) []ServiceIdentity {
 	sIdents := make([]ServiceIdentity, len(pbsIdents))
-	for _, pbsIdent := range pbsIdents {
-		sIdents = append(sIdents, NewServiceIdentity(pbsIdent))
+	for i, pbsIdent := range pbsIdents {
+		sIdents[i] = NewServiceIdentity(pbsIdent)
 	}
 	return sIdents
 }
 
 // NewPBServiceIdentityList creates a list of new ServiceIdentitys from a list of pb.ServiceIdentity
 func NewPBServiceIdentityList(sIdents []ServiceIdentity) []*pb.ServiceIdentity {
+
 	pbsIdents := make([]*pb.ServiceIdentity, len(sIdents))
-	for _, sIdent := range sIdents {
-		pbsIdents = append(pbsIdents, NewPBServiceIdentity(sIdent))
+	for i, sIdent := range sIdents {
+		pbsIdents[i] = NewPBServiceIdentity(sIdent)
 	}
 	return pbsIdents
 }

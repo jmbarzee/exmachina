@@ -6,15 +6,16 @@ import (
 	"os/exec"
 	"path"
 	"strconv"
+	"strings"
 
 	"github.com/jmbarzee/dominion/system"
 )
 
-func Start(serviceType string, ip net.IP, dominionPort, servicePort int) error {
+func Start(serviceType string, ip net.IP, dominionPort int, domainUUID string, servicePort int) error {
 	system.Logf("Starting %v!", serviceType)
 
 	rootPath := "/usr/local/dominion/services"
-	makefilePath := path.Join(rootPath, serviceType)
+	makefilePath := path.Join(rootPath, strings.ToLower(serviceType))
 	makePath, err := exec.LookPath("make")
 	if err != nil {
 		return fmt.Errorf("make was not found in path: %w", err)
@@ -25,6 +26,7 @@ func Start(serviceType string, ip net.IP, dominionPort, servicePort int) error {
 		"-C", makefilePath,
 		"DOMINION_IP="+ip.String(),
 		"DOMINION_PORT="+strconv.Itoa(dominionPort),
+		"DOMAIN_UUID="+domainUUID,
 		"SERVICE_PORT="+strconv.Itoa(servicePort))
 	// pgid is same as parents by default
 

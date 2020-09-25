@@ -16,8 +16,6 @@ type (
 	DomainConfig struct {
 		// UUID is a unique identifier for a domain
 		UUID string
-		// LogFilePath
-		LogFilePath string
 		// Port is the port which the domain will be responding on
 		Port int
 
@@ -76,9 +74,6 @@ func (c DomainConfig) check() error {
 	}
 	if len(c.Traits) == 0 {
 		return fmt.Errorf("Traits were not set")
-	}
-	if c.LogFilePath == "" {
-		return fmt.Errorf("UUID was not set")
 	}
 	if c.Port == 0 {
 		return fmt.Errorf("Port was not set")

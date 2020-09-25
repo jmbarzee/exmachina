@@ -16,22 +16,6 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func (d *Domain) routineCheck(ctx context.Context, routineName string, wait time.Duration, check func(context.Context)) {
-	system.LogRoutinef(routineName, "Starting routine")
-	ticker := time.NewTicker(wait)
-
-Loop:
-	for {
-		select {
-		case <-ticker.C:
-			check(ctx)
-		case <-ctx.Done():
-			break Loop
-		}
-	}
-	system.LogRoutinef(routineName, "Stopping routine")
-}
-
 func (d *Domain) checkServices(ctx context.Context) {
 	d.services.Range(func(uuid string, serviceGuard *service.ServiceGuard) bool {
 		serviceGuard.LatchRead(func(service *service.Service) error {

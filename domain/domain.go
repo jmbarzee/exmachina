@@ -28,18 +28,13 @@ type (
 )
 
 // NewDomain creates a new Domain, to correctly build the Domain, just initilize
-func NewDomain(configFilePath string) (*Domain, error) {
+func NewDomain(config config.DomainConfig) (*Domain, error) {
 
-	// Check config
-	if err := config.SetupFromTOML(configFilePath); err != nil {
+	if err := system.Setup(config.UUID, "domain"); err != nil {
 		return nil, err
 	}
 
-	if err := system.Setup(config.GetDomainConfig().LogFilePath); err != nil {
-		return nil, err
-	}
-
-	ident, err := NewDomainIdentity(config.GetDomainConfig())
+	ident, err := NewDomainIdentity(config)
 	if err != nil {
 		return nil, err
 	}
@@ -81,8 +76,8 @@ func (d Domain) Run(ctx context.Context) error {
 	system.Logf("The Dominion ever expands!\n")
 
 	// Start Auto Connecting Routines
-	go d.routineCheck(ctx, "checkIsolation", config.GetDomainConfig().IsolationCheck, d.checkIsolation)
-	go d.routineCheck(ctx, "checkServices", config.GetDomainConfig().ServiceCheck, d.checkServices)
+	go system.RoutineCheck(ctx, "checkIsolation", config.GetDomainConfig().IsolationCheck, d.checkIsolation)
+	go system.RoutineCheck(ctx, "checkServices", config.GetDomainConfig().ServiceCheck, d.checkServices)
 
 	return d.hostDomain(ctx)
 }
