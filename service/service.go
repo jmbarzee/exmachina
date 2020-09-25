@@ -1,9 +1,7 @@
 package service
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 
 	pb "github.com/jmbarzee/dominion/grpc"
 	"github.com/jmbarzee/dominion/identity"
@@ -34,15 +32,6 @@ func NewService(config config.ServiceConfig) (*Service, error) {
 	if err := system.Setup(config.DomainUUID, config.ServiceType); err != nil {
 		return nil, err
 	}
-
-	if err := captureStdout(); err != nil {
-		return nil, err
-	}
-
-	if err := captureStderr(); err != nil {
-		return nil, err
-	}
-
 	// Initialize IP
 	ip, err := system.GetOutboundIP()
 	if err != nil {
@@ -71,54 +60,4 @@ func NewService(config config.ServiceConfig) (*Service, error) {
 
 	pb.RegisterServiceServer(service.Server, service)
 	return service, nil
-}
-
-func captureStdout() error {
-	r, w, err := os.Pipe()
-	if err != nil {
-		return fmt.Errorf("failed to gather: %w", err)
-	}
-	os.Stdout = w
-
-	go func() {
-		routineName := "Nameless-captureStdout"
-		system.LogRoutinef(routineName, "Starting routine")
-		buf := bufio.NewReader(r)
-		var err error
-		var bytes []byte
-		for err == nil {
-			bytes, err = buf.ReadBytes('\n')
-			if err != nil {
-				system.Logf("Stdout %s", bytes)
-			}
-		}
-		system.Errorf("Failure while reading bytes from Stdout to log")
-		system.LogRoutinef(routineName, "Stopping routine")
-	}()
-	return nil
-}
-
-func captureStderr() error {
-	r, w, err := os.Pipe()
-	if err != nil {
-		return fmt.Errorf("failed to gather: %w", err)
-	}
-	os.Stderr = w
-
-	go func() {
-		routineName := "Nameless-captureStderr"
-		system.LogRoutinef(routineName, "Starting routine")
-		buf := bufio.NewReader(r)
-		var err error
-		var bytes []byte
-		for err == nil {
-			bytes, err = buf.ReadBytes('\n')
-			if err != nil {
-				system.Logf("Stderr %s", bytes)
-			}
-		}
-		system.Errorf("Failure while reading bytes from Stderr to log")
-		system.LogRoutinef(routineName, "Stopping routine")
-	}()
-	return nil
 }
