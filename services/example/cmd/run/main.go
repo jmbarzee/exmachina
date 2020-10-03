@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/dominion/service/config"
-	example "github.com/jmbarzee/dominion/services/example/service"
+	service "github.com/jmbarzee/dominion/services/example/service"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 		panic(err)
 	}
 
-	example, err := example.NewExampleService(config)
+	example, err := service.NewExampleService(config)
 	if err != nil {
 		panic(err)
 	}

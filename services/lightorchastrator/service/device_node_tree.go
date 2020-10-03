@@ -1,4 +1,4 @@
-package lightorch
+package service
 
 import (
 	"sync"
