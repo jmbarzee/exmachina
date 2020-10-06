@@ -1,10 +1,8 @@
-<h1>Identity</h1>
-{{template "service" .Identity}}
-<h1>Identities</h1>
+<h1>Domains</h1>
 <ol>
-{{ range .Identities }}
+{{ range .Domains }}
     <li>
-    {{ template "service" . }}
+    {{ template "domain" . }}
     </li>
 {{ end }}
 </ol>

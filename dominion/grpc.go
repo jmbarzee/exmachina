@@ -12,14 +12,24 @@ import (
 	"github.com/jmbarzee/dominion/system/connect"
 )
 
-// GetServices implements grpc and allows the domains to use grpc.
-// GetServices serves as the directory of services hosted on all domains.
+// GetServices implements grpc and serves as the directory of services hosted on all domains.
 // GetServices is called by services hosted on a single domain to find their dependencies.
 func (d *Dominion) GetServices(ctx context.Context, request *grpc.GetServicesRequest) (*grpc.GetServicesReply, error) {
 	rpcName := "GetServices"
 	system.LogRPCf(rpcName, "Receving request")
 	reply := &grpc.GetServicesReply{
 		Services: identity.NewPBServiceIdentityList(d.findService(request.Type)),
+	}
+	system.LogRPCf(rpcName, "Sending reply")
+	return reply, nil
+}
+
+// GetDomains implements grpc and returns all domains and their services
+func (d *Dominion) GetDomains(ctx context.Context, request *grpc.Empty) (*grpc.GetDomainsReply, error) {
+	rpcName := "GetAllServices"
+	system.LogRPCf(rpcName, "Receving request")
+	reply := &grpc.GetDomainsReply{
+		Domains: identity.NewPBDomainIdentityList(d.packageDomains()),
 	}
 	system.LogRPCf(rpcName, "Sending reply")
 	return reply, nil

@@ -1,15 +1,4 @@
 {{ define "service" }}
-<h2>{{ .UUID }}</h2>
-<div>{{ .Version }}</div>
-<div>{{ .IP }} {{ .Port }}</div>
-<div>{{ .LastContact }}</div>
-<ol>
-{{ range $name, $service := .Services }}
-    <li>
-        <h3>{{ $name }}</h3>
-        <div>{{ $service.Port }}</div>
-        <div>{{ $service.LastContact }}</div>
-    </li>
-{{ end }}
-</ol>
+<h3>{{ .Type }}</h3>
+<div>{{ .Address }}</div>
 {{ end }}

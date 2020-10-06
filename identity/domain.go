@@ -43,6 +43,26 @@ func (i DomainIdentity) String() string {
 	return s
 }
 
+func (d DomainIdentity) HasTraits(traits []string) bool {
+	hasTraits := true
+	for _, trait := range traits {
+		if !d.HasTrait(trait) {
+			hasTraits = false
+			break
+		}
+	}
+	return hasTraits
+}
+
+func (d DomainIdentity) HasTrait(trait string) bool {
+	for _, ownTrait := range d.Traits {
+		if ownTrait == trait {
+			return true
+		}
+	}
+	return false
+}
+
 // NewDomainIdentity creates a DomainIdentity from a pb.DomainIdentity
 func NewDomainIdentity(pbdIdent *pb.DomainIdentity) DomainIdentity {
 
@@ -71,22 +91,21 @@ func NewPBDomainIdentity(dIdent DomainIdentity) *pb.DomainIdentity {
 	}
 }
 
-func (d DomainIdentity) HasTraits(traits []string) bool {
-	hasTraits := true
-	for _, trait := range traits {
-		if !d.HasTrait(trait) {
-			hasTraits = false
-			break
-		}
+// NewDomainIdentityList creates a list of new DomainIdentitys from a list of pb.DomainIdentity
+func NewDomainIdentityList(pbdIdents []*pb.DomainIdentity) []DomainIdentity {
+	dIdents := make([]DomainIdentity, len(pbdIdents))
+	for i, pbdIdent := range pbdIdents {
+		dIdents[i] = NewDomainIdentity(pbdIdent)
 	}
-	return hasTraits
+	return dIdents
 }
 
-func (d DomainIdentity) HasTrait(trait string) bool {
-	for _, ownTrait := range d.Traits {
-		if ownTrait == trait {
-			return true
-		}
+// NewPBDomainIdentityList creates a list of new DomainIdentitys from a list of pb.DomainIdentity
+func NewPBDomainIdentityList(dIdents []DomainIdentity) []*pb.DomainIdentity {
+
+	pbdIdents := make([]*pb.DomainIdentity, len(dIdents))
+	for i, dIdent := range dIdents {
+		pbdIdents[i] = NewPBDomainIdentity(dIdent)
 	}
-	return false
+	return pbdIdents
 }

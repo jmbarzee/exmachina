@@ -7,8 +7,10 @@ import "identity.proto";
 service Dominion {
 	// GetServices returns the availible services and their locations
 	rpc GetServices (GetServicesRequest) returns (GetServicesReply) {}
-}
 
+	// GetDomains returns all domains and their services
+	rpc GetDomains (Empty) returns (GetDomainsReply) {}
+}
 
 
 // GetServicesRequest contains the type of the service the client is searching for
@@ -21,4 +23,16 @@ message GetServicesRequest {
 message GetServicesReply {
 	// Services is the list of services of the requested type
 	repeated ServiceIdentity Services = 1;
+}
+
+
+
+// GetDomainsReply contains all domains and their services
+message GetDomainsReply {
+	// Domains is the list of all domains 
+	repeated DomainIdentity Domains = 1;
+}
+
+// Empty is empty, Duh.
+message Empty {
 }

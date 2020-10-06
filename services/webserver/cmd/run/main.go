@@ -1,20 +1,31 @@
 package main
 
 import (
-	"github.com/jmbarzee/domain/services"
-	"github.com/jmbarzee/domain/services/webserver/service"
+	"context"
+	"runtime"
+	"time"
+
+	"github.com/jmbarzee/dominion/service/config"
+	"github.com/jmbarzee/dominion/services/webserver/service"
 )
 
 func main() {
-	port, domainPort, logger, err := services.GatherStandardArgs()
+	runtime.GOMAXPROCS(4)
+
+	config, err := config.FromEnv("webServer")
 	if err != nil {
 		panic(err)
 	}
 
-	server, err := service.NewWebServer(port, domainPort, logger, "/usr/local/domain/services/webserver/service/static")
+	example, err := service.NewWebServer(config)
 	if err != nil {
 		panic(err)
 	}
 
-	server.Run()
+	ctx, cancel := context.WithTimeout(context.Background(), 240*time.Second)
+	defer cancel()
+
+	if err := example.Run(ctx); err != nil {
+		panic(err)
+	}
 }

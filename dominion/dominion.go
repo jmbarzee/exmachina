@@ -74,6 +74,19 @@ func (d Dominion) Run(ctx context.Context) error {
 
 	return d.hostDominion(ctx)
 }
+func (d *Dominion) packageDomains() []identity.DomainIdentity {
+	domainIdents := make([]identity.DomainIdentity, 0)
+
+	d.domains.Range(func(uuid string, domainGuard *domain.DomainGuard) bool {
+		domainGuard.LatchRead(func(domain *domain.Domain) error {
+			domainIdents = append(domainIdents, domain.DomainIdentity)
+			return nil
+		})
+		return true
+	})
+
+	return domainIdents
+}
 
 func (d *Dominion) findService(serviceTypeRequested string) []identity.ServiceIdentity {
 	serviceIdents := make([]identity.ServiceIdentity, 0)
