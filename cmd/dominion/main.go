@@ -2,19 +2,20 @@ package main
 
 import (
 	"context"
-	"os"
 	"runtime"
 	"time"
 
 	"github.com/jmbarzee/dominion/dominion"
 	"github.com/jmbarzee/dominion/dominion/config"
+	"github.com/jmbarzee/dominion/system"
 )
 
 func main() {
 	runtime.GOMAXPROCS(4)
 
+	configFileName := system.RequireEnv("DOMINION_CONFIG_FILE")
+
 	// Check config
-	configFileName := os.Getenv("DOMINION_CONFIG_FILE")
 	if err := config.SetupFromTOML(configFileName); err != nil {
 		panic(err)
 	}

@@ -9,14 +9,14 @@ serviceCheck = 5000000000
 
 
 [services]
-	# [services.webServer]
-	# 	priority = "dependency"
-	# 	dependencies = []
-	# 	traits = [
-	# 		"compute",
-	# 	]
+	[services.webServer]
+		priority = "dependency"
+		dependencies = []
+		traits = [
+			"compute",
+		]
 
-	# [services.experienceOrchastrator]
+	# [services.experienceOrchestrator]
 	# 	priority = "dependency"
 	# 	dependencies = [
 	# 		"webServer",
@@ -25,10 +25,11 @@ serviceCheck = 5000000000
 	# 		"compute",
 	# 	]
 
-	[services.lightOrchastrator]
+	[services.lightOrchestrator]
 		priority = "dependency"
 		dependencies = [
-			# "experienceOrchastrator",
+			"webServer",
+			# "experienceOrchestrator",
 		]
 		traits = [
 			"compute",
@@ -36,7 +37,7 @@ serviceCheck = 5000000000
 	[services.npBar]
 		priority = "required"
 		dependencies = [
-			"lightOrchastrator",
+			"lightOrchestrator",
 		]
 		traits = [
 			"npBar",

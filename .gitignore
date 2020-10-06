@@ -1,1 +1,5 @@
+// all logfiles
 *.log
+
+// vscode debug config
+launch.json

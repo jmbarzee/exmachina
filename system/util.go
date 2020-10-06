@@ -2,7 +2,9 @@ package system
 
 import (
 	"context"
+	"fmt"
 	"net"
+	"os"
 	"time"
 )
 
@@ -62,4 +64,13 @@ Loop:
 		}
 	}
 	LogRoutinef(routineName, "Stopping routine")
+}
+
+// RequireEnv finds the value of the requried variable or panics
+func RequireEnv(varName string) string {
+	value := os.Getenv(varName)
+	if value == "" {
+		panic(fmt.Errorf("Could not find required enviornment variable %s", varName))
+	}
+	return value
 }
