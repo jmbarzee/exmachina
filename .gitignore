@@ -1,5 +1,2 @@
-// all logfiles
-*.log
-
-// vscode debug config
-launch.json
+// exclude example from parent directory
+example/*
