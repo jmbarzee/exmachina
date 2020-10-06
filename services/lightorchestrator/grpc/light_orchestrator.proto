@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package grpcdomain;
+
+import "google/protobuf/timestamp.proto";
+
+/*		Command to rebuild from parent directory
+=========================================================
+
+protoc -I grpc/ --go_out=plugins=grpc:grpc \
+	light_orchestrator.proto 
+=========================================================
+*/
+
+service LightOrchestrator {
+	// SubscribeLights requests a stream of lights
+	rpc SubscribeLights(SubscribeLightsRequest) returns (stream SubscribeLightsReply) {}
+
+	// GetDevices returns the DeviceNode hierarchy and all subscribed devices
+	rpc GetDevices(Empty) returns (GetDevicesReply) {}
+
+	// MoveDevice changes a devices location and orientation 
+	rpc MoveDevice(MoveDeviceRequest) returns (Empty) {}
+
+	// InsertDeviceInHierarchy inserts a device into the DeviceNode hierarchy
+	rpc InsertDeviceInHierarchy(InsertDeviceInHierarchyRequest) returns (Empty) {}
+}
+
+
+// SubscribeLightsRequest contains the identifying information from the subscriber
+message SubscribeLightsRequest {
+	// Type is the Type of the Subscriber
+	string Type = 1;
+	// UUID is a Unique Identifier for the Subscriber
+	string UUID = 2;
+
+} 
+
+// SubscribeLightsReply contains the time and series of RGBA colors which should be displayed
+message SubscribeLightsReply {
+	// DisplayTime is the time which the lights should be applied
+	google.protobuf.Timestamp DisplayTime = 1;
+
+	// Colors are the series of colors which should be displayed
+	repeated uint32 Colors = 2;
+} 
+
+
+// GetDevicesReply contains the DeviceNode hierarchy and all subscribed devices
+message GetDevicesReply {
+	// DeviceNodeTree is DeviceNode hierarchy
+	DeviceNode DeviceNodeTree = 1;
+
+	// Devices is the list of subscribed devices
+	repeated Device Devices = 2;
+} 
+
+
+// MoveDeviceRequest contains the new position and orientation 
+message MoveDeviceRequest {
+	// Device contians the UUID and type of the device to help find the device to move
+	// the Location and Orientation are where the device should be moved to
+	Device Device = 1;
+} 
+
+
+// InsertDeviceInHierarchyRequest contains the UUID of the parent and ne child
+message InsertDeviceInHierarchyRequest {
+	// ParentUUID is the UUID of the parent for the new child
+	string ParentUUID = 1;
+
+	// ChildUUID is the UUID of the new child 
+	string ChildUUID = 2;
+} 
+
+// DeviceNode represents a DeviceNode in the DeviceNode hierarchy
+message DeviceNode {
+	// UUID is the UUID of the DeviceNode
+	string UUID = 1;
+
+	// Type is the Type of the DeviceNode
+	string Type = 2;
+
+	// Children are the Children of the DeviceNode
+	repeated DeviceNode Children = 3;
+}
+
+// Device represents a subscriber in the list of subscribers
+message Device {
+	// UUID is the UUID of the Device
+	string UUID = 1;
+
+	// Type is the Type of the Device
+	string Type = 2;
+
+	// Location is the Location of the Device
+	Vector Location = 3;
+
+	// Orientation is the Orientation of the Device
+	Orientation Orientation = 4;
+}
+
+// Orientation represents a direction in 3D space
+message Orientation {
+	// Theta is the horizontal rotation in radians [0,2pi)
+	float Theta = 1;
+
+	// Theta is the vertical rotation in radians [pi/2,pi/2]
+	float Phi = 2;
+}
+
+// Vector represents a location in 3D space
+message Vector {
+	// Theta is the X cooridnate in meters 
+	float X = 1;
+	// Theta is the Y cooridnate in meters 
+	float Y = 2;
+	// Theta is the Z cooridnate in meters 
+	float Z = 3;
+}
+
+// Empty is empty, Duh.
+message Empty {
+}

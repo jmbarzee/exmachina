@@ -2,7 +2,7 @@ package service
 
 import (
 	"github.com/jmbarzee/dominion/service/config"
-	"github.com/jmbarzee/dominion/services/lightorchastrator/clients/nplight"
+	"github.com/jmbarzee/dominion/services/lightorchestrator/clients/nplight"
 )
 
 type (
