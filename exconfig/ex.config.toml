@@ -1,0 +1,44 @@
+# Example Config to create a domain/dominion
+
+port = 8000 # doesn't matter for the most part, the domain will find other domains on any functioning port
+
+# All timings are in Nanoseconds
+dialtimeout = 100000000	
+domainCheck = 1000000000
+serviceCheck = 5000000000
+
+
+[services]
+	[services.webServer]
+		priority = "dependency"
+		dependencies = []
+		traits = [
+			"compute",
+		]
+
+	# [services.experienceOrchestrator]
+	# 	priority = "dependency"
+	# 	dependencies = [
+	# 		"webServer",
+	# 	]
+	# 	traits = [
+	# 		"compute",
+	# 	]
+
+	[services.lightOrchestrator]
+		priority = "dependency"
+		dependencies = [
+			"webServer",
+			# "experienceOrchestrator",
+		]
+		traits = [
+			"compute",
+		]
+	[services.npBar]
+		priority = "required"
+		dependencies = [
+			"lightOrchestrator",
+		]
+		traits = [
+			"npBar",
+		]
