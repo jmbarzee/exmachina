@@ -1,4 +1,4 @@
-module github.com/jmbarzee/services/lightorchestrator
+module github.com/jmbarzee/services
 
 go 1.14
 
