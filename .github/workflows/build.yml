@@ -27,3 +27,5 @@ jobs:
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         COVERAGE_FILE: ./cover.info
+      if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
+      
