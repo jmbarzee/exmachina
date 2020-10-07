@@ -27,7 +27,7 @@ func NewWebServer(config config.ServiceConfig) (WebServer, error) {
 		"domain.html",
 		"service.html",
 	}
-	staticPath := "/usr/local/dominion/services/webserver/service/static"
+	staticPath := "/usr/local/services/webserver/service/static"
 
 	system.Logf("Loading template files...")
 	template, err := template.ParseFiles(prefixPaths(staticPath, prefixPaths(routeTMPL, prefixPaths(routeSystemStatus, htmlTemplates)))...)

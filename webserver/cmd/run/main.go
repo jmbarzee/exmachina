@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/dominion/service/config"
-	"github.com/jmbarzee/dominion/services/webserver/service"
+	"github.com/jmbarzee/services/webserver/service"
 )
 
 func main() {
