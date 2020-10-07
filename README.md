@@ -1,6 +1,8 @@
-[![Build Status](https://travis-ci.com/jmbarzee/services.svg?branch=master)](https://travis-ci.com/jmbarzee/services)
-[![Go Report Card](https://goreportcard.com/badge/github.com/jmbarzee/services)](https://goreportcard.com/report/github.com/jmbarzee/services)
-[![GoDoc](https://godoc.org/github.com/jmbarzee/services?status.svg)](https://godoc.org/github.com/jmbarzee/services)
+[![License: AGPL](https://img.shields.io/badge/license-AGPL-blue.svg)](https://opensource.org/licenses/GPL-3.0/)
+[![Documentation](https://godoc.org/github.com/jmbarzee/services?status.svg)](https://godoc.org/github.com/jmbarzee/services)
+[![Code Quality](https://goreportcard.com/badge/github.com/jmbarzee/services)](https://goreportcard.com/report/github.com/jmbarzee/services)
+[![Build Status](https://github.com/jmbarzee/services/workflows/build/badge.svg)](https://github.com/jmbarzee/services/actions)
+[![Coverage](https://codecov.io/gh/jmbarzee/services/branch/master/graph/badge.svg)](https://codecov.io/gh/jmbarzee/services)
 
 
 # Services
