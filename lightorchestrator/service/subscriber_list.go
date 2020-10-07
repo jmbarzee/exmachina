@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/ptypes"
-	pb "github.com/jmbarzee/dominion/services/lightorchestrator/grpc"
-	device "github.com/jmbarzee/dominion/services/lightorchestrator/service/device"
+	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
+	device "github.com/jmbarzee/services/lightorchestrator/service/device"
 )
 
 func NewStructs() (*SubscriberList, *DeviceNodeTree) {

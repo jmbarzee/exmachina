@@ -6,7 +6,7 @@ import (
 
 	"github.com/jmbarzee/dominion/service"
 	"github.com/jmbarzee/dominion/service/config"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/clients/nplight/lightplan"
+	"github.com/jmbarzee/services/lightorchestrator/clients/nplight/lightplan"
 	"github.com/jmbarzee/dominion/system"
 )
 

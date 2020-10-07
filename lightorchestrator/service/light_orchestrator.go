@@ -5,7 +5,7 @@ import (
 
 	"github.com/jmbarzee/dominion/service"
 	"github.com/jmbarzee/dominion/service/config"
-	pb "github.com/jmbarzee/dominion/services/lightorchestrator/grpc"
+	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 	"github.com/jmbarzee/dominion/system"
 )
 

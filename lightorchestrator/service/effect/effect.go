@@ -3,7 +3,7 @@ package effect
 import (
 	"time"
 
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/shared"
 )
 
 // Effect is a light abstraction representing paterns of colors

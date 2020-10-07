@@ -2,7 +2,7 @@ package device
 
 import (
 	"github.com/google/uuid"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/vibe"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
 )
 
 // Group represents a group of devices who's effects will share traits

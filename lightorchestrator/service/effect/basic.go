@@ -3,8 +3,8 @@ package effect
 import (
 	"time"
 
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/color"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/shared"
 )
 
 type BasicEffect struct {

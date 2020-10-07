@@ -1,9 +1,9 @@
 package pbconvert
 
 import (
-	pb "github.com/jmbarzee/dominion/services/lightorchestrator/grpc"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/device"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/space"
+	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
+	"github.com/jmbarzee/services/lightorchestrator/service/device"
+	"github.com/jmbarzee/services/lightorchestrator/service/space"
 )
 
 func NewPBDevice(device device.Device) *pb.Device {

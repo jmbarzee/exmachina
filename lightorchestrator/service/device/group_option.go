@@ -2,8 +2,8 @@ package device
 
 import (
 	"github.com/google/uuid"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/shared"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/vibe"
+	"github.com/jmbarzee/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
 )
 
 // GroupOption represents a series of groups

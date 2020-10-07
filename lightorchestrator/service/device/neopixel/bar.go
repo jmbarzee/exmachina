@@ -1,8 +1,8 @@
 package neopixel
 
 import (
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/device"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/space"
+	"github.com/jmbarzee/services/lightorchestrator/service/device"
+	"github.com/jmbarzee/services/lightorchestrator/service/space"
 )
 
 const (

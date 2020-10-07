@@ -4,10 +4,10 @@ import (
 	"sort"
 	"time"
 
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/device"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/effect"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/shared"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/vibe"
+	"github.com/jmbarzee/services/lightorchestrator/service/device"
+	"github.com/jmbarzee/services/lightorchestrator/service/effect"
+	"github.com/jmbarzee/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
 )
 
 // density is assumed to be 60 leds per meter

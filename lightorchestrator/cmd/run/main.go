@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/dominion/service/config"
-	lightorch "github.com/jmbarzee/dominion/services/lightorchestrator/service"
+	lightorch "github.com/jmbarzee/services/lightorchestrator/service"
 )
 
 func main() {

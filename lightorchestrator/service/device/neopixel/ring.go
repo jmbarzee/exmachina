@@ -3,8 +3,8 @@ package neopixel
 import (
 	"math"
 
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/shared"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/space"
+	"github.com/jmbarzee/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/space"
 )
 
 // Ring is a representation of a ring of neopixels.

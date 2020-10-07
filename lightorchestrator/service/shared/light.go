@@ -1,8 +1,8 @@
 package shared
 
 import (
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/color"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/space"
+	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/space"
 )
 
 // Light represents a NeoPixel in a line

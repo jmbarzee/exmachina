@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 
-	pb "github.com/jmbarzee/dominion/services/lightorchestrator/grpc"
-	device "github.com/jmbarzee/dominion/services/lightorchestrator/service/device"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/device/neopixel"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/pbconvert"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/space"
+	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
+	device "github.com/jmbarzee/services/lightorchestrator/service/device"
+	"github.com/jmbarzee/services/lightorchestrator/service/device/neopixel"
+	"github.com/jmbarzee/services/lightorchestrator/service/pbconvert"
+	"github.com/jmbarzee/services/lightorchestrator/service/space"
 	"github.com/jmbarzee/dominion/system"
 )
 

@@ -7,8 +7,8 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/jmbarzee/dominion/identity"
 	"github.com/jmbarzee/dominion/service/config"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/clients/nplight/lightplan"
-	pb "github.com/jmbarzee/dominion/services/lightorchestrator/grpc"
+	"github.com/jmbarzee/services/lightorchestrator/clients/nplight/lightplan"
+	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 	"github.com/jmbarzee/dominion/system"
 	"google.golang.org/grpc"
 )

@@ -4,9 +4,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/shared"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/space"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/vibe"
+	"github.com/jmbarzee/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/space"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
 )
 
 var DeviceNodeInsertError = errors.New("Failed to find location to insert DeviceNode")

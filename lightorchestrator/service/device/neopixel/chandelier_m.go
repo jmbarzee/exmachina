@@ -4,10 +4,10 @@ import (
 	"math"
 	"time"
 
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/device"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/shared"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/space"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/vibe"
+	"github.com/jmbarzee/services/lightorchestrator/service/device"
+	"github.com/jmbarzee/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/space"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
 )
 
 // ChandelierMedium is a Medium Chandelier (4 rings)

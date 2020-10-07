@@ -3,10 +3,10 @@ package service
 import (
 	"sync"
 
-	pb "github.com/jmbarzee/dominion/services/lightorchestrator/grpc"
-	device "github.com/jmbarzee/dominion/services/lightorchestrator/service/device"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/pbconvert"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/vibe"
+	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
+	device "github.com/jmbarzee/services/lightorchestrator/service/device"
+	"github.com/jmbarzee/services/lightorchestrator/service/pbconvert"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
 )
 
 // DeviceNodeTree thread-safe tree of allocaters

@@ -1,9 +1,9 @@
 package vibe
 
 import (
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/color"
-	effect "github.com/jmbarzee/dominion/services/lightorchestrator/service/effect"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	effect "github.com/jmbarzee/services/lightorchestrator/service/effect"
+	"github.com/jmbarzee/services/lightorchestrator/service/shared"
 )
 
 type BasicVibe struct {

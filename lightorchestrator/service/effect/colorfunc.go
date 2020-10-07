@@ -5,7 +5,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/color"
 	"github.com/jmbarzee/dominion/system"
 )
 

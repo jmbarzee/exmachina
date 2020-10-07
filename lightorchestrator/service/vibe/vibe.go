@@ -3,7 +3,7 @@ package vibe
 import (
 	"time"
 
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/effect"
+	"github.com/jmbarzee/services/lightorchestrator/service/effect"
 )
 
 // Vibe is a heavy abstraction correlating to general feelings in music

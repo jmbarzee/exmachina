@@ -1,8 +1,8 @@
 package neopixel
 
 import (
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/shared"
-	"github.com/jmbarzee/dominion/services/lightorchestrator/service/space"
+	"github.com/jmbarzee/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/space"
 )
 
 // Line is a representation of a strait line of neopixels.
