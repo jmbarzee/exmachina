@@ -16,7 +16,13 @@ Service hiarchy is defined in [Dominion Config](../main/cmd/exconfig/ex.config.t
 Planned: Offers a web GUI
 
 ### Routes
-`/systemstatus` displays info for all services
+`/` displays dominion info
+
+`/domain/{uuid}/` displays domain info
+
+`/domain/{uuid}/service/{type}` displays service info
+
+`/devices` displays device location info
 
 `/healthcheck` returns `Healthy!`
 
@@ -34,3 +40,11 @@ Peripheral: NeoPixel light string
 
 Subscribes to light updates from the `LightOrchestrator`.
 
+
+
+
+# Planned Work
+1. Lighting Effects - Expand effects library
+2. Color Picker - WebServer offers color picking for lights
+3. Expose Logfiles - Services offer routes with logfiles
+4. Display Logfiles - All log files can be viewed through the webserver

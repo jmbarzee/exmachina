@@ -1,2 +1,2 @@
-// exclude example from parent directory
+# exclude example from parent directory
 example/*
