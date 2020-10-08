@@ -8,6 +8,6 @@ traits = [
 ]
 
 # All timings are in Nanoseconds
-dialtimeout = 100000000	
-isolationCheck = 5000000000
-serviceCheck = 1000000000
+dialtimeout = 100000000
+isolationCheck = 500000000
+serviceCheck = 2000000000

@@ -3,9 +3,9 @@
 port = 8000 # doesn't matter for the most part, the domain will find other domains on any functioning port
 
 # All timings are in Nanoseconds
-dialtimeout = 100000000	
-domainCheck = 1000000000
-serviceCheck = 5000000000
+dialtimeout = 100000000
+domainCheck = 100000000
+serviceCheck = 2000000000
 
 
 [services]
