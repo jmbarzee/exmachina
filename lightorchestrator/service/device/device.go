@@ -17,7 +17,7 @@ type (
 	// DeviceNodes can also be an abstraction which has a Device as a parent or child
 	DeviceNode interface {
 		// Allocate passes Vibe into this device and its children
-		// Allocate typically stabalize the Vibe before passing it to children devices
+		// Allocate typically Stabilize the Vibe before passing it to children devices
 		Allocate(vibe.Vibe)
 
 		// Insert will place a node underneath a target node.

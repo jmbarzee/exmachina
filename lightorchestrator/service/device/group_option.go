@@ -23,7 +23,7 @@ func NewGroupOption() GroupOption {
 }
 
 // Allocate passes Vibe into this device and a single child group
-// Allocate stabalize the Vibe before passing it to a child group
+// Allocate Stabilize the Vibe before passing it to a child group
 func (d GroupOption) Allocate(vibe vibe.Vibe) {
 	groupNum := shared.RepeatableOption(vibe.Start(), len(d.Groups))
 	d.Groups[groupNum].Allocate(vibe)

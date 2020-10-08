@@ -56,7 +56,7 @@ func NewChandelierLarge(top space.Vector, theta float32) ChandelierLarge {
 
 // Allocate takes Vibes and Distributes them to the rings
 func (c ChandelierLarge) Allocate(feeling vibe.Vibe) {
-	newVibe := feeling.Stabalize()
+	newVibe := feeling.Stabilize()
 	for _, smallRing := range c.SmallRings {
 		smallRing.Allocate(newVibe)
 	}

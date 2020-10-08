@@ -18,7 +18,7 @@ type DeviceNodeTree struct {
 	root device.DeviceNode
 }
 
-// Allocate passes a vibe into the tree where it will be allocated to sub devices as it is stabalized
+// Allocate passes a vibe into the tree where it will be allocated to sub devices as it is Stabilized
 func (t DeviceNodeTree) Allocate(vibe vibe.Vibe) {
 	t.rwmutex.Lock()
 	t.root.Allocate(vibe)

@@ -22,9 +22,9 @@ func NewGroup() Group {
 }
 
 // Allocate passes Vibe into this device and its children
-// Allocate stabalize the Vibe before passing it to children devices
+// Allocate Stabilize the Vibe before passing it to children devices
 func (d Group) Allocate(vibe vibe.Vibe) {
-	newVibe := vibe.Stabalize()
+	newVibe := vibe.Stabilize()
 
 	for _, device := range d.DeviceNodes {
 		device.Allocate(newVibe)
