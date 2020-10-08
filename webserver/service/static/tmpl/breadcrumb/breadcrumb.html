@@ -1,0 +1,9 @@
+{{define "breadcrumb"}}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        {{range .Breadcrumbs}}
+            {{template "breadcrumbitem" .}}
+        {{end}}
+    </ol>
+</nav>
+{{end}}

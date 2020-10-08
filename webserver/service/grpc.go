@@ -28,7 +28,7 @@ func (s WebServer) rpcGetDomains(ctx context.Context) ([]identity.DomainIdentity
 		if err != nil {
 			return err
 		}
-		system.LogRPCf(rpcName, "Recieved reply")
+		system.LogRPCf(rpcName, "Received reply")
 
 		domains = identity.NewDomainIdentityList(reply.GetDomains())
 		return nil

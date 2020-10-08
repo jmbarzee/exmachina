@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    {{template "header" .Header}}
+    {{template "breadcrumb" .Breadcrumb}}
+    {{$domain := .Domain}}
+    <div class="m-3">
+        <h4>{{$domain.Address}} <span class="badge badge-dark">{{$domain.Version}}</span></h4>
+        <div class="row row-cols-1 row-cols-md-2">
+        {{range .Domain.Services}}
+            {{$service := .}}
+            <div class="col mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <a href="/domain/{{$domain.UUID}}/service/{{$service.Type}}">{{$service.Type}}</a>
+                    </div>
+                    <div class="card-body">
+                        <h6 class="card-subtitle mb-2 text-muted">{{$service.Address}}</h6>
+                    </div>
+                </div>
+            </div>
+        {{end}}
+        </div>
+    </div>
+    {{template "footer"}}
+</html>

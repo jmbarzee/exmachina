@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"html/template"
 	"path"
 
 	"github.com/jmbarzee/dominion/service"
@@ -12,9 +11,10 @@ import (
 
 type WebServer struct {
 	*service.Service
-	Template   *template.Template
-	StaticPath string
 }
+
+const staticPath = "/usr/local/dominion/services/webserver/service/static"
+const staticTemplatePath = "/usr/local/dominion/services/webserver/service/static/tmpl"
 
 func NewWebServer(config config.ServiceConfig) (WebServer, error) {
 	service, err := service.NewService(config)
@@ -22,25 +22,8 @@ func NewWebServer(config config.ServiceConfig) (WebServer, error) {
 		return WebServer{}, err
 	}
 
-	htmlTemplates := []string{
-		"index.html",
-		"domain.html",
-		"service.html",
-	}
-	staticPath := "/usr/local/services/webserver/service/static"
-
-	system.Logf("Loading template files...")
-	template, err := template.ParseFiles(prefixPaths(staticPath, prefixPaths(routeTMPL, prefixPaths(routeSystemStatus, htmlTemplates)))...)
-	if err != nil {
-		system.Logf("Failed to load: %v", err.Error())
-		return WebServer{}, err
-	}
-	system.Logf("Successful!")
-
 	example := WebServer{
-		Service:    service,
-		Template:   template,
-		StaticPath: staticPath,
+		Service: service,
 	}
 	return example, nil
 }
@@ -61,22 +44,3 @@ func prefixPaths(prefix string, paths []string) []string {
 	}
 	return paths
 }
-
-// func sampleIdentities() (identity.Identity, []identity.Identity, error) {
-// 	ident := identity.ServiceIdentity{
-// 		UUID: "UUID-ident",
-// 		Version: semver.Version{
-// 			Major: 1,
-// 		},
-// 		Services: map[string]identity.ServiceIdentity{
-// 			"service-a": identity.ServiceIdentity{
-// 				Port:        9001,
-// 				LastContact: time.Now(),
-// 			},
-// 		},
-// 		LastContact: time.Now(),
-// 		IP:          net.IP{},
-// 		Port:        9000,
-// 	}
-// 	return ident, []identity.Identity{ident, ident}, nil
-// }
