@@ -7,9 +7,9 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/jmbarzee/dominion/identity"
 	"github.com/jmbarzee/dominion/service/config"
+	"github.com/jmbarzee/dominion/system"
 	"github.com/jmbarzee/services/lightorchestrator/clients/nplight/lightplan"
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
-	"github.com/jmbarzee/dominion/system"
 	"google.golang.org/grpc"
 )
 
@@ -37,7 +37,7 @@ func (l *NPLight) rpcSubscribeLights(ctx context.Context, lightOrchestrator iden
 	if err != nil {
 		return fmt.Errorf("Error subscribing to lightOrchestrator: %w", err)
 	}
-	system.LogRPCf(rpcName, "Recieved stream client")
+	system.LogRPCf(rpcName, "Received stream client")
 
 	for {
 		reply, err := subLightsClient.Recv()
@@ -45,7 +45,7 @@ func (l *NPLight) rpcSubscribeLights(ctx context.Context, lightOrchestrator iden
 			if err = conn.Close(); err != nil {
 				return fmt.Errorf("Error closing connection to lightOrchestrator: %v", err)
 			}
-			return fmt.Errorf("Error receving reply from lightOrchestrator: %v", err)
+			return fmt.Errorf("Error receiving reply from lightOrchestrator: %v", err)
 		}
 
 		lightChange, err := l.convertDLRtoLightChange(reply)

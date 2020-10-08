@@ -5,8 +5,8 @@ import (
 
 	"github.com/jmbarzee/dominion/service"
 	"github.com/jmbarzee/dominion/service/config"
-	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 	"github.com/jmbarzee/dominion/system"
+	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 )
 
 type LightOrch struct {

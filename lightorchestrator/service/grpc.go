@@ -4,19 +4,19 @@ import (
 	"context"
 	"errors"
 
+	"github.com/jmbarzee/dominion/system"
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
-	device "github.com/jmbarzee/services/lightorchestrator/service/device"
+	"github.com/jmbarzee/services/lightorchestrator/service/device"
 	"github.com/jmbarzee/services/lightorchestrator/service/device/neopixel"
 	"github.com/jmbarzee/services/lightorchestrator/service/pbconvert"
 	"github.com/jmbarzee/services/lightorchestrator/service/space"
-	"github.com/jmbarzee/dominion/system"
 )
 
 // SubscribeLights requests a stream of lights
 // implements pb.LightOrchestratorServer
 func (l *LightOrch) SubscribeLights(request *pb.SubscribeLightsRequest, server pb.LightOrchestrator_SubscribeLightsServer) error {
 	rpcName := "SubscribeLights"
-	system.LogRPCf(rpcName, "Receving request")
+	system.LogRPCf(rpcName, "Receiving request")
 	serviceType := request.Type
 	serviceUUID := request.UUID
 	var device device.Device
@@ -46,7 +46,7 @@ func (l *LightOrch) SubscribeLights(request *pb.SubscribeLightsRequest, server p
 // implements pb.LightOrchestratorServer
 func (l *LightOrch) GetDevices(ctx context.Context, request *pb.Empty) (*pb.GetDevicesReply, error) {
 	rpcName := "GetDevices"
-	system.LogRPCf(rpcName, "Receving request")
+	system.LogRPCf(rpcName, "Receiving request")
 	pbDeviceNodes := l.DeviceHierarchy.ToPBDeviceNode()
 	pbDevices := make([]*pb.Device, 0)
 	l.Subscribers.Range(func(sub Subscriber) bool {
@@ -66,7 +66,7 @@ func (l *LightOrch) GetDevices(ctx context.Context, request *pb.Empty) (*pb.GetD
 // implements pb.LightOrchestratorServer
 func (l *LightOrch) MoveDevice(ctx context.Context, request *pb.MoveDeviceRequest) (*pb.Empty, error) {
 	rpcName := "MoveDevice"
-	system.LogRPCf(rpcName, "Receving request")
+	system.LogRPCf(rpcName, "Receiving request")
 
 	pbDevice := request.Device
 
@@ -93,7 +93,7 @@ func (l *LightOrch) MoveDevice(ctx context.Context, request *pb.MoveDeviceReques
 // implements pb.LightOrchestratorServer
 func (l *LightOrch) InsertDeviceInHierarchy(ctx context.Context, request *pb.InsertDeviceInHierarchyRequest) (*pb.Empty, error) {
 	rpcName := "InsertDeviceInHierarchy"
-	system.LogRPCf(rpcName, "Receving request")
+	system.LogRPCf(rpcName, "Receiving request")
 
 	parentUUID := request.ParentUUID
 	childUUID := request.ChildUUID
