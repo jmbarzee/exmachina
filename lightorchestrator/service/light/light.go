@@ -1,4 +1,4 @@
-package shared
+package light
 
 import (
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
