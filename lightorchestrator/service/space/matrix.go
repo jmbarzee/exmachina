@@ -17,7 +17,7 @@ func NewRotationMatrixX(theta float32) Matrix {
 	}
 }
 
-// NewRotationMatrixY produces a matrix which will rotate about X
+// NewRotationMatrixY produces a matrix which will rotate about Y
 func NewRotationMatrixY(theta float32) Matrix {
 	sin64, cos64 := math.Sincos(float64(theta))
 	sin := float32(sin64)
@@ -29,7 +29,7 @@ func NewRotationMatrixY(theta float32) Matrix {
 	}
 }
 
-// NewRotationMatrixZ produces a matrix which will rotate about X
+// NewRotationMatrixZ produces a matrix which will rotate about Z
 func NewRotationMatrixZ(theta float32) Matrix {
 	sin64, cos64 := math.Sincos(float64(theta))
 	sin := float32(sin64)
