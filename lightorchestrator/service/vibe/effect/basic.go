@@ -5,11 +5,11 @@ import (
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
 	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe/span"
 )
 
 type BasicEffect struct {
-	shared.TimeSpan
+	span.Span
 	Rank int
 }
 
