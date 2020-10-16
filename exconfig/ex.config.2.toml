@@ -5,9 +5,10 @@ port = 9200 # doesn't matter for the most part, the domain will find other domai
 
 traits = [
 	"npBar",
+	"compute",
 ]
 
 # All timings are in Nanoseconds
 dialtimeout = 100000000
-isolationCheck = 500000000
+isolationCheck = 5000000000
 serviceCheck = 2000000000
