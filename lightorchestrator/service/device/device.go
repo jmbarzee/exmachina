@@ -1,24 +1,26 @@
 package device
 
 import (
-	"errors"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/light"
 	"github.com/jmbarzee/services/lightorchestrator/service/space"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
 
-var DeviceNodeInsertError = errors.New("Failed to find location to insert DeviceNode")
-
 type (
+	// Allocater accepts and distributes vibes to children Allocaters
+	Allocater interface {
+		// Allocate passes Vibe into this device and its children
+		// Allocate typically Stabilize the Vibe before passing it to children devices
+		Allocate(ifaces.Vibe)
+	}
+
 	// A DeviceNode is a node in the device tree
 	// DeviceNodes can reference an object which is also a Device
 	// DeviceNodes can also be an abstraction which has a Device as a parent or child
 	DeviceNode interface {
-		// Allocate passes Vibe into this device and its children
-		// Allocate typically Stabilize the Vibe before passing it to children devices
-		Allocate(vibe.Vibe)
+		Allocater
 
 		// Insert will place a node underneath a target node.
 		// Insert returns an error if the current DeviceNode is a real Device
@@ -44,7 +46,7 @@ type (
 		DeviceNode
 
 		// Render produces lights from the effects stored in a device
-		Render(time.Time) []shared.Light
+		Render(time.Time) []light.Light
 
 		PruneEffects(time.Time)
 

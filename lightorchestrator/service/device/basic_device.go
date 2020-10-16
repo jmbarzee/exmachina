@@ -1,5 +1,11 @@
 package device
 
+import (
+	"errors"
+)
+
+var DeviceNodeInsertError = errors.New("Failed to find location to insert DeviceNode")
+
 type BasicDevice struct {
 	ID string
 }
