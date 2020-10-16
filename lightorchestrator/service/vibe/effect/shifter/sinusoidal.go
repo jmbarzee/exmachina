@@ -4,14 +4,14 @@ import (
 	"math"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/effect/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
 
 // Sinusoidal is a Shifter which provides shifts that relate to changing time, linearly
 type Sinusoidal struct {
 	Start         *time.Time
-	TimePerCycle  *time.Duration
-	ShiftPerCycle *float32
+	TimePerCycle  *time.Duration // Period
+	ShiftPerCycle *float32       // Amplitude
 }
 
 // Shift returns a value representing some change or shift
@@ -24,33 +24,22 @@ func (s Sinusoidal) Shift(t time.Time) float32 {
 }
 
 // GetStabilizeFuncs returns StabilizeFunc for all remaining unstablaized traits
-func (s *Sinusoidal) GetStabilizeFuncs() []shared.StabilizeFunc {
-	sFuncs := []shared.StabilizeFunc{}
+func (s *Sinusoidal) GetStabilizeFuncs() []func(ifaces.Palette) {
+	sFuncs := []func(ifaces.Palette){}
 	if s.Start == nil {
-		sFuncs = append(sFuncs, func(palette shared.Palette) error {
-			t := palette.StartTime
+		sFuncs = append(sFuncs, func(p ifaces.Palette) {
+			t := p.Start()
 			s.Start = &t
-			return nil
 		})
 	}
 	if s.TimePerCycle == nil {
-		sFuncs = append(sFuncs, func(palette shared.Palette) error {
-			d, err := palette.SelectDuration()
-			if err != nil {
-				return err
-			}
-			s.TimePerCycle = &d
-			return nil
+		sFuncs = append(sFuncs, func(p ifaces.Palette) {
+			s.TimePerCycle = p.SelectDuration()
 		})
 	}
 	if s.ShiftPerCycle == nil {
-		sFuncs = append(sFuncs, func(palette shared.Palette) error {
-			shift, err := palette.SelectShift()
-			if err != nil {
-				return err
-			}
-			s.ShiftPerCycle = &shift
-			return nil
+		sFuncs = append(sFuncs, func(p ifaces.Palette) {
+			s.ShiftPerCycle = p.SelectShift()
 		})
 	}
 	return sFuncs
