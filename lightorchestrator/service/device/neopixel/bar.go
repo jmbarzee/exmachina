@@ -14,12 +14,12 @@ type Bar struct {
 	*Line
 }
 
-func NewBar(uuid string, start space.Vector, direction space.Orientation) Bar {
+func NewBar(uuid string, start space.Vector, direction, rotation space.Orientation) Bar {
 	return Bar{
 		BasicDevice: device.BasicDevice{
 			ID: uuid,
 		},
-		Line: NewLine(start, direction, neoPixelBarLength),
+		Line: NewLine(start, direction, rotation, neoPixelBarLength),
 	}
 }
 

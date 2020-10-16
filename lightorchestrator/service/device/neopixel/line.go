@@ -1,7 +1,7 @@
 package neopixel
 
 import (
-	"github.com/jmbarzee/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/light"
 	"github.com/jmbarzee/services/lightorchestrator/service/space"
 )
 
@@ -15,28 +15,33 @@ type Line struct {
 	Start space.Vector
 	// Direction is direction which all LEDs are from the first
 	Direction space.Orientation
+	// Rotation is direction which all LEDs point (orthogonal to Direction)
+	Rotation space.Orientation
 }
 
 // NewLine creates a new Line
-func NewLine(start space.Vector, direction space.Orientation, length int) *Line {
+func NewLine(start space.Vector, direction, rotation space.Orientation, length int) *Line {
+	// TODO
 
 	d := &Line{
 		Start:     start,
 		Direction: direction,
+		Rotation:  rotation,
 	}
 
 	singleLEDVector := space.NewVector(direction, distPerLED)
 
 	d.Row = NewRow(
 		length,
-		func() []shared.Light {
-			lights := make([]shared.Light, length)
+		func() []light.Light {
+			lights := make([]light.Light, length)
 			for i := range lights {
-				lights[i] = shared.Light{
-					Position: i,
-					GetLocationFunc: func(position int) space.Vector {
-						return start.Translate(singleLEDVector.Scale(float32(position)))
-					},
+				lightLocation := start.Translate(singleLEDVector.Scale(float32(i)))
+				lightOrientation := rotation
+				lights[i] = &light.Basic{
+					Position:    i,
+					Location:    lightLocation,
+					Orientation: lightOrientation,
 				}
 			}
 			return lights

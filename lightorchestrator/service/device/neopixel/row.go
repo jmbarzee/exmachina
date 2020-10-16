@@ -5,9 +5,8 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/device"
-	"github.com/jmbarzee/services/lightorchestrator/service/effect"
-	"github.com/jmbarzee/services/lightorchestrator/service/shared"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
+	"github.com/jmbarzee/services/lightorchestrator/service/light"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
 
 // density is assumed to be 60 leds per meter
@@ -21,26 +20,26 @@ type Row struct {
 	Length int
 
 	// Effects is the array of effects from materializing Vibes in calls to Allocate
-	Effects []effect.Effect
+	Effects []ifaces.Effect
 
-	GetLights func() []shared.Light
+	GetLights func() []light.Light
 }
 
 // NewRow creates a new Row
 func NewRow(
 	length int,
-	getLights func() []shared.Light,
+	getLights func() []light.Light,
 ) *Row {
 	return &Row{
 		Length:    length,
-		Effects:   make([]effect.Effect, 0),
+		Effects:   make([]ifaces.Effect, 0),
 		GetLights: getLights,
 	}
 }
 
 // PruneEffects removes all effects which have ended before a time t
 func (d *Row) PruneEffects(t time.Time) {
-	unEndedEffects := make([]effect.Effect, 0, len(d.Effects))
+	unEndedEffects := make([]ifaces.Effect, 0, len(d.Effects))
 	for _, e := range d.Effects {
 		if e.End().Before(t) {
 			continue
@@ -53,8 +52,8 @@ func (d *Row) PruneEffects(t time.Time) {
 }
 
 // Render uses the stored effects from allocate(feeling)s to produce an array of lights
-func (d *Row) Render(t time.Time) []shared.Light {
-	runningEffects := make([]effect.Effect, 0)
+func (d *Row) Render(t time.Time) []light.Light {
+	runningEffects := make([]ifaces.Effect, 0)
 	for _, f := range d.Effects {
 		if f.Start().After(time.Now()) {
 			// since the list is ordered we can assume there are no more running effects
@@ -69,7 +68,7 @@ func (d *Row) Render(t time.Time) []shared.Light {
 	lights := d.GetLights()
 
 	for _, e := range runningEffects {
-		e.Render(t, lights)
+		lights = e.Render(t, lights)
 	}
 
 	return lights
@@ -82,19 +81,19 @@ func (d Row) GetChildren() []device.DeviceNode {
 
 // Allocate takes Vibes and Materializes them into effects
 // This is the bottom of the Allocater hiarchy for neoPixels
-func (d *Row) Allocate(feeling vibe.Vibe) {
+func (d *Row) Allocate(feeling ifaces.Vibe) {
 	newEffects := feeling.Materialize()
 	d.Effects = append(d.Effects, newEffects...)
 	sort.Sort(byStartTime(d.Effects))
 }
 
-type byStartTime []effect.Effect
+type byStartTime []ifaces.Effect
 
 func (st byStartTime) Len() int           { return len(st) }
 func (st byStartTime) Swap(i, j int)      { st[i], st[j] = st[j], st[i] }
 func (st byStartTime) Less(i, j int) bool { return st[i].Start().Before(st[j].Start()) }
 
-type byPriority []effect.Effect
+type byPriority []ifaces.Effect
 
 func (p byPriority) Len() int           { return len(p) }
 func (p byPriority) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
