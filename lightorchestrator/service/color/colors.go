@@ -41,6 +41,33 @@ var (
 	WarmMagenta = NewHSLA(21.0/24, Max, Half, Min)
 	RedMagenta  = NewHSLA(22.0/24, Max, Half, Min)
 	CoolRed     = NewHSLA(23.0/24, Max, Half, Min)
+
+	AllColors = []HSLA{
+		Red,
+		WarmRed,
+		Orange,
+		WarmYellow,
+		Yellow,
+		CoolYellow,
+		YellowGreen,
+		WarmGreen,
+		Green,
+		CoolGreen,
+		GreenCyan,
+		WarmCyan,
+		Cyan,
+		CoolCyan,
+		BlueCyan,
+		CoolBlue,
+		Blue,
+		WarmBlue,
+		Violet,
+		CoolMagenta,
+		Magenta,
+		WarmMagenta,
+		RedMagenta,
+		CoolRed,
+	}
 )
 
 var (
