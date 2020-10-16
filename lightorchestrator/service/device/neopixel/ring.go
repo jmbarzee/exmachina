@@ -3,7 +3,7 @@ package neopixel
 import (
 	"math"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/shared"
+	"github.com/jmbarzee/services/lightorchestrator/service/light"
 	"github.com/jmbarzee/services/lightorchestrator/service/space"
 )
 
@@ -13,60 +13,58 @@ type Ring struct {
 	// Row provides the implementation of effect.Allocater
 	*Row
 
-	// Center is the point about which the Ring is centered
-	Center space.Vector
 	// Radius is the distance from the Center to any LED
 	Radius float32
-
-	// Theta is the rotation about Z of the first LED
-	Theta float32
-	// Phi is the tilt from Z of the first LED
-	Phi float32
+	// Center is the point about which the Ring is centered
+	Center space.Vector
+	// Orientation is the rotation and tilt of the Ring
+	Orientation space.Orientation
 }
 
 // NewRing creates a new Ring
 func NewRing(
-	center space.Vector,
 	radius float32,
-	theta float32,
-	phi float32,
+	center space.Vector,
+	orientation space.Orientation,
 ) *Ring {
 	d := &Ring{
-		Center: center,
-		Radius: radius,
-
-		Theta: theta,
-		Phi:   phi,
+		Radius:      radius,
+		Center:      center,
+		Orientation: orientation,
 	}
 	length := int(radius * 2 * math.Pi / distPerLED)
 
-	transRotatePhi := space.NewRotationMatrixY(math.Pi/2.0 - phi)
-	transRotateTheta := space.NewRotationMatrixZ(theta)
-	transRotate := transRotateTheta.Mult(transRotatePhi)
+	rotateTheta := space.NewRotationMatrixX(orientation.Theta)
+	rotatePhi := space.NewRotationMatrixZ(orientation.Phi)
+	orientationMatrix := rotateTheta.Mult(rotatePhi)
 	radPerLED := distPerLED / radius
 
 	d.Row = NewRow(
 		length,
-		func() []shared.Light {
-			lights := make([]shared.Light, length)
+		func() []light.Light {
+			lights := make([]light.Light, length)
 			for i := range lights {
-				lights[i] = shared.Light{
-					Position: i,
-					GetLocationFunc: func(position int) space.Vector {
 
-						radToLED := radPerLED * float32(position)
+				localPhi := radPerLED * float32(i)
 
-						// Location of LED if Ring was in XY-Plane with first LED on the positive X axis
-						location := space.Vector{
-							X: radius * float32(math.Cos(float64(radToLED))),
-							Y: radius * float32(math.Sin(float64(radToLED))),
-							Z: 0,
-						}
-						// Transform to match rotation and tilt of ring
-						transLocation := location.Transform(transRotate)
-						// Translate to be relative to origin and not center
-						return center.Translate(transLocation)
-					},
+				// Location of LED if Ring was in XZ-Plane with first LED on the positive X axis
+				sin64, cos64 := math.Sincos(float64(localPhi))
+				location := space.Vector{
+					X: radius * float32(cos64),
+					Y: radius * float32(sin64),
+					Z: 0,
+				}
+				// Transform to match rotation and tilt of ring
+				rotatedLocation := location.Transform(orientationMatrix)
+				// Translate to be relative to origin and not center
+				lightLocation := center.Translate(rotatedLocation)
+
+				lightOrientation := orientation.Rotate(localPhi)
+
+				lights[i] = &light.Basic{
+					Position:    i,
+					Location:    lightLocation,
+					Orientation: lightOrientation,
 				}
 			}
 			return lights
