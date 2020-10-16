@@ -6,6 +6,7 @@ import (
 
 	"github.com/jmbarzee/dominion/system"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe/span"
 )
 
 const (
@@ -40,14 +41,21 @@ Loop:
 func (l *LightOrch) subscribeVibes(ctx context.Context) {
 	routineName := "orchastrate"
 	system.LogRoutinef(routineName, "Starting routine")
-	ticker := time.NewTicker(time.Second * 15)
+
+	tickLength := time.Second * 20
+	ticker := time.NewTicker(tickLength)
 
 Loop:
 	for {
 
 		select {
-		case <-ticker.C:
-			v := &vibe.Basic{}
+		case t := <-ticker.C:
+			v := &vibe.Basic{
+				Span: span.Span{
+					StartTime: t.Add(tickLength),
+					EndTime:   t.Add(tickLength * 2),
+				},
+			}
 			l.DeviceHierarchy.Allocate(v)
 		case <-ctx.Done():
 			break Loop
