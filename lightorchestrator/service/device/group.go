@@ -2,7 +2,7 @@ package device
 
 import (
 	"github.com/google/uuid"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
 
 // Group represents a group of devices who's effects will share traits
@@ -12,18 +12,21 @@ type Group struct {
 }
 
 // NewGroup creates a new Group with a unique ID
-func NewGroup() Group {
-	return Group{
+func NewGroup(deviceNodes ...DeviceNode) *Group {
+	if deviceNodes == nil {
+		deviceNodes = []DeviceNode{}
+	}
+	return &Group{
 		BasicDevice: BasicDevice{
 			ID: uuid.New().String(),
 		},
-		DeviceNodes: []DeviceNode{},
+		DeviceNodes: deviceNodes,
 	}
 }
 
 // Allocate passes Vibe into this device and its children
 // Allocate Stabilize the Vibe before passing it to children devices
-func (d Group) Allocate(vibe vibe.Vibe) {
+func (d Group) Allocate(vibe ifaces.Vibe) {
 	newVibe := vibe.Stabilize()
 
 	for _, device := range d.DeviceNodes {

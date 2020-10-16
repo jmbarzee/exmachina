@@ -2,8 +2,8 @@ package device
 
 import (
 	"github.com/google/uuid"
-	"github.com/jmbarzee/services/lightorchestrator/service/shared"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
+	"github.com/jmbarzee/services/lightorchestrator/service/repeatable"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
 
 // GroupOption represents a series of groups
@@ -13,19 +13,22 @@ type GroupOption struct {
 }
 
 // NewGroupOption creates a new GroupOption with a unique ID
-func NewGroupOption() GroupOption {
+func NewGroupOption(groups ...*Group) GroupOption {
+	if groups == nil {
+		groups = []*Group{}
+	}
 	return GroupOption{
 		BasicDevice: BasicDevice{
 			ID: uuid.New().String(),
 		},
-		Groups: []*Group{},
+		Groups: groups,
 	}
 }
 
 // Allocate passes Vibe into this device and a single child group
 // Allocate Stabilize the Vibe before passing it to a child group
-func (d GroupOption) Allocate(vibe vibe.Vibe) {
-	groupNum := shared.RepeatableOption(vibe.Start(), len(d.Groups))
+func (d GroupOption) Allocate(vibe ifaces.Vibe) {
+	groupNum := repeatable.Option(vibe.Start(), len(d.Groups))
 	d.Groups[groupNum].Allocate(vibe)
 }
 
