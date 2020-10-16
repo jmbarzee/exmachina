@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/dominion/system"
-	ws2811 "github.com/jmbarzee/rpi_ws281x/golang/stub"
+	ws2811 "github.com/jmbarzee/rpi_ws281x/golang/ws2811"
 )
 
 func (l *NPLight) displayLights(ctx context.Context) {
