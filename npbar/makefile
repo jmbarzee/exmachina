@@ -12,11 +12,11 @@ else
 	git clone https://github.com/jgarff/rpi_ws281x --quiet; \
 	cd rpi_ws281x; \
 	scons; \
-	find . -name '*.a' | cpio -pdm /usr/local/bin; \
-	find . -name '*.h' | cpio -pdm /usr/local/include
+	find . -name '*.a' | sudo cpio -pdm /usr/local/bin; \
+	find . -name '*.h' | sudo cpio -pdm /usr/local/include
 
 	
-	go build cmd/run/main.go 
+	go build -v cmd/run/main.go 
 endif
 
 start:
