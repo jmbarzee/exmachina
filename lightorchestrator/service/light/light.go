@@ -5,29 +5,17 @@ import (
 	"github.com/jmbarzee/services/lightorchestrator/service/space"
 )
 
-// Light represents a NeoPixel in a line
-type Light struct {
-	Position        int
-	Color           color.HSLA
-	GetLocationFunc func(position int) space.Vector
-}
+type Light interface {
 
-// GetColor returns the color of the light
-func (l Light) GetColor() color.HSLA {
-	return l.Color
-}
+	// GetColor returns the color of the light
+	GetColor() color.HSLA
+	// SetColor changes the color of the light
+	SetColor(newColor color.HSLA)
 
-// SetColor changes the color of the light
-func (l *Light) SetColor(newColor color.HSLA) {
-	l.Color = newColor
-}
-
-// GetLocation returns the point in space where the Light is
-func (l Light) GetLocation() space.Vector {
-	return l.GetLocationFunc(l.Position)
-}
-
-// GetPosition returns the position of the Light (in a string)
-func (l Light) GetPosition() int {
-	return l.Position
+	// GetPosition returns the position of the Light (in a string)
+	GetPosition() int
+	// GetLocation returns the point in space where the Light is
+	GetLocation() space.Vector
+	// GetOrientation returns the direction the Light points
+	GetOrientation() space.Orientation
 }
