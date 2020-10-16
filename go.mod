@@ -9,5 +9,6 @@ require (
 	github.com/jmbarzee/domain v0.0.0-20200628231130-6db7017f3127
 	github.com/jmbarzee/dominion v0.0.0-20201007010044-c3155ac46310
 	github.com/jmbarzee/rpi_ws281x v0.0.0-20181120233232-1c302014b520
+	github.com/rpi-ws281x/rpi-ws281x-go v1.0.5
 	google.golang.org/grpc v1.32.0
 )

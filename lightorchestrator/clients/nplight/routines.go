@@ -5,17 +5,29 @@ import (
 	"time"
 
 	"github.com/jmbarzee/dominion/system"
-	ws2811 "github.com/jmbarzee/rpi_ws281x/golang/ws2811"
+	ws2811 "github.com/rpi-ws281x/rpi-ws281x-go"
 )
 
 func (l *NPLight) displayLights(ctx context.Context) {
 	routineName := "DisplayLights"
 	system.LogRoutinef(routineName, "Starting routine")
-	defer ws2811.Fini()
-	err := ws2811.Init(gpioPin, l.Size, brightness)
+
+	opt := ws2811.DefaultOptions
+	opt.Channels[0].Brightness = brightness
+	opt.Channels[0].LedCount = l.Size
+	opt.Channels[0].GpioPin = gpioPin
+
+	dev, err := ws2811.MakeWS2811(&opt)
 	if err != nil {
 		system.Panic(err)
 	}
+
+	err = dev.Init()
+	if err != nil {
+		system.Panic(err)
+	}
+
+	defer dev.Fini()
 
 	ticker := time.NewTicker(displayRate)
 
@@ -27,9 +39,9 @@ Loop:
 			next := l.LightPlan.Advance(t)
 			if next != nil {
 				for i, wrgb := range next.Lights {
-					ws2811.SetLed(i, wrgb)
+					dev.Leds(0)[i] = wrgb
 				}
-				ws2811.Render()
+				dev.Render()
 			}
 
 		case <-ctx.Done():

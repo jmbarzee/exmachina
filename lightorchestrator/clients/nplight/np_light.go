@@ -6,8 +6,8 @@ import (
 
 	"github.com/jmbarzee/dominion/service"
 	"github.com/jmbarzee/dominion/service/config"
-	"github.com/jmbarzee/services/lightorchestrator/clients/nplight/lightplan"
 	"github.com/jmbarzee/dominion/system"
+	"github.com/jmbarzee/services/lightorchestrator/clients/nplight/lightplan"
 )
 
 const (
