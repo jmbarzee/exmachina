@@ -5,7 +5,6 @@ port = 9200 # doesn't matter for the most part, the domain will find other domai
 
 traits = [
 	"npBar",
-	"compute",
 ]
 
 # All timings are in Nanoseconds
