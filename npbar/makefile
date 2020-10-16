@@ -1,13 +1,11 @@
 
 UNAME := $(shell uname)
 
-ifneq ($(UNAME), Linux)
 build:
+ifneq ($(UNAME), Linux)
 	$(error Must build on a raspberry pi)
 else 
-build:
-
-	apt-get install scons
+	sudo apt-get install scons
 
 	cd /tmp; \
 	rm -rf rpi_ws281x; \
@@ -20,8 +18,6 @@ build:
 	
 	go build cmd/run/main.go 
 endif
-
-get_scons_linux:
 
 start:
 	./main $(DOMINION_IP) $(DOMINION_PORT) $(DOMAIN_UUID) $(SERVICE_PORT)
