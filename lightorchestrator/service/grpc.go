@@ -22,7 +22,7 @@ func (l *LightOrch) SubscribeLights(request *pb.SubscribeLightsRequest, server p
 	var device device.Device
 	switch serviceType {
 	case "npBar":
-		device = neopixel.NewBar(serviceUUID, space.Vector{}, space.Orientation{})
+		device = neopixel.NewBar(serviceUUID, space.Vector{}, space.Orientation{}, space.Orientation{})
 		// TODO @jmbarzee add other devices for start up here
 	}
 	if device == nil {

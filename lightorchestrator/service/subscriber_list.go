@@ -8,7 +8,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes"
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
-	device "github.com/jmbarzee/services/lightorchestrator/service/device"
+	"github.com/jmbarzee/services/lightorchestrator/service/device"
 )
 
 func NewStructs() (*SubscriberList, *DeviceNodeTree) {
@@ -39,7 +39,7 @@ func (s Subscriber) DispatchRender(t time.Time) error {
 
 	colors := make([]uint32, len(lights))
 	for i, light := range lights {
-		colors[i] = light.Color.ToRGBA().ToUInt32WGRB()
+		colors[i] = light.GetColor().ToRGBA().ToUInt32WGRB()
 	}
 
 	timestamp, err := ptypes.TimestampProto(t)

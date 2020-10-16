@@ -40,6 +40,7 @@ func (l *LightOrch) Run(ctx context.Context) error {
 	system.Logf(l.ServiceIdentity.String())
 	system.Logf("The Dominion ever expands!\n")
 
+	go l.subscribeVibes(ctx)
 	go l.orchastrate(ctx)
 
 	return l.Service.HostService(ctx)

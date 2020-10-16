@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/dominion/system"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe"
 )
 
 const (
@@ -33,5 +34,24 @@ Loop:
 		}
 	}
 
+	system.LogRoutinef(routineName, "Stopping routine")
+}
+
+func (l *LightOrch) subscribeVibes(ctx context.Context) {
+	routineName := "orchastrate"
+	system.LogRoutinef(routineName, "Starting routine")
+	ticker := time.NewTicker(time.Second * 15)
+
+Loop:
+	for {
+
+		select {
+		case <-ticker.C:
+			v := &vibe.Basic{}
+			l.DeviceHierarchy.Allocate(v)
+		case <-ctx.Done():
+			break Loop
+		}
+	}
 	system.LogRoutinef(routineName, "Stopping routine")
 }

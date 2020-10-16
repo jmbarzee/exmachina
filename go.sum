@@ -32,6 +32,7 @@ github.com/gorilla/mux v1.8.0 h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=
 github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
 github.com/grandcat/zeroconf v0.0.0-20190424104450-85eadb44205c/go.mod h1:YjKB0WsLXlMkO9p+wGTCoPIDGRJH0mz7E526PxkQVxI=
 github.com/grandcat/zeroconf v1.0.0/go.mod h1:lTKmG1zh86XyCoUeIHSA4FJMBwCJiQmGfcP2PdzytEs=
+github.com/jmbarzee/domain v0.0.0-20200628231130-6db7017f3127 h1:c7bccUYFOG/Z16sVvW5biL+7ipdwKQQRr7cBCJmxQpQ=
 github.com/jmbarzee/domain v0.0.0-20200628231130-6db7017f3127/go.mod h1:7tiDMphvqITjiHRO3Vza3FVk/z9sYl1N7lVbgAckisg=
 github.com/jmbarzee/dominion v0.0.0-20201007010044-c3155ac46310 h1:zuXUIWQ257tWnXpn2VCmaxMZCWVzVFHhNoqnIizw+6M=
 github.com/jmbarzee/dominion v0.0.0-20201007010044-c3155ac46310/go.mod h1:+ItHo5GvhFJRwixJI+5AGx+FHkuH0d09Q3XsIxYFXeI=
