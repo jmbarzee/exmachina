@@ -35,6 +35,7 @@ func (l *LightOrch) SubscribeLights(request *pb.SubscribeLightsRequest, server p
 		Kill:   cancelFunc,
 	}
 	l.Subscribers.Append(sub)
+	system.Logf("Added new Device %s!", serviceUUID)
 
 	// hold connection open until it is ended elsewhere
 	<-ctx.Done()
@@ -98,21 +99,21 @@ func (l *LightOrch) InsertDeviceInHierarchy(ctx context.Context, request *pb.Ins
 	parentUUID := request.ParentUUID
 	childUUID := request.ChildUUID
 
-	var device device.Device
+	var targetDevice device.Device
 	l.Subscribers.Range(func(sub Subscriber) bool {
 		device := sub.Device
 		if device.GetID() != childUUID {
 			return true
 		}
-		device = sub.Device
+		targetDevice = sub.Device
 		return false
 	})
 
-	if device == nil {
+	if targetDevice == nil {
 		return nil, errors.New("Could not find specified Child")
 	}
 
-	err := l.DeviceHierarchy.Insert(parentUUID, device)
+	err := l.DeviceHierarchy.Insert(parentUUID, targetDevice)
 
 	system.LogRPCf(rpcName, "Sending reply")
 	return &pb.Empty{}, err
