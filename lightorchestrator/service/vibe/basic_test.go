@@ -19,51 +19,58 @@ func TestBasicStabilize(t *testing.T) {
 	aTime3 := aTime2.Add(time.Minute)
 	aDuration := time.Nanosecond * 2245197264
 	aDuration2 := time.Nanosecond * 4291714913
+	aSpan1 := span.Span{
+		StartTime: aTime1,
+		EndTime:   aTime1.Add(time.Hour),
+	}
+	aSpan2 := span.Span{
+		StartTime: aTime2,
+		EndTime:   aTime2.Add(time.Hour),
+	}
+	aSpan3 := span.Span{
+		StartTime: aTime3,
+		EndTime:   aTime3.Add(time.Hour),
+	}
 
 	cases := []StabilizeTest{
 		{
 			Name: "Basic Vibe",
 			ActualVibe: &Basic{
-				Span: span.Span{
-					StartTime: aTime1,
-				},
+				Span: aSpan1,
 			},
 			ExpectedVibes: []ifaces.Vibe{
 				&Basic{
-					Span: span.Span{
-						StartTime: aTime1,
-					},
+					Span: aSpan1,
 					Effects: []ifaces.Effect{
-						&effect.Future{},
+						&effect.Future{
+							BasicEffect: effect.BasicEffect{Span: aSpan1},
+						},
 					},
 				},
 				&Basic{
-					Span: span.Span{
-						StartTime: aTime1,
-					},
+					Span: aSpan1,
 					Effects: []ifaces.Effect{
 						&effect.Future{
+							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 						},
 					},
 				},
 				&Basic{
-					Span: span.Span{
-						StartTime: aTime1,
-					},
+					Span: aSpan1,
 					Effects: []ifaces.Effect{
 						&effect.Future{
+							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter:      &painter.Move{},
 						},
 					},
 				},
 				&Basic{
-					Span: span.Span{
-						StartTime: aTime1,
-					},
+					Span: aSpan1,
 					Effects: []ifaces.Effect{
 						&effect.Future{
+							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Move{
 								ColorStart: &color.RedMagenta,
@@ -76,35 +83,31 @@ func TestBasicStabilize(t *testing.T) {
 		{
 			Name: "Basic Vibe",
 			ActualVibe: &Basic{
-				Span: span.Span{
-					StartTime: aTime2,
-				},
+				Span: aSpan2,
 			},
 			ExpectedVibes: []ifaces.Vibe{
 				&Basic{
-					Span: span.Span{
-						StartTime: aTime2,
-					},
-					Effects: []ifaces.Effect{
-						&effect.Solid{},
-					},
-				},
-				&Basic{
-					Span: span.Span{
-						StartTime: aTime2,
-					},
+					Span: aSpan2,
 					Effects: []ifaces.Effect{
 						&effect.Solid{
-							Painter: &painter.Static{},
+							BasicEffect: effect.BasicEffect{Span: aSpan2},
 						},
 					},
 				},
 				&Basic{
-					Span: span.Span{
-						StartTime: aTime2,
-					},
+					Span: aSpan2,
 					Effects: []ifaces.Effect{
 						&effect.Solid{
+							BasicEffect: effect.BasicEffect{Span: aSpan2},
+							Painter:     &painter.Static{},
+						},
+					},
+				},
+				&Basic{
+					Span: aSpan2,
+					Effects: []ifaces.Effect{
+						&effect.Solid{
+							BasicEffect: effect.BasicEffect{Span: aSpan2},
 							Painter: &painter.Static{
 								Color: &color.Green,
 							},
@@ -116,35 +119,31 @@ func TestBasicStabilize(t *testing.T) {
 		{
 			Name: "Basic Vibe",
 			ActualVibe: &Basic{
-				Span: span.Span{
-					StartTime: aTime3,
-				},
+				Span: aSpan3,
 			},
 			ExpectedVibes: []ifaces.Vibe{
 				&Basic{
-					Span: span.Span{
-						StartTime: aTime3,
-					},
-					Effects: []ifaces.Effect{
-						&effect.Future{},
-					},
-				},
-				&Basic{
-					Span: span.Span{
-						StartTime: aTime3,
-					},
+					Span: aSpan3,
 					Effects: []ifaces.Effect{
 						&effect.Future{
-							Painter: &painter.Static{},
+							BasicEffect: effect.BasicEffect{Span: aSpan3},
 						},
 					},
 				},
 				&Basic{
-					Span: span.Span{
-						StartTime: aTime3,
-					},
+					Span: aSpan3,
 					Effects: []ifaces.Effect{
 						&effect.Future{
+							BasicEffect: effect.BasicEffect{Span: aSpan3},
+							Painter:     &painter.Static{},
+						},
+					},
+				},
+				&Basic{
+					Span: aSpan3,
+					Effects: []ifaces.Effect{
+						&effect.Future{
+							BasicEffect: effect.BasicEffect{Span: aSpan3},
 							Painter: &painter.Static{
 								Color: &color.WarmGreen,
 							},
@@ -152,11 +151,10 @@ func TestBasicStabilize(t *testing.T) {
 					},
 				},
 				&Basic{
-					Span: span.Span{
-						StartTime: aTime3,
-					},
+					Span: aSpan3,
 					Effects: []ifaces.Effect{
 						&effect.Future{
+							BasicEffect:  effect.BasicEffect{Span: aSpan3},
 							TimePerLight: &aDuration2,
 							Painter: &painter.Static{
 								Color: &color.WarmGreen,
@@ -175,21 +173,22 @@ func TestBasicMaterialize(t *testing.T) {
 	aTime1 := time.Date(2009, 11, 17, 20, 34, 50, 651387237, time.UTC)
 	aDuration := time.Nanosecond * 2785814474
 	aDuration2 := time.Nanosecond * 2468348254
+	aSpan := span.Span{
+		StartTime: aTime1,
+		EndTime:   aTime1.Add(time.Hour),
+	}
 
 	cases := []MaterializeTest{
 		{
 			Name: "Basic Vibe",
 			ActualVibe: &Basic{
-				Span: span.Span{
-					StartTime: aTime1,
-				},
+				Span: aSpan,
 			},
 			ExpectedVibe: &Basic{
-				Span: span.Span{
-					StartTime: aTime1,
-				},
+				Span: aSpan,
 				Effects: []ifaces.Effect{
 					&effect.Future{
+						BasicEffect:  effect.BasicEffect{Span: aSpan},
 						TimePerLight: &aDuration,
 						Painter: &painter.Move{
 							ColorStart: &color.WarmCyan,

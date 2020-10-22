@@ -21,7 +21,7 @@ func RunStabilizeTests(t *testing.T, cases []StabilizeTest) {
 
 				actualVibe = actualVibe.Stabilize()
 				if !helper.StructsEqual(actualVibe, expectedVibe) {
-					t.Fatalf("Stabilize %v failed. Vibes were not equal:\n\tExpected: %+v,\n\tActual: %+v", i, actualVibe, expectedVibe)
+					t.Fatalf("Stabilize %v failed. Vibes were not equal:\n\tExpected: %+v,\n\tActual: %+v", i, expectedVibe, actualVibe)
 				}
 			}
 		})
@@ -39,7 +39,7 @@ func RunMaterializeTests(t *testing.T, cases []MaterializeTest) {
 		t.Run(c.Name, func(t *testing.T) {
 			c.ActualVibe.Materialize()
 			if !helper.StructsEqual(c.ActualVibe, c.ExpectedVibe) {
-				t.Fatalf("Materialize failed. Vibes were not equal:\n\tExpected: %+v,\n\tActual: %+v", c.ActualVibe, c.ExpectedVibe)
+				t.Fatalf("Materialize failed. Vibes were not equal:\n\tExpected: %+v,\n\tActual: %+v", c.ExpectedVibe, c.ActualVibe)
 			}
 		})
 	}

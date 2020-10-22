@@ -135,8 +135,16 @@ func (v *Basic) SelectPainter() ifaces.Painter {
 // SelectEffect returns a Effect
 func (v *Basic) SelectEffect() ifaces.Effect {
 	options := []ifaces.Effect{
-		&effect.Solid{},
-		&effect.Future{},
+		&effect.Solid{
+			BasicEffect: effect.BasicEffect{
+				Span: v.Span,
+			},
+		},
+		&effect.Future{
+			BasicEffect: effect.BasicEffect{
+				Span: v.Span,
+			},
+		},
 	}
 	length := len(options)
 	option := repeatable.Option(v.randSeed(), length)
