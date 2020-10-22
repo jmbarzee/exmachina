@@ -1,27 +1,30 @@
 package painter
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
 
-// Rotate is a Painter which provides shifting colors starting at colorStart
-type Rotate struct {
+// Move is a Painter which provides shifting colors starting at colorStart
+type Move struct {
 	ColorStart *color.HSLA
 	Shifter    ifaces.Shifter
 }
 
+var _ ifaces.Painter = (*Move)(nil)
+
 // Paint returns a color based on t
-func (p Rotate) Paint(t time.Time) color.HSLA {
+func (p Move) Paint(t time.Time) color.HSLA {
 	newColor := *p.ColorStart
 	newColor.ShiftHue(p.Shifter.Shift(t))
 	return newColor
 }
 
 // GetStabilizeFuncs returns StabilizeFunc for all remaining unstablaized traits
-func (p *Rotate) GetStabilizeFuncs() []func(p ifaces.Palette) {
+func (p *Move) GetStabilizeFuncs() []func(p ifaces.Palette) {
 	sFuncs := []func(p ifaces.Palette){}
 	if p.ColorStart == nil {
 		sFuncs = append(sFuncs, func(pa ifaces.Palette) {
@@ -36,4 +39,8 @@ func (p *Rotate) GetStabilizeFuncs() []func(p ifaces.Palette) {
 		sFuncs = append(sFuncs, p.Shifter.GetStabilizeFuncs()...)
 	}
 	return sFuncs
+}
+
+func (p Move) String() string {
+	return fmt.Sprintf("painter.Move{ColorStart:%v, Shifter:%v}", p.ColorStart, p.Shifter)
 }

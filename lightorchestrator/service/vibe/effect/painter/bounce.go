@@ -1,6 +1,7 @@
 package painter
 
 import (
+	"fmt"
 	"math"
 	"time"
 
@@ -18,6 +19,8 @@ type Bounce struct {
 	Shifter    ifaces.Shifter
 }
 
+var _ ifaces.Painter = (*Bounce)(nil)
+
 // Paint returns a color based on t
 func (p Bounce) Paint(t time.Time) color.HSLA {
 	if *p.Up {
@@ -27,9 +30,9 @@ func (p Bounce) Paint(t time.Time) color.HSLA {
 			lDistance := p.ColorStart.L - p.ColorEnd.L
 			totalShift := p.Shifter.Shift(t)
 			bounces := int(totalShift / hDistance)
-			remainingShift := float32(math.Mod(float64(totalShift), float64(hDistance)))
+			remainingShift := math.Mod(totalShift, hDistance)
 
-			var hShift float32
+			var hShift float64
 			if (bounces % 2) == 0 {
 				// even number of bounces
 				hShift = remainingShift
@@ -37,7 +40,7 @@ func (p Bounce) Paint(t time.Time) color.HSLA {
 				// odd number of bounces
 				hShift = hDistance - remainingShift
 			}
-			hShiftRatio := (hDistance / hShift)
+			hShiftRatio := (hShift / hDistance)
 			sShift := sDistance * hShiftRatio
 			lShift := lDistance * hShiftRatio
 
@@ -48,22 +51,22 @@ func (p Bounce) Paint(t time.Time) color.HSLA {
 
 			return c
 		} else {
-			hDistance := p.ColorStart.H - p.ColorEnd.H
+			hDistance := (1 - p.ColorStart.H) + p.ColorEnd.H
 			sDistance := p.ColorStart.S - p.ColorEnd.S
 			lDistance := p.ColorStart.L - p.ColorEnd.L
 			totalShift := p.Shifter.Shift(t)
 			bounces := int(totalShift / hDistance)
-			remainingShift := float32(math.Mod(float64(totalShift), float64(hDistance)))
+			remainingShift := math.Mod(totalShift, hDistance)
 
-			var hShift float32
+			var hShift float64
 			if (bounces % 2) == 0 {
 				// even number of bounces
-				hShift = remainingShift
+				hShift = -remainingShift
 			} else {
 				// odd number of bounces
-				hShift = hDistance - remainingShift
+				hShift = -(hDistance - remainingShift)
 			}
-			hShiftRatio := (hDistance / hShift)
+			hShiftRatio := (hShift / hDistance)
 			sShift := sDistance * hShiftRatio
 			lShift := lDistance * hShiftRatio
 
@@ -81,17 +84,17 @@ func (p Bounce) Paint(t time.Time) color.HSLA {
 			lDistance := p.ColorStart.L - p.ColorEnd.L
 			totalShift := p.Shifter.Shift(t)
 			bounces := int(totalShift / hDistance)
-			remainingShift := float32(math.Mod(float64(totalShift), float64(hDistance)))
+			remainingShift := math.Mod(totalShift, hDistance)
 
-			var hShift float32
+			var hShift float64
 			if (bounces % 2) == 0 {
 				// even number of bounces
-				hShift = remainingShift
+				hShift = -remainingShift
 			} else {
 				// odd number of bounces
-				hShift = hDistance - remainingShift
+				hShift = -(hDistance - remainingShift)
 			}
-			hShiftRatio := (hDistance / hShift)
+			hShiftRatio := (hShift / hDistance)
 			sShift := sDistance * hShiftRatio
 			lShift := lDistance * hShiftRatio
 
@@ -102,27 +105,27 @@ func (p Bounce) Paint(t time.Time) color.HSLA {
 
 			return c
 		} else {
-			hDistance := (1 - p.ColorStart.H) + p.ColorEnd.H
+			hDistance := p.ColorStart.H + (1 - p.ColorEnd.H)
 			sDistance := p.ColorStart.S - p.ColorEnd.S
 			lDistance := p.ColorStart.L - p.ColorEnd.L
 			totalShift := p.Shifter.Shift(t)
 			bounces := int(totalShift / hDistance)
-			remainingShift := float32(math.Mod(float64(totalShift), float64(hDistance)))
+			remainingShift := math.Mod(totalShift, hDistance)
 
-			var hShift float32
+			var hShift float64
 			if (bounces % 2) == 0 {
 				// even number of bounces
-				hShift = remainingShift
+				hShift = -remainingShift
 			} else {
 				// odd number of bounces
-				hShift = hDistance - remainingShift
+				hShift = -(hDistance - remainingShift)
 			}
-			hShiftRatio := (hDistance / hShift)
+			hShiftRatio := (hShift / hDistance)
 			sShift := sDistance * hShiftRatio
 			lShift := lDistance * hShiftRatio
 
 			c := *p.ColorStart
-			c.ShiftHue(-hShift) // shifting past 0
+			c.ShiftHue(hShift) // shifting past 0
 			c.SetSaturation(c.S + sShift)
 			c.SetLightness(c.L + lShift)
 
@@ -158,4 +161,8 @@ func (p *Bounce) GetStabilizeFuncs() []func(p ifaces.Palette) {
 		sFuncs = append(sFuncs, p.Shifter.GetStabilizeFuncs()...)
 	}
 	return sFuncs
+}
+
+func (p Bounce) String() string {
+	return fmt.Sprintf("painter.Bounce{ColorStart:%v, ColorEnd:%v, Up:%v, Shifter:%v}", p.ColorStart, p.ColorEnd, p.Up, p.Shifter)
 }

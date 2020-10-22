@@ -1,6 +1,7 @@
 package painter
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
@@ -11,6 +12,8 @@ import (
 type Static struct {
 	Color *color.HSLA
 }
+
+var _ ifaces.Painter = (*Static)(nil)
 
 // Paint returns a color based on t
 func (p Static) Paint(t time.Time) color.HSLA {
@@ -26,4 +29,8 @@ func (p *Static) GetStabilizeFuncs() []func(p ifaces.Palette) {
 		})
 	}
 	return sFuncs
+}
+
+func (p Static) String() string {
+	return fmt.Sprintf("painter.Static{Color:%v}", p.Color)
 }
