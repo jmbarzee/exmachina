@@ -1,6 +1,7 @@
 package effect
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/light"
@@ -12,6 +13,8 @@ type Solid struct {
 	BasicEffect
 	Painter ifaces.Painter
 }
+
+var _ ifaces.Effect = (*Solid)(nil)
 
 // Render will produce a slice of lights based on the time and properties of lights
 func (e Solid) Render(t time.Time, lights []light.Light) []light.Light {
@@ -33,4 +36,7 @@ func (e *Solid) GetStabilizeFuncs() []func(p ifaces.Palette) {
 		sFuncs = append(sFuncs, e.Painter.GetStabilizeFuncs()...)
 	}
 	return sFuncs
+}
+func (e Solid) String() string {
+	return fmt.Sprintf("effect.Solid{StartTime:%v, EndTime:%v, Rank:%v, Painter:%v}", e.StartTime, e.EndTime, e.Rank, e.Painter)
 }
