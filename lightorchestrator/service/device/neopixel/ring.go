@@ -14,7 +14,7 @@ type Ring struct {
 	*Row
 
 	// Radius is the distance from the Center to any LED
-	Radius float32
+	Radius float64
 	// Center is the point about which the Ring is centered
 	Center space.Vector
 	// Orientation is the rotation and tilt of the Ring
@@ -23,7 +23,7 @@ type Ring struct {
 
 // NewRing creates a new Ring
 func NewRing(
-	radius float32,
+	radius float64,
 	center space.Vector,
 	orientation space.Orientation,
 ) *Ring {
@@ -45,13 +45,13 @@ func NewRing(
 			lights := make([]light.Light, length)
 			for i := range lights {
 
-				localPhi := radPerLED * float32(i)
+				localPhi := radPerLED * float64(i)
 
 				// Location of LED if Ring was in XZ-Plane with first LED on the positive X axis
-				sin64, cos64 := math.Sincos(float64(localPhi))
+				sin, cos := math.Sincos(float64(localPhi))
 				location := space.Vector{
-					X: radius * float32(cos64),
-					Y: radius * float32(sin64),
+					X: radius * cos,
+					Y: radius * sin,
 					Z: 0,
 				}
 				// Transform to match rotation and tilt of ring

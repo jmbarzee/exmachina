@@ -22,7 +22,7 @@ type ChandelierSmall struct {
 }
 
 // NewChandelierSmall returns a new Small Chandelier
-func NewChandelierSmall(top space.Vector, theta float32) ChandelierSmall {
+func NewChandelierSmall(top space.Vector, theta float64) ChandelierSmall {
 
 	center := space.Vector{
 		X: top.X,

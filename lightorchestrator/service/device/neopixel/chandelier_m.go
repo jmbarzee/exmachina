@@ -24,7 +24,7 @@ type ChandelierMedium struct {
 }
 
 // NewChandelierMedium returns a new Medium Chandelier
-func NewChandelierMedium(top space.Vector, theta float32) ChandelierMedium {
+func NewChandelierMedium(top space.Vector, theta float64) ChandelierMedium {
 	smallRings := make([]*Ring, 2)
 	largeRings := make([]*Ring, 2)
 

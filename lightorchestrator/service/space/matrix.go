@@ -3,13 +3,11 @@ package space
 import "math"
 
 // Matrix is a transformational matrix for 3D space (3 x 3)
-type Matrix [][]float32
+type Matrix [][]float64
 
 // NewRotationMatrixX produces a matrix which will rotate about X
-func NewRotationMatrixX(theta float32) Matrix {
-	sin64, cos64 := math.Sincos(float64(theta))
-	sin := float32(sin64)
-	cos := float32(cos64)
+func NewRotationMatrixX(theta float64) Matrix {
+	sin, cos := math.Sincos(theta)
 	return Matrix{
 		{1, 0, 0},
 		{0, cos, -sin},
@@ -18,10 +16,8 @@ func NewRotationMatrixX(theta float32) Matrix {
 }
 
 // NewRotationMatrixY produces a matrix which will rotate about Y
-func NewRotationMatrixY(theta float32) Matrix {
-	sin64, cos64 := math.Sincos(float64(theta))
-	sin := float32(sin64)
-	cos := float32(cos64)
+func NewRotationMatrixY(theta float64) Matrix {
+	sin, cos := math.Sincos(theta)
 	return Matrix{
 		{cos, 0, sin},
 		{0, 1, 0},
@@ -30,10 +26,8 @@ func NewRotationMatrixY(theta float32) Matrix {
 }
 
 // NewRotationMatrixZ produces a matrix which will rotate about Z
-func NewRotationMatrixZ(theta float32) Matrix {
-	sin64, cos64 := math.Sincos(float64(theta))
-	sin := float32(sin64)
-	cos := float32(cos64)
+func NewRotationMatrixZ(theta float64) Matrix {
+	sin, cos := math.Sincos(theta)
 	return Matrix{
 		{cos, -sin, 0},
 		{sin, cos, 0},

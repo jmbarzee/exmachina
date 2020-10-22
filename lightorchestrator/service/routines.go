@@ -15,7 +15,7 @@ const (
 
 func (l *LightOrch) dispatchRender(ctx context.Context, t time.Time) {
 	l.Subscribers.Range(func(sub Subscriber) bool {
-		sub.CleanBefore(t.Add(tickLength * -2))
+		// sub.CleanBefore(t.Add(tickLength * -2))
 		if err := sub.DispatchRender(t); err != nil {
 			system.Errorf("Failed to dispatch Render: %w", err)
 		}

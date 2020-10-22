@@ -4,17 +4,13 @@ import "math"
 
 // Vector is a 3D coordinate (also known as Point)
 type Vector struct {
-	X, Y, Z float32
+	X, Y, Z float64
 }
 
 // NewVector produces a new Vector from spherical coordinates
-func NewVector(direction Orientation, radius float32) Vector {
-	sinTheta64, cosTheta64 := math.Sincos(float64(direction.Theta))
-	sinTheta := float32(sinTheta64)
-	cosTheta := float32(cosTheta64)
-	sinPhi64, cosPhi64 := math.Sincos(float64(direction.Phi))
-	sinPhi := float32(sinPhi64)
-	cosPhi := float32(cosPhi64)
+func NewVector(direction Orientation, radius float64) Vector {
+	sinTheta, cosTheta := math.Sincos(direction.Theta)
+	sinPhi, cosPhi := math.Sincos(direction.Phi)
 	return Vector{
 		X: radius * sinTheta * cosPhi,
 		Y: radius * sinTheta * sinPhi,
@@ -32,7 +28,7 @@ func (v Vector) Translate(q Vector) Vector {
 }
 
 // Scale multivlies a vector by a given scale
-func (v Vector) Scale(i float32) Vector {
+func (v Vector) Scale(i float64) Vector {
 	return Vector{
 		X: v.X * i,
 		Y: v.Y * i,
@@ -40,6 +36,7 @@ func (v Vector) Scale(i float32) Vector {
 	}
 }
 
+// Transform multivlies a vector by a given matrix
 func (v Vector) Transform(m Matrix) Vector {
 	return Vector{
 		X: (v.X * m[0][0]) + (v.Y * m[0][1]) + (v.Z * m[0][2]),

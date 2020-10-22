@@ -9,8 +9,12 @@ import (
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
 
-// density is assumed to be 60 leds per meter
-const distPerLED float32 = float32(1.0 / 60.0)
+const (
+	ledsPerMeter = 60
+
+	// density is assumed to be 60 leds per meter
+	distPerLED = 1.0 / float64(ledsPerMeter)
+)
 
 // Row holds basic functionality for any neoPixelDevice
 // Row implements effect.Allocater

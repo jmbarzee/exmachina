@@ -6,7 +6,9 @@ import (
 )
 
 const (
-	neoPixelBarLength = 30
+	npBarLength = 2
+
+	ledsPerNPBar = npBarLength * ledsPerMeter
 )
 
 type Bar struct {
@@ -19,7 +21,7 @@ func NewBar(uuid string, start space.Vector, direction, rotation space.Orientati
 		BasicDevice: device.BasicDevice{
 			ID: uuid,
 		},
-		Line: NewLine(start, direction, rotation, neoPixelBarLength),
+		Line: NewLine(start, direction, rotation, ledsPerNPBar),
 	}
 }
 

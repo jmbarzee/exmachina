@@ -5,13 +5,13 @@ import "math"
 // Orientation represents the direction of spherical coordinates
 type Orientation struct {
 	// Phi is rotation about Z
-	Phi float32
+	Phi float64
 	// Theta is tilt from Z
-	Theta float32
+	Theta float64
 }
 
 // NewOrientation creates a new Orientation from a rotation and tilt
-func NewOrientation(phi, theta float32) Orientation {
+func NewOrientation(phi, theta float64) Orientation {
 	o := Orientation{}
 	o = o.Rotate(phi)
 	o = o.Tilt(theta)
@@ -19,16 +19,16 @@ func NewOrientation(phi, theta float32) Orientation {
 }
 
 // Rotate will adjust the rotation about Z by phi
-func (o Orientation) Rotate(phi float32) Orientation {
+func (o Orientation) Rotate(phi float64) Orientation {
 	wrappedPhi := o.Phi + phi
-	o.Phi = float32(math.Mod(float64(wrappedPhi), math.Pi*2))
+	o.Phi = math.Mod(wrappedPhi, math.Pi*2)
 	return o
 }
 
 // Tilt will adjust the tilt from Z by theta
-func (o Orientation) Tilt(theta float32) Orientation {
+func (o Orientation) Tilt(theta float64) Orientation {
 	wrappedTheta := o.Theta + theta
-	newTheta := float32(math.Mod(float64(wrappedTheta), math.Pi*2))
+	newTheta := math.Mod(wrappedTheta, math.Pi*2)
 
 	// Check if tilt is negative
 	if newTheta < 0 {

@@ -36,7 +36,7 @@ func NewLine(start space.Vector, direction, rotation space.Orientation, length i
 		func() []light.Light {
 			lights := make([]light.Light, length)
 			for i := range lights {
-				lightLocation := start.Translate(singleLEDVector.Scale(float32(i)))
+				lightLocation := start.Translate(singleLEDVector.Scale(float64(i)))
 				lightOrientation := rotation
 				lights[i] = &light.Basic{
 					Position:    i,

@@ -29,7 +29,7 @@ type ChandelierLarge struct {
 }
 
 // NewChandelierLarge returns a new Large Chandelier
-func NewChandelierLarge(top space.Vector, theta float32) ChandelierLarge {
+func NewChandelierLarge(top space.Vector, theta float64) ChandelierLarge {
 	smallRings := make([]*Ring, 3)
 	largeRings := make([]*Ring, 3)
 
