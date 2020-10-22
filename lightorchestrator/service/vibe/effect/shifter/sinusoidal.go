@@ -1,6 +1,7 @@
 package shifter
 
 import (
+	"fmt"
 	"math"
 	"time"
 
@@ -11,14 +12,16 @@ import (
 type Sinusoidal struct {
 	Start         *time.Time
 	TimePerCycle  *time.Duration // Period
-	ShiftPerCycle *float32       // Amplitude
+	ShiftPerCycle *float64       // Amplitude
 }
 
+var _ ifaces.Shifter = (*Sinusoidal)(nil)
+
 // Shift returns a value representing some change or shift
-func (s Sinusoidal) Shift(t time.Time) float32 {
+func (s Sinusoidal) Shift(t time.Time) float64 {
 	timePast := t.Sub(*s.Start)
-	cycles := timePast / *s.TimePerCycle
-	sin := float32(math.Sin(2 * math.Pi * float64(cycles)))
+	cycles := float64(timePast) / float64(*s.TimePerCycle)
+	sin := math.Sin(2 * math.Pi * cycles)
 	normalizedSin := (sin + 1) / 2 // normalized sin has the correct frequency but y ranges from 0 to 1
 	return *s.ShiftPerCycle * normalizedSin
 }
@@ -43,4 +46,8 @@ func (s *Sinusoidal) GetStabilizeFuncs() []func(ifaces.Palette) {
 		})
 	}
 	return sFuncs
+}
+
+func (s Sinusoidal) String() string {
+	return fmt.Sprintf("shifter.Sinusoidal{Start:%v, TimePerCycle:%v, ShiftPerCycle:%v}", s.Start, s.TimePerCycle, s.ShiftPerCycle)
 }

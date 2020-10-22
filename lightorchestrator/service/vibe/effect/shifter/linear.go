@@ -1,6 +1,7 @@
 package shifter
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
@@ -16,10 +17,12 @@ type Linear struct {
 	TimePerOneShift *time.Duration
 }
 
+var _ ifaces.Shifter = (*Linear)(nil)
+
 // Shift returns a value representing some change or shift
-func (s Linear) Shift(t time.Time) float32 {
+func (s Linear) Shift(t time.Time) float64 {
 	timePast := t.Sub(*s.Start)
-	shift := float32(timePast) / float32(*s.TimePerOneShift)
+	shift := float64(timePast) / float64(*s.TimePerOneShift)
 	return shift * OneShift
 }
 
@@ -38,4 +41,8 @@ func (s *Linear) GetStabilizeFuncs() []func(p ifaces.Palette) {
 		})
 	}
 	return sFuncs
+}
+
+func (s Linear) String() string {
+	return fmt.Sprintf("shifter.Linear{Start:%v, TimePerOneShift:%v}", s.Start, s.TimePerOneShift)
 }
