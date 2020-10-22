@@ -32,6 +32,7 @@ func NewNPLight(config config.ServiceConfig, size int) (*NPLight, error) {
 	}
 
 	opt := ws2811.DefaultOptions
+	opt.Channels[0].StripeType = ws2811.SK6812StripRGBW
 	opt.Channels[0].Brightness = brightness
 	opt.Channels[0].LedCount = sub.Size
 	opt.Channels[0].GpioPin = gpioPin
