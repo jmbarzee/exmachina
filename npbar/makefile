@@ -1,10 +1,8 @@
 
 UNAME := $(shell uname)
 
-build:
-ifneq ($(UNAME), Linux)
-	$(error Must build on a raspberry pi)
-else 
+build: $(shell find . -regex ".*\.go" -type f)
+ifeq ($(UNAME), Linux)
 	sudo apt-get install scons
 
 	cd /tmp; \
@@ -17,6 +15,12 @@ else
 
 	
 	go build -v cmd/run/main.go 
+else 
+ifeq ($(UNAME), Darwin)
+	go build -v cmd/runtest/main.go 
+else 
+	$(error Must build on a mac or raspberry pi)
+endif
 endif
 
 start:
