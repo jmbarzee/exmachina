@@ -10,56 +10,25 @@ import (
 )
 
 const (
-	displayFPS                = 1
-	displayRate time.Duration = time.Second / displayFPS
+	tickLength = time.Second * 5
 )
 
-func (l *LightOrch) orchastrate(ctx context.Context) {
-	routineName := "orchastrate"
-	system.LogRoutinef(routineName, "Starting routine")
-	ticker := time.NewTicker(displayRate)
-
-Loop:
-	for {
-
-		select {
-		case <-ticker.C:
-			l.Subscribers.Range(func(sub Subscriber) bool {
-				if err := sub.DispatchRender(time.Now()); err != nil {
-					system.Errorf("Failed to dispatch Render: %w", err)
-				}
-				return true
-			})
-		case <-ctx.Done():
-			break Loop
+func (l *LightOrch) dispatchRender(ctx context.Context, t time.Time) {
+	l.Subscribers.Range(func(sub Subscriber) bool {
+		sub.CleanBefore(t.Add(tickLength * -2))
+		if err := sub.DispatchRender(t); err != nil {
+			system.Errorf("Failed to dispatch Render: %w", err)
 		}
-	}
-
-	system.LogRoutinef(routineName, "Stopping routine")
+		return true
+	})
 }
 
-func (l *LightOrch) subscribeVibes(ctx context.Context) {
-	routineName := "orchastrate"
-	system.LogRoutinef(routineName, "Starting routine")
-
-	tickLength := time.Second * 20
-	ticker := time.NewTicker(tickLength)
-
-Loop:
-	for {
-
-		select {
-		case t := <-ticker.C:
-			v := &vibe.Basic{
-				Span: span.Span{
-					StartTime: t.Add(tickLength),
-					EndTime:   t.Add(tickLength * 2),
-				},
-			}
-			l.DeviceHierarchy.Allocate(v)
-		case <-ctx.Done():
-			break Loop
-		}
+func (l *LightOrch) allocateVibe(ctx context.Context, t time.Time) {
+	v := &vibe.Basic{
+		Span: span.Span{
+			StartTime: t.Add(tickLength),
+			EndTime:   t.Add(tickLength * 2),
+		},
 	}
-	system.LogRoutinef(routineName, "Stopping routine")
+	l.DeviceHierarchy.Allocate(v)
 }

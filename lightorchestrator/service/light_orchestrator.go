@@ -2,11 +2,17 @@ package service
 
 import (
 	"context"
+	"time"
 
 	"github.com/jmbarzee/dominion/service"
 	"github.com/jmbarzee/dominion/service/config"
 	"github.com/jmbarzee/dominion/system"
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
+)
+
+const (
+	displayFPS                = 30
+	displayRate time.Duration = time.Second / displayFPS
 )
 
 type LightOrch struct {
@@ -40,8 +46,8 @@ func (l *LightOrch) Run(ctx context.Context) error {
 	system.Logf(l.ServiceIdentity.String())
 	system.Logf("The Dominion ever expands!\n")
 
-	go l.subscribeVibes(ctx)
-	go l.orchastrate(ctx)
+	go system.RoutineOperation(ctx, "allocateVibe", tickLength, l.allocateVibe)
+	go system.RoutineOperation(ctx, "dispatchRender", displayRate, l.dispatchRender)
 
 	return l.Service.HostService(ctx)
 }
