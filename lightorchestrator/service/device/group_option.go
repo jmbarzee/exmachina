@@ -13,11 +13,11 @@ type GroupOption struct {
 }
 
 // NewGroupOption creates a new GroupOption with a unique ID
-func NewGroupOption(groups ...*Group) GroupOption {
+func NewGroupOption(groups ...*Group) *GroupOption {
 	if groups == nil {
 		groups = []*Group{}
 	}
-	return GroupOption{
+	return &GroupOption{
 		BasicDevice: BasicDevice{
 			ID: uuid.New().String(),
 		},
@@ -28,12 +28,21 @@ func NewGroupOption(groups ...*Group) GroupOption {
 // Allocate passes Vibe into this device and a single child group
 // Allocate Stabilize the Vibe before passing it to a child group
 func (d GroupOption) Allocate(vibe ifaces.Vibe) {
+	if len(d.Groups) == 0 {
+		return
+	}
 	groupNum := repeatable.Option(vibe.Start(), len(d.Groups))
 	d.Groups[groupNum].Allocate(vibe)
 }
 
 // Insert will attempt to place insert a node into a group until successful
-func (d GroupOption) Insert(parentID string, newNode DeviceNode) error {
+func (d *GroupOption) Insert(parentID string, newNode DeviceNode) error {
+	if parentID == d.ID {
+		group := NewGroup(newNode)
+		d.Groups = append(d.Groups, group)
+		return nil
+	}
+
 	for _, group := range d.Groups {
 		if group.Insert(parentID, newNode) == nil {
 			return nil

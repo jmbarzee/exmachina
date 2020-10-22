@@ -28,7 +28,7 @@ type (
 
 		// GetChildren returns any children under the node
 		// DeviceNodes which are also Devices will never return their children
-		// despite still sometimes passing
+		// despite still sometimes passing vibes further down a deviceTree
 		GetChildren() []DeviceNode
 
 		// GetType returns the type
