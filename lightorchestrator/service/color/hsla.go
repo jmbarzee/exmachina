@@ -3,11 +3,11 @@ package color
 type (
 	HSLA struct {
 		HSL
-		A float32
+		A float64
 	}
 )
 
-func NewHSLA(h, s, l, a float32) HSLA {
+func NewHSLA(h, s, l, a float64) HSLA {
 	return HSLA{
 		HSL: HSL{
 			H: h,

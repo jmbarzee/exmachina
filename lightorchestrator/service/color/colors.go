@@ -1,13 +1,13 @@
 package color
 
 import (
-	"math/rand"
+	"math"
 )
 
 var (
-	Min  = float32(0.0000001)
-	Max  = float32(0.9999999)
-	Half = float32(.5)
+	Min  = math.SmallestNonzeroFloat64
+	Max  = math.MaxFloat64
+	Half = 0.5
 )
 
 var (
@@ -81,7 +81,3 @@ var (
 
 	Schemes = map[string][]HSLA{}
 )
-
-func RandRGB(colors []RGB) RGB {
-	return colors[rand.Intn(len(colors)-1)+1]
-}

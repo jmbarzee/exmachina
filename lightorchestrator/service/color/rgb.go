@@ -3,11 +3,11 @@ package color
 import "math"
 
 type RGB struct {
-	R, G, B float32
+	R, G, B float64
 }
 
 func (c RGB) ToHSL() HSL {
-	var h, s, l float32
+	var h, s, l float64
 
 	r := c.R
 	g := c.G
@@ -63,8 +63,4 @@ func (c RGB) ToUInt32WGRB() uint32 {
 	val |= uint32(c.R*math.MaxUint8) << 8
 	val |= uint32(c.G*math.MaxUint8) << 16
 	return val
-}
-
-func (c RGB) ToUInt8s() (uint8, uint8, uint8, uint8) {
-	return uint8(c.R * math.MaxUint8), uint8(c.G * math.MaxUint8), uint8(c.B * math.MaxUint8), 0
 }

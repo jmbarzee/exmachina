@@ -1,27 +1,28 @@
 package color
 
-import (
-	"math"
-)
-
 type (
 	HSL struct {
-		H, S, L float32
+		H, S, L float64
 	}
 )
 
 // SetHue will change hue to h (with wrapping).
-func (c *HSL) SetHue(h float32) {
-	c.H = modOne(h)
+func (c *HSL) SetHue(h float64) {
+	hue := modOne(h)
+	if hue < 0 {
+		c.H = 1.0 + hue
+	} else {
+		c.H = hue
+	}
 }
 
 // ShiftHue will shift hue by h (with wrapping).
-func (c *HSL) ShiftHue(h float32) {
+func (c *HSL) ShiftHue(h float64) {
 	c.SetHue(c.H + h)
 }
 
 // SetSaturation will change saturation to s (with bounding).
-func (c *HSL) SetSaturation(s float32) {
+func (c *HSL) SetSaturation(s float64) {
 	if s > Max {
 		c.S = Max
 	} else if s < Min {
@@ -32,7 +33,7 @@ func (c *HSL) SetSaturation(s float32) {
 }
 
 // SetLightness will change lightness to l (with bounding).
-func (c *HSL) SetLightness(l float32) {
+func (c *HSL) SetLightness(l float64) {
 	if l > Max {
 		c.L = Max
 	} else if l < Min {
@@ -43,6 +44,24 @@ func (c *HSL) SetLightness(l float32) {
 }
 
 func (c HSL) ToRGB() RGB {
+
+	hueToRGB := func(v1, v2, h float64) float64 {
+		if h < 0 {
+			h += 1
+		} else if h > 1 {
+			h -= 1
+		}
+		switch {
+		case 6*h < 1:
+			return (v1 + (v2-v1)*6*h)
+		case 2*h < 1:
+			return v2
+		case 3*h < 2:
+			return v1 + (v2-v1)*((2.0/3.0)-h)*6
+		}
+		return v1
+	}
+
 	h := c.H
 	s := c.S
 	l := c.L
@@ -52,7 +71,7 @@ func (c HSL) ToRGB() RGB {
 		return RGB{l, l, l}
 	}
 
-	var v1, v2 float32
+	var v1, v2 float64
 	if l < 0.5 {
 		v2 = l * (1 + s)
 	} else {
@@ -68,38 +87,6 @@ func (c HSL) ToRGB() RGB {
 	return RGB{r, g, b}
 }
 
-func hueToRGB(v1, v2, h float32) float32 {
-	if h < 0 {
-		h += 1
-	}
-	if h > 1 {
-		h -= 1
-	}
-	switch {
-	case 6*h < 1:
-		return (v1 + (v2-v1)*6*h)
-	case 2*h < 1:
-		return v2
-	case 3*h < 2:
-		return v1 + (v2-v1)*((2.0/3.0)-h)*6
-	}
-	return v1
-}
-
-func BlendHSLIgnoreBlack(a, b HSL) HSL {
-	if a.L <= Min {
-		return b
-	}
-	if b.L <= Min {
-		return a
-	}
-	var hsl HSL
-	hsl.H = BlendHue(a.H, b.H)
-	hsl.S = Average(a.S, b.S)
-	hsl.L = Average(a.L, b.L)
-	return hsl
-}
-
 func BlendHSL(a, b HSL) HSL {
 	var hsl HSL
 	hsl.H = BlendHue(a.H, b.H)
@@ -108,7 +95,7 @@ func BlendHSL(a, b HSL) HSL {
 	return hsl
 }
 
-func BlendHSLWeighted(a, b HSL, weight float32) HSL {
+func BlendHSLWeighted(a, b HSL, weight float64) HSL {
 	var hsl HSL
 	hsl.H = BlendHueWeighted(a.H, b.H, weight)
 	hsl.S = AverageWeighted(a.S, b.S, weight)
@@ -117,8 +104,8 @@ func BlendHSLWeighted(a, b HSL, weight float32) HSL {
 }
 
 // BlendHue will accuratly blend Hues, by finding their midpoint, and accounting for wraping.
-func BlendHue(h1, h2 float32) float32 {
-	var max, min float32
+func BlendHue(h1, h2 float64) float64 {
+	var max, min float64
 	if h1 > h2 {
 		max, min = h1, h2
 	} else {
@@ -138,7 +125,7 @@ func BlendHue(h1, h2 float32) float32 {
 // BlendHueWeighted will accuratly blend Hues, by finding their midpoint, and accounting for wraping.
 // weight should range from 0 to 1 and is used to favor a hue.
 // 0 will favor the first hue and 1 will favor the hue.
-func BlendHueWeighted(h1, h2, weight float32) float32 {
+func BlendHueWeighted(h1, h2, weight float64) float64 {
 	if h1 > h2 {
 		// distance between hues in both directions
 		cont := h1 - h2     // contiguous
@@ -158,18 +145,4 @@ func BlendHueWeighted(h1, h2, weight float32) float32 {
 			return modOne(h2 + wrap*(1-weight))
 		}
 	}
-}
-
-// BlendL
-func BlendL(l1, l2 float32) float32 {
-	if l1 < 0.5 && l2 >= 0.5 {
-		return Average(l1, l2) - 0.25
-	} else if l1 >= 0.5 && l2 < 0.5 {
-		return Average(l1, l2) - 0.25
-	}
-	return Average(l1, l2)
-}
-
-func modOne(val float32) float32 {
-	return float32(math.Mod(float64(val), 1.0))
 }
