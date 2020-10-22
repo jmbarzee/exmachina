@@ -13,15 +13,15 @@ import (
 
 func NewStructs() (*SubscriberList, *DeviceNodeTree) {
 	root := device.NewGroupOption()
-	rwmutex := &sync.RWMutex{}
+	rwmutex := sync.RWMutex{}
 
 	return &SubscriberList{
-			rwmutex: rwmutex,
+			rwmutex: &rwmutex,
 			subs:    []Subscriber{},
 		},
 		&DeviceNodeTree{
 			root:    root,
-			rwmutex: rwmutex,
+			rwmutex: &rwmutex,
 		}
 }
 
@@ -54,6 +54,11 @@ func (s Subscriber) DispatchRender(t time.Time) error {
 	return s.Server.Send(reply)
 }
 
+// CleanBefore removes all effects which have finished by t
+func (s Subscriber) CleanBefore(t time.Time) {
+	s.Device.PruneEffects(t)
+}
+
 // SubscriberList thread-safe list of subscribers
 type SubscriberList struct {
 	// RWMutex gates changes to the list
@@ -62,6 +67,7 @@ type SubscriberList struct {
 	subs []Subscriber
 }
 
+// Range ranges over a SubscriberList
 func (l SubscriberList) Range(f func(sub Subscriber) bool) {
 	l.rwmutex.Lock()
 	for _, sub := range l.subs {
@@ -72,6 +78,7 @@ func (l SubscriberList) Range(f func(sub Subscriber) bool) {
 	l.rwmutex.Unlock()
 }
 
+// Append appends a subscriber to a SubscriberList
 func (l *SubscriberList) Append(sub Subscriber) {
 	l.rwmutex.Lock()
 	l.subs = append(l.subs, sub)
