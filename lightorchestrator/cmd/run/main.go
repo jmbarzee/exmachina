@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"runtime"
-	"time"
 
 	"github.com/jmbarzee/dominion/service/config"
 	lightorch "github.com/jmbarzee/services/lightorchestrator/service"
@@ -22,10 +21,7 @@ func main() {
 		panic(err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 600*time.Second)
-	defer cancel()
-
-	if err := lightOrch.Run(ctx); err != nil {
+	if err := lightOrch.Run(context.Background()); err != nil {
 		panic(err)
 	}
 }
