@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"runtime"
-	"time"
 
 	"github.com/jmbarzee/dominion/service/config"
 	"github.com/jmbarzee/services/webserver/service"
@@ -22,10 +21,7 @@ func main() {
 		panic(err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 600*time.Second)
-	defer cancel()
-
-	if err := example.Run(ctx); err != nil {
+	if err := example.Run(context.Background()); err != nil {
 		panic(err)
 	}
 }
