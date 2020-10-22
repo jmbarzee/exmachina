@@ -1,4 +1,4 @@
-package nplight
+package npsub
 
 import (
 	"context"
@@ -8,12 +8,12 @@ import (
 	"github.com/jmbarzee/dominion/identity"
 	"github.com/jmbarzee/dominion/service/config"
 	"github.com/jmbarzee/dominion/system"
-	"github.com/jmbarzee/services/lightorchestrator/clients/nplight/lightplan"
+	"github.com/jmbarzee/services/lightorchestrator/clients/npsub/lightplan"
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 	"google.golang.org/grpc"
 )
 
-func (l *NPLight) rpcSubscribeLights(ctx context.Context, lightOrchestrator identity.ServiceIdentity) error {
+func (s *NPSub) rpcSubscribeLights(ctx context.Context, lightOrchestrator identity.ServiceIdentity) error {
 	rpcName := "SubscribeLights"
 	conn, err := grpc.DialContext(
 		ctx,
@@ -27,8 +27,8 @@ func (l *NPLight) rpcSubscribeLights(ctx context.Context, lightOrchestrator iden
 	defer conn.Close()
 
 	request := &pb.SubscribeLightsRequest{
-		Type: l.Type,
-		UUID: l.UUID,
+		Type: s.Type,
+		UUID: s.UUID,
 	}
 
 	system.LogRPCf(rpcName, "Sending request")
@@ -48,16 +48,16 @@ func (l *NPLight) rpcSubscribeLights(ctx context.Context, lightOrchestrator iden
 			return fmt.Errorf("Error receiving reply from lightOrchestrator: %v", err)
 		}
 
-		lightChange, err := l.convertDLRtoLightChange(reply)
+		lightChange, err := s.convertDLRtoLightChange(reply)
 		if err != nil {
 			system.Errorf("Could not convert to LightChange: %w", err)
 			continue
 		}
-		l.LightPlan.Add(lightChange)
+		s.LightPlan.Add(lightChange)
 	}
 }
 
-func (l *NPLight) convertDLRtoLightChange(reply *pb.SubscribeLightsReply) (lightplan.LightChange, error) {
+func (s *NPSub) convertDLRtoLightChange(reply *pb.SubscribeLightsReply) (lightplan.LightChange, error) {
 	t, err := ptypes.Timestamp(reply.GetDisplayTime())
 	if err != nil {
 		return lightplan.LightChange{}, err
@@ -65,11 +65,11 @@ func (l *NPLight) convertDLRtoLightChange(reply *pb.SubscribeLightsReply) (light
 
 	change := lightplan.LightChange{
 		Time:   t,
-		Lights: make([]uint32, l.Size),
+		Lights: make([]uint32, s.Size),
 	}
 	for i, color := range reply.GetColors() {
-		if i == l.Size {
-			return lightplan.LightChange{}, fmt.Errorf("Expected %v colors, got %v", l.Size, len(reply.GetColors()))
+		if i == s.Size {
+			return lightplan.LightChange{}, fmt.Errorf("Expected %v colors, got %v", s.Size, len(reply.GetColors()))
 		}
 		change.Lights[i] = uint32(color)
 	}

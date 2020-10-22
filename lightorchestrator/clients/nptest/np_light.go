@@ -1,65 +1,59 @@
-package nplight
+package nptest
 
 import (
 	"context"
 	"time"
 
+	"github.com/faiface/pixel"
+	"github.com/faiface/pixel/pixelgl"
 	"github.com/jmbarzee/dominion/service/config"
 	"github.com/jmbarzee/dominion/system"
 	"github.com/jmbarzee/services/lightorchestrator/clients/npsub"
-	ws2811 "github.com/rpi-ws281x/rpi-ws281x-go"
 )
 
 const (
 	displayFPS                = 30
 	displayRate time.Duration = time.Second // displayFPS
 
-	gpioPin    = 18
-	brightness = 255
+	pixelsPerLight = 10
 )
 
 type (
-	NPLight struct {
+	NPTest struct {
 		*npsub.NPSub
-		Strip *ws2811.WS2811
+		Window *pixelgl.Window
 	}
 )
 
-func NewNPLight(config config.ServiceConfig, size int) (*NPLight, error) {
+func NewNPTest(config config.ServiceConfig, size int) (*NPTest, error) {
 	sub, err := npsub.NewNPSub(config, size)
 	if err != nil {
 		return nil, err
 	}
 
-	opt := ws2811.DefaultOptions
-	opt.Channels[0].Brightness = brightness
-	opt.Channels[0].LedCount = sub.Size
-	opt.Channels[0].GpioPin = gpioPin
-
-	strip, err := ws2811.MakeWS2811(&opt)
+	cfg := pixelgl.WindowConfig{
+		Title:  "Pixel Rocks!",
+		Bounds: pixel.R(0, 0, float64(pixelsPerLight*sub.Size), pixelsPerLight*2),
+		VSync:  true,
+	}
+	win, err := pixelgl.NewWindow(cfg)
 	if err != nil {
-		system.Panic(err)
+		panic(err)
 	}
 
-	err = strip.Init()
-	if err != nil {
-		system.Panic(err)
-	}
-
-	return &NPLight{
-		NPSub: sub,
-		Strip: strip,
+	return &NPTest{
+		NPSub:  sub,
+		Window: win,
 	}, nil
 }
 
-func (l *NPLight) Run(ctx context.Context) error {
+func (l *NPTest) Run(ctx context.Context) error {
 	system.Logf("I seek to join the Dominion\n")
 	system.Logf(l.ServiceIdentity.String())
 	system.Logf("The Dominion ever expands!\n")
 
 	go l.SubscribeLights(ctx)
 	go system.RoutineOperation(ctx, "UpdateLights", displayRate, l.updateLights)
-	defer l.Strip.Fini()
 
 	return l.Service.HostService(ctx)
 }
