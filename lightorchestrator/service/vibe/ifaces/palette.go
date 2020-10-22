@@ -16,7 +16,7 @@ type Palette interface {
 	SelectDuration() *time.Duration
 	// SelectShift returns a Shift
 	// Should generally range from .01 to 1
-	SelectShift() *float32
+	SelectShift() *float64
 	// SelectShifter returns a Shifter
 	SelectShifter() Shifter
 	// SelectPainter returns a Painter
