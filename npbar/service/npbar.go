@@ -12,7 +12,7 @@ type (
 )
 
 const (
-	size = 30 //TODO @jmbarzee fetch from config
+	size = 120 //TODO @jmbarzee fetch from config
 )
 
 func NewNPBar(config config.ServiceConfig) (NPBar, error) {
