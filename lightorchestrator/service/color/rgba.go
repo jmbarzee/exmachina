@@ -18,13 +18,13 @@ func FromUInt32WGRB(wgrb uint32) RGBA {
 	mask := uint32(0x000000ff)
 
 	uint8b := mask & (wgrb >> 0)
-	b := float64(uint8b) / math.MaxFloat64
+	b := float64(uint8b) / math.MaxUint8
 	uint8r := mask & (wgrb >> 8)
-	r := float64(uint8r) / math.MaxFloat64
+	r := float64(uint8r) / math.MaxUint8
 	uint8g := mask & (wgrb >> 16)
-	g := float64(uint8g) / math.MaxFloat64
+	g := float64(uint8g) / math.MaxUint8
 	uint8a := mask & (wgrb >> 24)
-	a := float64(uint8a) / math.MaxFloat64
+	a := float64(uint8a) / math.MaxUint8
 	return RGBA{
 		RGB: RGB{
 			R: r,

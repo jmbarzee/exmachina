@@ -6,7 +6,7 @@ import (
 
 var (
 	Min  = math.SmallestNonzeroFloat64
-	Max  = math.MaxFloat64
+	Max  = 1.0 - Min
 	Half = 0.5
 )
 
