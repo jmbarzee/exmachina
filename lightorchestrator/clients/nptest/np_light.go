@@ -13,7 +13,7 @@ import (
 
 const (
 	displayFPS                = 30
-	displayRate time.Duration = time.Second // displayFPS
+	displayRate time.Duration = time.Second / displayFPS
 
 	pixelsPerLight = 10
 )
@@ -33,7 +33,7 @@ func NewNPTest(config config.ServiceConfig, size int) (*NPTest, error) {
 
 	cfg := pixelgl.WindowConfig{
 		Title:  "Pixel Rocks!",
-		Bounds: pixel.R(0, 0, float64(pixelsPerLight*sub.Size), pixelsPerLight*2),
+		Bounds: pixel.R(0, 0, float64(pixelsPerLight*sub.Size), pixelsPerLight*3),
 		VSync:  true,
 	}
 	win, err := pixelgl.NewWindow(cfg)

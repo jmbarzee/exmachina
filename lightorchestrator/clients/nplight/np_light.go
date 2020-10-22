@@ -12,7 +12,7 @@ import (
 
 const (
 	displayFPS                = 30
-	displayRate time.Duration = time.Second // displayFPS
+	displayRate time.Duration = time.Second / displayFPS
 
 	gpioPin    = 18
 	brightness = 255
