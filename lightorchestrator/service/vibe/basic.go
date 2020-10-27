@@ -7,6 +7,7 @@ import (
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
 	"github.com/jmbarzee/services/lightorchestrator/service/repeatable"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/painter"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/shifter"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
@@ -81,6 +82,17 @@ func (v *Basic) randSeed() time.Time {
 }
 
 // ======== ifaces.Palette implementation ========
+
+// SelectBender returns a Bender
+func (v *Basic) SelectBender() ifaces.Bender {
+	options := []ifaces.Bender{
+		&bender.Static{},
+	}
+	length := len(options)
+	option := repeatable.Option(v.randSeed(), length)
+
+	return options[option]
+}
 
 // SelectColor returns a Color
 func (v *Basic) SelectColor() *color.HSLA {

@@ -28,7 +28,7 @@ func RunShifterTests(t *testing.T, cases []ShiftTest) {
 		t.Run(c.Name, func(t *testing.T) {
 			for i, instant := range c.Instants {
 				actualShift := c.Shifter.Shift(instant.Time, instant.Light)
-				if !helper.ShiftsEqual(instant.ExpectedShift, actualShift, helper.MinErrColor) {
+				if !helper.FloatsEqual(instant.ExpectedShift, actualShift, helper.MinErrColor) {
 					t.Fatalf("instant %v failed:\n\tExpected: %v,\n\tActual: %v", i, instant.ExpectedShift, actualShift)
 				}
 			}

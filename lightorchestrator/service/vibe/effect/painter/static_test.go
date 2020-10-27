@@ -11,7 +11,7 @@ import (
 
 func TestStaticPaint(t *testing.T) {
 	aTime := time.Date(2009, 11, 17, 20, 34, 50, 651387237, time.UTC)
-	cases := []PaintTest{
+	cases := []PainterTest{
 		{
 			Name: "Paint Black",
 			Painter: &Static{

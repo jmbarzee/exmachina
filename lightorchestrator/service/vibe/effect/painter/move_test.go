@@ -15,7 +15,7 @@ func TestMovePaint(t *testing.T) {
 	aTime := time.Date(2009, 11, 17, 20, 34, 50, 651387237, time.UTC)
 	aSecond := time.Second
 
-	cases := []PaintTest{
+	cases := []PainterTest{
 		{
 			Name: "Paint Black",
 			Painter: &Move{

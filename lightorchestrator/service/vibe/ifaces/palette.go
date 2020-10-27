@@ -9,6 +9,8 @@ import (
 type Palette interface {
 	Span
 
+	// SelectBender returns a Bender
+	SelectBender() Bender
 	// SelectColor returns a Color
 	SelectColor() *color.HSLA
 	// SelectDuration returns a Duration

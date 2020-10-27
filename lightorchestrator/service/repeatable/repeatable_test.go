@@ -27,7 +27,7 @@ func TestOption(t *testing.T) {
 			expectedPercentage := float64(1.0) / float64(options)
 			for j, bucket := range buckets {
 				actualPercentage := float64(bucket) / float64(totalRuns)
-				if !helper.ShiftsEqual(expectedPercentage, actualPercentage, 0.001) {
+				if !helper.FloatsEqual(expectedPercentage, actualPercentage, 0.001) {
 					t.Fatalf("bucket %v failed:\n\tExpected: %v\n\tActual: %v", j, expectedPercentage, actualPercentage)
 				}
 			}
@@ -53,7 +53,7 @@ func TestChance(t *testing.T) {
 				}
 			}
 			actualChance := float64(choiceCount) / float64(totalRuns)
-			if !helper.ShiftsEqual(chance, actualChance, 0.01) {
+			if !helper.FloatsEqual(chance, actualChance, 0.01) {
 				t.Fatalf("Percentages were not close enough:\n\tExpected: %5.2g\n\tActual: %5.2g", chance, actualChance)
 			}
 		})
@@ -86,7 +86,7 @@ func TestRandDuration(t *testing.T) {
 				expectedPercentage := float64(1.0 / possibleDurations)
 				for j, bucket := range buckets {
 					actualPercentage := float64(bucket) / float64(totalRuns)
-					if !helper.ShiftsEqual(expectedPercentage, actualPercentage, 0.002) {
+					if !helper.FloatsEqual(expectedPercentage, actualPercentage, 0.002) {
 						t.Fatalf("bucket %v failed:\n\tExpected: %v\n\tActual: %v", j, expectedPercentage, actualPercentage)
 					}
 				}
@@ -124,7 +124,7 @@ func TestRandDuration(t *testing.T) {
 // 				expectedPercentage := 2.0 / float64(numberOfBuckets)
 // 				for j, bucket := range buckets {
 // 					actualPercentage := float64(bucket) / float64(totalRuns)
-// 					if !helper.ShiftsEqual(expectedPercentage, actualPercentage, 0.01) {
+// 					if !helper.FloatsEqual(expectedPercentage, actualPercentage, 0.01) {
 // 						t.Fatalf("bucket %v failed:\n\tExpected: %v\n\tActual: %v", j, expectedPercentage, actualPercentage)
 // 					}
 // 				}

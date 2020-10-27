@@ -12,33 +12,33 @@ const (
 	MinErrColor = 0.000001
 )
 
-// ShiftsEqual compares and diffs floats (shifts)
-func ShiftsEqual(a, b float64, err float64) bool {
+// FloatsEqual compares and diffs floats (shifts)
+func FloatsEqual(a, b float64, err float64) bool {
 	return float64(math.Abs(float64(a-b))) < err
 }
 
 // ColorsEqual compares and diffs colors
 func ColorsEqual(a, b color.HSLA) bool {
-	if !ShiftsEqual(a.H, b.H, MinErrColor) {
+	if !FloatsEqual(a.H, b.H, MinErrColor) {
 		if a.H > 0.99 {
-			if !ShiftsEqual(1-a.H, b.H, MinErrColor) {
+			if !FloatsEqual(1-a.H, b.H, MinErrColor) {
 				return false
 			}
 		} else if b.H > 0.99 {
-			if !ShiftsEqual(a.H, 1-b.H, MinErrColor) {
+			if !FloatsEqual(a.H, 1-b.H, MinErrColor) {
 				return false
 			}
 		} else {
 			return false
 		}
 	}
-	if !ShiftsEqual(a.S, b.S, MinErrColor) {
+	if !FloatsEqual(a.S, b.S, MinErrColor) {
 		return false
 	}
-	if !ShiftsEqual(a.L, b.L, MinErrColor) {
+	if !FloatsEqual(a.L, b.L, MinErrColor) {
 		return false
 	}
-	if !ShiftsEqual(a.A, b.A, MinErrColor) {
+	if !FloatsEqual(a.A, b.A, MinErrColor) {
 		return false
 	}
 	return true

@@ -31,12 +31,18 @@ func RunStabilizeableTest(t *testing.T, c StabilizeableTest) {
 
 type TestPalette struct {
 	span.Span
+	Bender   ifaces.Bender
 	Color    color.HSLA
 	Duration time.Duration
 	Shift    float64
 	Shifter  ifaces.Shifter
 	Painter  ifaces.Painter
 	Effect   ifaces.Effect
+}
+
+// SelectBender returns a Bender
+func (p TestPalette) SelectBender() ifaces.Bender {
+	return p.Bender
 }
 
 // SelectColor returns a Color

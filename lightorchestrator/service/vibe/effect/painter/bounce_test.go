@@ -17,7 +17,7 @@ func TestBouncePaint(t *testing.T) {
 	theTruth := true
 	theFalsehood := false
 
-	cases := []PaintTest{
+	cases := []PainterTest{
 		{
 			Name: "Bounce from Green to Cyan ",
 			Painter: &Bounce{

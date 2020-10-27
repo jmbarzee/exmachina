@@ -11,7 +11,7 @@ import (
 )
 
 type (
-	PaintTest struct {
+	PainterTest struct {
 		Name     string
 		Painter  ifaces.Painter
 		Instants []Instant
@@ -24,7 +24,7 @@ type (
 	}
 )
 
-func RunPainterTests(t *testing.T, cases []PaintTest) {
+func RunPainterTests(t *testing.T, cases []PainterTest) {
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
 			for i, instant := range c.Instants {
