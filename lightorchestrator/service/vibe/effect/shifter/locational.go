@@ -54,5 +54,5 @@ func (s *Locational) GetStabilizeFuncs() []func(p ifaces.Palette) {
 }
 
 func (s Locational) String() string {
-	return fmt.Sprintf("shifter.Locational{XBender:%v, TimePerOneShift:%v, TimePerOneShift:%v}", s.XBender, s.YBender, s.ZBender)
+	return fmt.Sprintf("shifter.Locational{XBender:%v, YBender:%v, ZBender:%v}", s.XBender, s.YBender, s.ZBender)
 }
