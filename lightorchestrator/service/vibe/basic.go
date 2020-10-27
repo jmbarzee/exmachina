@@ -87,6 +87,7 @@ func (v *Basic) randSeed() time.Time {
 func (v *Basic) SelectBender() ifaces.Bender {
 	options := []ifaces.Bender{
 		&bender.Static{},
+		&bender.Linear{},
 	}
 	length := len(options)
 	option := repeatable.Option(v.randSeed(), length)
