@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/light"
 	"github.com/jmbarzee/services/lightorchestrator/service/repeatable"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
@@ -22,13 +23,13 @@ type Bounce struct {
 var _ ifaces.Painter = (*Bounce)(nil)
 
 // Paint returns a color based on t
-func (p Bounce) Paint(t time.Time) color.HSLA {
+func (p Bounce) Paint(t time.Time, l light.Light) color.HSLA {
 	if *p.Up {
 		if p.ColorStart.H < p.ColorEnd.H {
 			hDistance := p.ColorEnd.H - p.ColorStart.H
 			sDistance := p.ColorStart.S - p.ColorEnd.S
 			lDistance := p.ColorStart.L - p.ColorEnd.L
-			totalShift := p.Shifter.Shift(t)
+			totalShift := p.Shifter.Shift(t, l)
 			bounces := int(totalShift / hDistance)
 			remainingShift := math.Mod(totalShift, hDistance)
 
@@ -54,7 +55,7 @@ func (p Bounce) Paint(t time.Time) color.HSLA {
 			hDistance := (1 - p.ColorStart.H) + p.ColorEnd.H
 			sDistance := p.ColorStart.S - p.ColorEnd.S
 			lDistance := p.ColorStart.L - p.ColorEnd.L
-			totalShift := p.Shifter.Shift(t)
+			totalShift := p.Shifter.Shift(t, l)
 			bounces := int(totalShift / hDistance)
 			remainingShift := math.Mod(totalShift, hDistance)
 
@@ -82,7 +83,7 @@ func (p Bounce) Paint(t time.Time) color.HSLA {
 			hDistance := p.ColorStart.H - p.ColorEnd.H
 			sDistance := p.ColorStart.S - p.ColorEnd.S
 			lDistance := p.ColorStart.L - p.ColorEnd.L
-			totalShift := p.Shifter.Shift(t)
+			totalShift := p.Shifter.Shift(t, l)
 			bounces := int(totalShift / hDistance)
 			remainingShift := math.Mod(totalShift, hDistance)
 
@@ -108,7 +109,7 @@ func (p Bounce) Paint(t time.Time) color.HSLA {
 			hDistance := p.ColorStart.H + (1 - p.ColorEnd.H)
 			sDistance := p.ColorStart.S - p.ColorEnd.S
 			lDistance := p.ColorStart.L - p.ColorEnd.L
-			totalShift := p.Shifter.Shift(t)
+			totalShift := p.Shifter.Shift(t, l)
 			bounces := int(totalShift / hDistance)
 			remainingShift := math.Mod(totalShift, hDistance)
 

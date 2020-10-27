@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/light"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
 
@@ -17,9 +18,9 @@ type Move struct {
 var _ ifaces.Painter = (*Move)(nil)
 
 // Paint returns a color based on t
-func (p Move) Paint(t time.Time) color.HSLA {
+func (p Move) Paint(t time.Time, l light.Light) color.HSLA {
 	newColor := *p.ColorStart
-	newColor.ShiftHue(p.Shifter.Shift(t))
+	newColor.ShiftHue(p.Shifter.Shift(t, l))
 	return newColor
 }
 

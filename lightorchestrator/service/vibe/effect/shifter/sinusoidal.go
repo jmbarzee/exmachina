@@ -5,6 +5,7 @@ import (
 	"math"
 	"time"
 
+	"github.com/jmbarzee/services/lightorchestrator/service/light"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
 
@@ -18,7 +19,7 @@ type Sinusoidal struct {
 var _ ifaces.Shifter = (*Sinusoidal)(nil)
 
 // Shift returns a value representing some change or shift
-func (s Sinusoidal) Shift(t time.Time) float64 {
+func (s Sinusoidal) Shift(t time.Time, l light.Light) float64 {
 	timePast := t.Sub(*s.Start)
 	cycles := float64(timePast) / float64(*s.TimePerCycle)
 	sin := math.Sin(2 * math.Pi * cycles)

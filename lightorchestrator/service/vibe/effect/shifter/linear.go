@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/jmbarzee/services/lightorchestrator/service/light"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
 
@@ -20,7 +21,7 @@ type Linear struct {
 var _ ifaces.Shifter = (*Linear)(nil)
 
 // Shift returns a value representing some change or shift
-func (s Linear) Shift(t time.Time) float64 {
+func (s Linear) Shift(t time.Time, l light.Light) float64 {
 	timePast := t.Sub(*s.Start)
 	shift := float64(timePast) / float64(*s.TimePerOneShift)
 	return shift * OneShift

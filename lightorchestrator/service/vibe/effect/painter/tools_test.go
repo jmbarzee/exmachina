@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/light"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
 )
@@ -18,6 +19,7 @@ type (
 
 	Instant struct {
 		Time          time.Time
+		Light         light.Light
 		ExpectedColor color.HSLA
 	}
 )
@@ -26,7 +28,7 @@ func RunPainterTests(t *testing.T, cases []PaintTest) {
 	for _, c := range cases {
 		t.Run(c.Name, func(t *testing.T) {
 			for i, instant := range c.Instants {
-				actualColor := c.Painter.Paint(instant.Time)
+				actualColor := c.Painter.Paint(instant.Time, instant.Light)
 				if !helper.ColorsEqual(instant.ExpectedColor, actualColor) {
 					t.Fatalf("instant %v failed:\n\tExpected: %v,\n\tActual: %v", i, instant.ExpectedColor, actualColor)
 				}

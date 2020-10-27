@@ -18,7 +18,11 @@ var _ ifaces.Effect = (*Solid)(nil)
 
 // Render will produce a slice of lights based on the time and properties of lights
 func (e Solid) Render(t time.Time, lights []light.Light) []light.Light {
-	c := e.Painter.Paint(t)
+	if len(lights) == 0 {
+		return lights
+	}
+
+	c := e.Painter.Paint(t, lights[0])
 	for i := range lights {
 		lights[i].SetColor(c)
 	}
