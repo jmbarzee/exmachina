@@ -7,10 +7,11 @@ import (
 
 // Basic represents a NeoPixel Light in a line
 type Basic struct {
-	Color       color.HSLA
-	Position    int
-	Location    space.Vector
-	Orientation space.Orientation
+	Color        color.HSLA
+	Position     int
+	NumPositions int
+	Location     space.Vector
+	Orientation  space.Orientation
 }
 
 // GetColor returns the color of the light
@@ -24,8 +25,8 @@ func (l *Basic) SetColor(newColor color.HSLA) {
 }
 
 // GetPosition returns the position of the Light (in a string)
-func (l Basic) GetPosition() int {
-	return l.Position
+func (l Basic) GetPosition() (int, int) {
+	return l.Position, l.NumPositions
 }
 
 // GetLocation returns the point in space where the Light is

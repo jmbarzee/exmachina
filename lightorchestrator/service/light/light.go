@@ -13,7 +13,7 @@ type Light interface {
 	SetColor(newColor color.HSLA)
 
 	// GetPosition returns the position of the Light (in a string)
-	GetPosition() int
+	GetPosition() (int, int)
 	// GetLocation returns the point in space where the Light is
 	GetLocation() space.Vector
 	// GetOrientation returns the direction the Light points

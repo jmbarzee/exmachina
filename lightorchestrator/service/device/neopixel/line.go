@@ -39,9 +39,10 @@ func NewLine(start space.Vector, direction, rotation space.Orientation, length i
 				lightLocation := start.Translate(singleLEDVector.Scale(float64(i)))
 				lightOrientation := rotation
 				lights[i] = &light.Basic{
-					Position:    i,
-					Location:    lightLocation,
-					Orientation: lightOrientation,
+					Position:     i,
+					NumPositions: length,
+					Location:     lightLocation,
+					Orientation:  lightOrientation,
 				}
 			}
 			return lights
