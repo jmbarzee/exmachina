@@ -88,6 +88,7 @@ func (v *Basic) SelectBender() ifaces.Bender {
 	options := []ifaces.Bender{
 		&bender.Static{},
 		&bender.Linear{},
+		&bender.Sinusoidal{},
 	}
 	length := len(options)
 	option := repeatable.Option(v.randSeed(), length)
