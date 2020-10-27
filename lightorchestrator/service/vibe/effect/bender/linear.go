@@ -15,7 +15,7 @@ var _ ifaces.Bender = (*Linear)(nil)
 
 // Bend returns a value representing some change or bend
 func (s Linear) Bend(f float64) float64 {
-	bend := float64(f) / *s.BendPerInput
+	bend := f / *s.BendPerInput
 	return bend
 }
 
