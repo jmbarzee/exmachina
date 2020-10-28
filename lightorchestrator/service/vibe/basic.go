@@ -88,7 +88,9 @@ func (v *Basic) SelectBender() ifaces.Bender {
 	options := []ifaces.Bender{
 		&bender.Static{},
 		&bender.Linear{},
+		&bender.Exponential{},
 		&bender.Sinusoidal{},
+		&bender.Combo{},
 	}
 	length := len(options)
 	option := repeatable.Option(v.randSeed(), length)
@@ -114,8 +116,8 @@ func (v *Basic) SelectDuration() *time.Duration {
 
 // SelectShift returns a Shift
 func (v *Basic) SelectShift() *float64 {
-	min := 0.01
-	max := 1.00
+	min := 0.005
+	max := .50
 	s := repeatable.RandShift(v.randSeed(), min, max, 0.001)
 	return &s
 
@@ -124,8 +126,12 @@ func (v *Basic) SelectShift() *float64 {
 // SelectShifter returns a Shifter
 func (v *Basic) SelectShifter() ifaces.Shifter {
 	options := []ifaces.Shifter{
-		&shifter.Linear{},
-		&shifter.Sinusoidal{},
+		&shifter.Static{},
+		&shifter.Positional{},
+		&shifter.Locational{},
+		&shifter.Directional{},
+		&shifter.Temporal{},
+		&shifter.Combo{},
 	}
 	length := len(options)
 	option := repeatable.Option(v.randSeed(), length)

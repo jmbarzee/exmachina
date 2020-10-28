@@ -62,9 +62,10 @@ func NewRing(
 				lightOrientation := orientation.Rotate(localPhi)
 
 				lights[i] = &light.Basic{
-					Position:    i,
-					Location:    lightLocation,
-					Orientation: lightOrientation,
+					Position:     i,
+					NumPositions: length,
+					Location:     lightLocation,
+					Orientation:  lightOrientation,
 				}
 			}
 			return lights

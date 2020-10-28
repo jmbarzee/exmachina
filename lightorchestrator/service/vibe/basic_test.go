@@ -172,7 +172,7 @@ func TestBasicStabilize(t *testing.T) {
 func TestBasicMaterialize(t *testing.T) {
 	aTime1 := time.Date(2009, 11, 17, 20, 34, 50, 651387237, time.UTC)
 	aDuration := time.Nanosecond * 2785814474
-	aDuration2 := time.Nanosecond * 2468348254
+	aFloat := 0.277
 	aSpan := span.Span{
 		StartTime: aTime1,
 		EndTime:   aTime1.Add(time.Hour),
@@ -192,9 +192,8 @@ func TestBasicMaterialize(t *testing.T) {
 						TimePerLight: &aDuration,
 						Painter: &painter.Move{
 							ColorStart: &color.WarmCyan,
-							Shifter: &shifter.Linear{
-								Start:           &aTime1,
-								TimePerOneShift: &aDuration2,
+							Shifter: &shifter.Static{
+								TheShift: &aFloat,
 							},
 						},
 					},
