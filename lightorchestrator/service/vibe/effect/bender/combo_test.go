@@ -18,17 +18,17 @@ func TestComboBend(t *testing.T) {
 					TheBend: &aFloat1,
 				},
 				B: &Linear{
-					Rate: &aFloat2,
+					Interval: &aFloat2,
 				},
 			},
 			Instants: []Instant{
 				{
 					Input:        0.0,
-					ExpectedBend: aFloat1 + 0.0*aFloat2,
+					ExpectedBend: aFloat1 + 0.0/aFloat2,
 				},
 				{
 					Input:        1.0,
-					ExpectedBend: aFloat1 + 1.0*aFloat2,
+					ExpectedBend: aFloat1 + 1.0/aFloat2,
 				},
 			},
 		},
