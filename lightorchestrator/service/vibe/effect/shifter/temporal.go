@@ -10,16 +10,17 @@ import (
 
 // Temporal is a Shifter which provides shifts that relate to changing time, Directionally
 type Temporal struct {
-	Start  *time.Time
-	Bender ifaces.Bender
+	Start    *time.Time
+	Interval *time.Duration
+	Bender   ifaces.Bender
 }
 
 var _ ifaces.Shifter = (*Temporal)(nil)
 
 // Shift returns a value representing some change or shift
 func (s Temporal) Shift(t time.Time, l light.Light) float64 {
-	secondsPast := t.Sub(*s.Start) / time.Second
-	bend := s.Bender.Bend(float64(secondsPast))
+	secondsPast := float64(t.Sub(*s.Start)) / float64(*s.Interval)
+	bend := s.Bender.Bend(secondsPast)
 	return bend
 }
 
@@ -30,6 +31,11 @@ func (s *Temporal) GetStabilizeFuncs() []func(p ifaces.Palette) {
 		sFuncs = append(sFuncs, func(p ifaces.Palette) {
 			t := p.Start()
 			s.Start = &t
+		})
+	}
+	if s.Interval == nil {
+		sFuncs = append(sFuncs, func(p ifaces.Palette) {
+			s.Interval = p.SelectDuration()
 		})
 	}
 	if s.Bender == nil {
@@ -43,5 +49,5 @@ func (s *Temporal) GetStabilizeFuncs() []func(p ifaces.Palette) {
 }
 
 func (s Temporal) String() string {
-	return fmt.Sprintf("shifter.Temporal{Start:%v, Bender:%v}", s.Start, s.Bender)
+	return fmt.Sprintf("shifter.Temporal{Start:%v, Interval:%v, Bender:%v}", s.Start, s.Interval, s.Bender)
 }

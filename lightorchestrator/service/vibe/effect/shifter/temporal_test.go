@@ -12,12 +12,14 @@ import (
 
 func TestTemporalShift(t *testing.T) {
 	aTime := time.Date(2009, 11, 17, 20, 34, 50, 651387237, time.UTC)
+	aSecond := time.Second
 	aFloat := 1.1
 	cases := []ShiftTest{
 		{
 			Name: "One shift per second",
 			Shifter: &Temporal{
-				Start: &aTime,
+				Start:    &aTime,
+				Interval: &aSecond,
 				Bender: &bender.Static{
 					TheBend: &aFloat,
 				},
@@ -40,31 +42,34 @@ func TestTemporalShift(t *testing.T) {
 		{
 			Name: "One shift per second",
 			Shifter: &Temporal{
-				Start: &aTime,
+				Start:    &aTime,
+				Interval: &aSecond,
 				Bender: &bender.Linear{
-					Rate: &aFloat,
+					Interval: &aFloat,
 				},
 			},
 			Instants: []Instant{
 				{
 					Time:          aTime.Add(0 * time.Second),
-					ExpectedShift: aFloat * 0,
+					ExpectedShift: 0 / aFloat,
 				},
 				{
 					Time:          aTime.Add(1 * time.Second),
-					ExpectedShift: aFloat * 1,
+					ExpectedShift: 1 / aFloat,
 				},
 				{
 					Time:          aTime.Add(1 * time.Hour),
-					ExpectedShift: aFloat * 3600,
+					ExpectedShift: 3600 / aFloat,
 				},
 			},
 		},
 	}
 	RunShifterTests(t, cases)
 }
+
 func TestTemporalGetStabilizeFuncs(t *testing.T) {
 	aTime := time.Date(2009, 11, 17, 20, 34, 50, 651387237, time.UTC)
+	aSecond := time.Second
 	aFloat := 1.1
 	c := helper.StabilizeableTest{
 		Stabalizable: &Temporal{},
@@ -73,11 +78,17 @@ func TestTemporalGetStabilizeFuncs(t *testing.T) {
 				Start: &aTime,
 			},
 			&Temporal{
-				Start:  &aTime,
-				Bender: &bender.Static{},
+				Start:    &aTime,
+				Interval: &aSecond,
 			},
 			&Temporal{
-				Start: &aTime,
+				Start:    &aTime,
+				Interval: &aSecond,
+				Bender:   &bender.Static{},
+			},
+			&Temporal{
+				Start:    &aTime,
+				Interval: &aSecond,
 				Bender: &bender.Static{
 					TheBend: &aFloat,
 				},
@@ -87,8 +98,9 @@ func TestTemporalGetStabilizeFuncs(t *testing.T) {
 			Span: span.Span{
 				StartTime: aTime,
 			},
-			Bender: &bender.Static{},
-			Shift:  aFloat,
+			Duration: aSecond,
+			Bender:   &bender.Static{},
+			Shift:    aFloat,
 		},
 	}
 	helper.RunStabilizeableTest(t, c)
