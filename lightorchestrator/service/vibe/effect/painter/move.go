@@ -20,7 +20,8 @@ var _ ifaces.Painter = (*Move)(nil)
 // Paint returns a color based on t
 func (p Move) Paint(t time.Time, l light.Light) color.HSLA {
 	newColor := *p.ColorStart
-	newColor.ShiftHue(p.Shifter.Shift(t, l))
+	shift := p.Shifter.Shift(t, l)
+	newColor.ShiftHue(shift)
 	return newColor
 }
 

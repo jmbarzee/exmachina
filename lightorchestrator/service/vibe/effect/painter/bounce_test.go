@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/shifter"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/span"
@@ -16,6 +17,7 @@ func TestBouncePaint(t *testing.T) {
 	aSecond := time.Second
 	theTruth := true
 	theFalsehood := false
+	aFloat := 1.0
 
 	cases := []PainterTest{
 		{
@@ -24,9 +26,12 @@ func TestBouncePaint(t *testing.T) {
 				ColorStart: &color.Green,
 				ColorEnd:   &color.Cyan,
 				Up:         &theTruth,
-				Shifter: &shifter.Linear{
-					Start:           &aTime,
-					TimePerOneShift: &aSecond,
+				Shifter: &shifter.Temporal{
+					Start:    &aTime,
+					Interval: &aSecond,
+					Bender: &bender.Linear{
+						Interval: &aFloat,
+					},
 				},
 			},
 			Instants: []Instant{
@@ -78,9 +83,12 @@ func TestBouncePaint(t *testing.T) {
 				ColorStart: &color.Cyan,
 				ColorEnd:   &color.Green,
 				Up:         &theFalsehood,
-				Shifter: &shifter.Linear{
-					Start:           &aTime,
-					TimePerOneShift: &aSecond,
+				Shifter: &shifter.Temporal{
+					Start:    &aTime,
+					Interval: &aSecond,
+					Bender: &bender.Linear{
+						Interval: &aFloat,
+					},
 				},
 			},
 			Instants: []Instant{
@@ -132,9 +140,12 @@ func TestBouncePaint(t *testing.T) {
 				ColorStart: &color.Orange,
 				ColorEnd:   &color.RedMagenta,
 				Up:         &theFalsehood,
-				Shifter: &shifter.Linear{
-					Start:           &aTime,
-					TimePerOneShift: &aSecond,
+				Shifter: &shifter.Temporal{
+					Start:    &aTime,
+					Interval: &aSecond,
+					Bender: &bender.Linear{
+						Interval: &aFloat,
+					},
 				},
 			},
 			Instants: []Instant{
@@ -186,9 +197,12 @@ func TestBouncePaint(t *testing.T) {
 				ColorStart: &color.RedMagenta,
 				ColorEnd:   &color.Orange,
 				Up:         &theTruth,
-				Shifter: &shifter.Linear{
-					Start:           &aTime,
-					TimePerOneShift: &aSecond,
+				Shifter: &shifter.Temporal{
+					Start:    &aTime,
+					Interval: &aSecond,
+					Bender: &bender.Linear{
+						Interval: &aFloat,
+					},
 				},
 			},
 			Instants: []Instant{
@@ -242,6 +256,7 @@ func TestBounceGetStabilizeFuncs(t *testing.T) {
 	aTime := time.Date(2009, 11, 17, 20, 34, 50, 651387237, time.UTC)
 	aDuration := time.Second
 	theTruth := true
+	aFloat := 1.1
 	c := helper.StabilizeableTest{
 		Stabalizable: &Bounce{},
 		ExpectedVersions: []ifaces.Stabalizable{
@@ -261,13 +276,13 @@ func TestBounceGetStabilizeFuncs(t *testing.T) {
 				ColorStart: &color.Red,
 				ColorEnd:   &color.Red,
 				Up:         &theTruth,
-				Shifter:    &shifter.Linear{},
+				Shifter:    &shifter.Temporal{},
 			},
 			&Bounce{
 				ColorStart: &color.Red,
 				ColorEnd:   &color.Red,
 				Up:         &theTruth,
-				Shifter: &shifter.Linear{
+				Shifter: &shifter.Temporal{
 					Start: &aTime,
 				},
 			},
@@ -275,9 +290,31 @@ func TestBounceGetStabilizeFuncs(t *testing.T) {
 				ColorStart: &color.Red,
 				ColorEnd:   &color.Red,
 				Up:         &theTruth,
-				Shifter: &shifter.Linear{
-					Start:           &aTime,
-					TimePerOneShift: &aDuration,
+				Shifter: &shifter.Temporal{
+					Start:    &aTime,
+					Interval: &aDuration,
+				},
+			},
+			&Bounce{
+				ColorStart: &color.Red,
+				ColorEnd:   &color.Red,
+				Up:         &theTruth,
+				Shifter: &shifter.Temporal{
+					Start:    &aTime,
+					Interval: &aDuration,
+					Bender:   &bender.Linear{},
+				},
+			},
+			&Bounce{
+				ColorStart: &color.Red,
+				ColorEnd:   &color.Red,
+				Up:         &theTruth,
+				Shifter: &shifter.Temporal{
+					Start:    &aTime,
+					Interval: &aDuration,
+					Bender: &bender.Linear{
+						Interval: &aFloat,
+					},
 				},
 			},
 		},
@@ -285,9 +322,11 @@ func TestBounceGetStabilizeFuncs(t *testing.T) {
 			Span: span.Span{
 				StartTime: aTime,
 			},
+			Bender:   &bender.Linear{},
 			Duration: aDuration,
 			Color:    color.Red,
-			Shifter:  &shifter.Linear{},
+			Shift:    aFloat,
+			Shifter:  &shifter.Temporal{},
 		},
 	}
 	helper.RunStabilizeableTest(t, c)
