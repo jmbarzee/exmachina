@@ -6,6 +6,7 @@ import (
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
 	"github.com/jmbarzee/services/lightorchestrator/service/light"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/painter"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/shifter"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
@@ -14,6 +15,7 @@ import (
 
 func TestFutureEffect(t *testing.T) {
 	aTime := time.Date(2009, 11, 17, 20, 34, 50, 651387237, time.UTC)
+	aFloat := 1.0
 	aSecond := time.Second
 	a24thSecond := time.Second / 24
 	numLights := 5
@@ -56,9 +58,12 @@ func TestFutureEffect(t *testing.T) {
 				TimePerLight: &a24thSecond,
 				Painter: &painter.Move{
 					ColorStart: &color.Blue,
-					Shifter: &shifter.Linear{
-						Start:           &aTime,
-						TimePerOneShift: &aSecond,
+					Shifter: &shifter.Temporal{
+						Start:    &aTime,
+						Interval: &aSecond,
+						Bender: &bender.Linear{
+							Interval: &aFloat,
+						},
 					},
 				},
 			},

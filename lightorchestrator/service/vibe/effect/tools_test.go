@@ -66,8 +66,8 @@ func (l *TestLight) SetColor(newColor color.HSLA) {
 }
 
 // GetPosition returns the position of the Light (in a string)
-func (l TestLight) GetPosition() int {
-	return 0
+func (l TestLight) GetPosition() (int, int) {
+	return 0, 0
 }
 
 // GetLocation returns the point in space where the Light is

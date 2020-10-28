@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/painter"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/shifter"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
@@ -14,6 +15,7 @@ import (
 func TestSolidEffect(t *testing.T) {
 	aTime := time.Date(2009, 11, 17, 20, 34, 50, 651387237, time.UTC)
 	aSecond := time.Second
+	aFloat := 1.0
 	numLights := 5
 	cases := []EffectTest{
 		{
@@ -52,9 +54,12 @@ func TestSolidEffect(t *testing.T) {
 			Effect: &Solid{
 				Painter: &painter.Move{
 					ColorStart: &color.Blue,
-					Shifter: &shifter.Linear{
-						Start:           &aTime,
-						TimePerOneShift: &aSecond,
+					Shifter: &shifter.Temporal{
+						Start:    &aTime,
+						Interval: &aSecond,
+						Bender: &bender.Linear{
+							Interval: &aFloat,
+						},
 					},
 				},
 			},
