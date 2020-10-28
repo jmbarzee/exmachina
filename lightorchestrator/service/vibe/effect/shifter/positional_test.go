@@ -35,7 +35,7 @@ func TestPositionalShift(t *testing.T) {
 			Name: "One shift per second",
 			Shifter: &Positional{
 				Bender: &bender.Linear{
-					Rate: &aFloat,
+					Interval: &aFloat,
 				},
 			},
 			Instants: []Instant{
@@ -44,7 +44,7 @@ func TestPositionalShift(t *testing.T) {
 						Position:     aPosition,
 						NumPositions: numPositions,
 					},
-					ExpectedShift: aFloat * float64(aPosition) / float64(numPositions),
+					ExpectedShift: float64(aPosition) / aFloat / float64(numPositions),
 				},
 			},
 		},
