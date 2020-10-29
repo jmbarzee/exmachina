@@ -26,5 +26,6 @@ func (d AllocGroup) Allocate(vibe ifaces.Vibe) {
 
 	for _, device := range d.Allocaters {
 		device.Allocate(newVibe)
+		newVibe = newVibe.Duplicate()
 	}
 }

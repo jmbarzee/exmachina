@@ -23,6 +23,14 @@ type Basic struct {
 
 var _ ifaces.Vibe = (*Basic)(nil)
 
+// Duplicate creates a copy of a vibe and insures that
+// the dupliacted vibe will stabalize/materialize differently
+func (v *Basic) Duplicate() ifaces.Vibe {
+	newVibe := *v
+	(&newVibe).count++
+	return &newVibe
+}
+
 // Stabilize locks in part of the visual representation of a vibe.
 func (v *Basic) Stabilize() ifaces.Vibe {
 	newVibe := *v
@@ -86,7 +94,7 @@ func (v *Basic) randSeed() time.Time {
 // SelectBender returns a Bender
 func (v *Basic) SelectBender() ifaces.Bender {
 	options := []ifaces.Bender{
-		&bender.Static{},
+		//&bender.Static{},
 		&bender.Linear{},
 		&bender.Exponential{},
 		&bender.Sinusoidal{},
@@ -126,7 +134,7 @@ func (v *Basic) SelectShift() *float64 {
 // SelectShifter returns a Shifter
 func (v *Basic) SelectShifter() ifaces.Shifter {
 	options := []ifaces.Shifter{
-		&shifter.Static{},
+		//&shifter.Static{},
 		&shifter.Positional{},
 		&shifter.Locational{},
 		&shifter.Directional{},
@@ -142,7 +150,7 @@ func (v *Basic) SelectShifter() ifaces.Shifter {
 // SelectPainter returns a Painter
 func (v *Basic) SelectPainter() ifaces.Painter {
 	options := []ifaces.Painter{
-		&painter.Static{},
+		//&painter.Static{},
 		&painter.Move{},
 		&painter.Bounce{},
 	}

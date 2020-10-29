@@ -6,6 +6,10 @@ type Vibe interface {
 
 	Stabalizable
 
+	// Duplicate creates a copy of a vibe and insures that
+	// the dupliacted vibe will stabalize/materialize differently
+	Duplicate() Vibe
+
 	// Stabilize locks in part of the visual representation of a vibe.
 	Stabilize() Vibe
 
