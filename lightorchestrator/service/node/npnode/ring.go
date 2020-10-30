@@ -36,20 +36,16 @@ func NewRing(
 	d := &Ring{
 		Radius: radius,
 		Object: space.NewObject(center, orientation, rotation),
-		Row:    NewRow(length, r.getLights),
+		Row:    NewRow(length, getLights),
 	}
 	return d
 }
 
 func (r Ring) getLights() []light.Light {
 
-	orientationMatrix := r.GetOrientation().RotationMatrix()
-
 	rotationMatrix := r.GetRotation().RotationMatrix()
 
 	translationMatrix := r.GetLocation().TranslationMatrix()
-
-	transformationMatrix := translationMatrix.Mult(orientationMatrix)
 
 	radPerLED := distPerLED / r.Radius
 
