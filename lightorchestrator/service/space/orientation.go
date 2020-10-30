@@ -44,3 +44,30 @@ func (o Orientation) Tilt(theta float64) Orientation {
 	o.Theta = newTheta
 	return o
 }
+
+// RotationMatrix produces a matrix which will transform by o
+func (o Orientation) RotationMatrix() Matrix {
+	orientationTheta := newRotationMatrixY(o.Theta)
+	orientationPhi := newRotationMatrixZ(o.Phi)
+
+	return orientationTheta.Mult(orientationPhi)
+}
+
+// Vector returns a vector of length one in the orientation of o
+func (o Orientation) Vector() Vector {
+	cosT, sinT := math.Sincos(o.Theta)
+	cosP, sinP := math.Sincos(o.Phi)
+	return Vector{
+		X: cosT * sinP,
+		Y: sinT * sinP,
+		Z: cosP,
+	}
+}
+
+// PortionOrtagonal returns the portion of o2 which is orthogonal to o
+func (o Orientation) PortionOrtagonal(o2 Orientation) Orientation {
+	v := o.Vector()
+	u := o2.Vector()
+	portUOrthoV := u.Translate(v.Project(u).Negative())
+	return portUOrthoV.Orientation()
+}

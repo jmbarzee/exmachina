@@ -12,7 +12,7 @@ import (
 
 // ChandelierMedium is a Medium Chandelier (4 rings)
 type ChandelierMedium struct {
-	device.BasicDevice
+	device.Basic
 
 	// Top is the mounting location for the chandilier
 	Top space.Vector

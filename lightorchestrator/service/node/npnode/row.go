@@ -4,7 +4,6 @@ import (
 	"sort"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/device"
 	"github.com/jmbarzee/services/lightorchestrator/service/light"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
@@ -41,8 +40,16 @@ func NewRow(
 	}
 }
 
-// PruneEffects removes all effects which have ended before a time t
-func (d *Row) PruneEffects(t time.Time) {
+// Allocate takes Vibes and Materializes them into effects
+// This is the bottom of the Allocater hiarchy for neoPixels
+func (d *Row) Allocate(feeling ifaces.Vibe) {
+	newEffects := feeling.Materialize()
+	d.Effects = append(d.Effects, newEffects...)
+	sort.Sort(byStartTime(d.Effects))
+}
+
+// Clean removes all effects which have ended before a time t
+func (d *Row) Clean(t time.Time) {
 	unEndedEffects := make([]ifaces.Effect, 0, len(d.Effects))
 	for _, e := range d.Effects {
 		if e.End().Before(t) {
@@ -76,19 +83,6 @@ func (d *Row) Render(t time.Time) []light.Light {
 	}
 
 	return lights
-}
-
-// GetChildren returns all groups under the GroupOption
-func (d Row) GetChildren() []device.DeviceNode {
-	return []device.DeviceNode{}
-}
-
-// Allocate takes Vibes and Materializes them into effects
-// This is the bottom of the Allocater hiarchy for neoPixels
-func (d *Row) Allocate(feeling ifaces.Vibe) {
-	newEffects := feeling.Materialize()
-	d.Effects = append(d.Effects, newEffects...)
-	sort.Sort(byStartTime(d.Effects))
 }
 
 type byStartTime []ifaces.Effect

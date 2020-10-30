@@ -1,7 +1,6 @@
 package neopixel
 
 import (
-	"github.com/jmbarzee/services/lightorchestrator/service/device"
 	"github.com/jmbarzee/services/lightorchestrator/service/space"
 )
 
@@ -12,15 +11,11 @@ const (
 )
 
 type Bar struct {
-	device.BasicDevice
 	*Line
 }
 
 func NewBar(uuid string, start space.Vector, direction, rotation space.Orientation) Bar {
 	return Bar{
-		BasicDevice: device.BasicDevice{
-			ID: uuid,
-		},
 		Line: NewLine(start, direction, rotation, ledsPerNPBar),
 	}
 }

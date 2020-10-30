@@ -12,7 +12,7 @@ import (
 
 // ChandelierSmall is a Small Chandelier (2 rings)
 type ChandelierSmall struct {
-	device.BasicDevice
+	device.Basic
 
 	// Top is the mounting location for the chandilier
 	Top space.Vector

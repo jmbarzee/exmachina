@@ -17,7 +17,7 @@ const (
 
 // ChandelierLarge is a Large Chandelier (6 rings)
 type ChandelierLarge struct {
-	device.BasicDevice
+	device.Basic
 
 	// Top is the mounting location for the chandilier
 	Top space.Vector
