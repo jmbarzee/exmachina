@@ -22,8 +22,11 @@ service LightOrchestrator {
 	// MoveDevice changes a devices location and orientation 
 	rpc MoveDevice(MoveDeviceRequest) returns (Empty) {}
 
-	// InsertDeviceInHierarchy inserts a device into the DeviceNode hierarchy
-	rpc InsertDeviceInHierarchy(InsertDeviceInHierarchyRequest) returns (Empty) {}
+	// InsertNode inserts a node into the NodeTree
+	rpc InsertNode(InsertNodeRequest) returns (Empty) {}
+
+	// DeleteNode deletes a node from the NodeTree
+	rpc DeleteNode(DeleteNodeRequest) returns (Empty) {}
 }
 
 
@@ -64,8 +67,17 @@ message MoveDeviceRequest {
 } 
 
 
-// InsertDeviceInHierarchyRequest contains the UUID of the parent and ne child
-message InsertDeviceInHierarchyRequest {
+// InsertNodeRequest contains the UUID of the parent and the child
+message InsertNodeRequest {
+	// ParentUUID is the UUID of the parent for the new child
+	string ParentUUID = 1;
+
+	// ChildUUID is the UUID of the new child 
+	string ChildUUID = 2;
+} 
+
+// DeleteNodeRequest contains the UUID of the parent and the child
+message DeleteNodeRequest {
 	// ParentUUID is the UUID of the parent for the new child
 	string ParentUUID = 1;
 

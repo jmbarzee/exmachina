@@ -5,9 +5,9 @@ import (
 
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/node"
 	"github.com/jmbarzee/services/lightorchestrator/service/pbconvert"
-	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // NodeTree thread-safe tree of allocaters
@@ -25,10 +25,18 @@ func (t NodeTree) Allocate(vibe ifaces.Vibe) {
 	t.rwmutex.Unlock()
 }
 
-// Insert places a device in the tree underneath the device with parentID
+// Insert places a device into the tree underneath the device with parentID
 func (t NodeTree) Insert(parentID string, newNode node.Node) error {
 	t.rwmutex.Lock()
 	err := t.root.Insert(parentID, newNode)
+	t.rwmutex.Unlock()
+	return err
+}
+
+// Delete removes a device from the tree underneath the device with parentID
+func (t NodeTree) Delete(parentID, childID string) error {
+	t.rwmutex.Lock()
+	err := t.root.Delete(parentID, childID)
 	t.rwmutex.Unlock()
 	return err
 }

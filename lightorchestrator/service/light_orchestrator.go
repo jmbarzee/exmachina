@@ -20,7 +20,7 @@ type LightOrch struct {
 
 	Subscribers *SubscriberList
 
-	DeviceHierarchy *NodeTree
+	NodeTree *NodeTree
 }
 
 func NewLightOrch(config config.ServiceConfig) (*LightOrch, error) {
@@ -32,9 +32,9 @@ func NewLightOrch(config config.ServiceConfig) (*LightOrch, error) {
 	subscriberList, deviceNodeTree := NewStructs()
 
 	lightOrch := &LightOrch{
-		Service:         service,
-		Subscribers:     subscriberList,
-		DeviceHierarchy: deviceNodeTree,
+		Service:     service,
+		Subscribers: subscriberList,
+		NodeTree:    deviceNodeTree,
 	}
 
 	pb.RegisterLightOrchestratorServer(service.Server, lightOrch)

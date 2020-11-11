@@ -30,5 +30,5 @@ func (l *LightOrch) allocateVibe(ctx context.Context, t time.Time) {
 			EndTime:   t.Add(tickLength * 2),
 		},
 	}
-	l.DeviceHierarchy.Allocate(v)
+	l.NodeTree.Allocate(v)
 }

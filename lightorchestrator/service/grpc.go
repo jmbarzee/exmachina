@@ -55,7 +55,7 @@ func (l *LightOrch) SubscribeLights(request *pb.SubscribeLightsRequest, server p
 func (l *LightOrch) GetDevices(ctx context.Context, request *pb.Empty) (*pb.GetDevicesReply, error) {
 	rpcName := "GetDevices"
 	system.LogRPCf(rpcName, "Receiving request")
-	pbDeviceNodes := l.DeviceHierarchy.ToPBDeviceNode()
+	pbDeviceNodes := l.NodeTree.ToPBDeviceNode()
 	pbDevices := make([]*pb.Device, 0)
 	l.Subscribers.Range(func(sub Subscriber) bool {
 		pbDevices = append(pbDevices, pbconvert.NewPBDevice(sub.Device))
@@ -97,10 +97,10 @@ func (l *LightOrch) MoveDevice(ctx context.Context, request *pb.MoveDeviceReques
 	return &pb.Empty{}, err
 }
 
-// InsertDeviceInHierarchy inserts a device into the DeviceNode hierarchy
+// InsertNode inserts a device into the NodeTree
 // implements pb.LightOrchestratorServer
-func (l *LightOrch) InsertDeviceInHierarchy(ctx context.Context, request *pb.InsertDeviceInHierarchyRequest) (*pb.Empty, error) {
-	rpcName := "InsertDeviceInHierarchy"
+func (l *LightOrch) InsertNode(ctx context.Context, request *pb.InsertNodeRequest) (*pb.Empty, error) {
+	rpcName := "InsertNode"
 	system.LogRPCf(rpcName, "Receiving request")
 
 	parentUUID := request.ParentUUID
@@ -125,7 +125,22 @@ func (l *LightOrch) InsertDeviceInHierarchy(ctx context.Context, request *pb.Ins
 		return nil, errors.New("Could not find specified Child")
 	}
 
-	err := l.DeviceHierarchy.Insert(parentUUID, targetNode)
+	err := l.NodeTree.Insert(parentUUID, targetNode)
+
+	system.LogRPCf(rpcName, "Sending reply")
+	return &pb.Empty{}, err
+}
+
+// DeleteNode deletes a device from the NodeTree
+// implements pb.LightOrchestratorServer
+func (l *LightOrch) DeleteNode(ctx context.Context, request *pb.DeleteNodeRequest) (*pb.Empty, error) {
+	rpcName := "DeleteNode"
+	system.LogRPCf(rpcName, "Receiving request")
+
+	parentUUID := request.ParentUUID
+	childUUID := request.ChildUUID
+
+	err := l.NodeTree.Delete(parentUUID, childUUID)
 
 	system.LogRPCf(rpcName, "Sending reply")
 	return &pb.Empty{}, err
