@@ -12,11 +12,6 @@ const (
 	MinErrColor = 0.000001
 )
 
-// FloatsEqual compares and diffs floats (shifts)
-func FloatsEqual(a, b float64, err float64) bool {
-	return float64(math.Abs(float64(a-b))) < err
-}
-
 // ColorsEqual compares and diffs colors
 func ColorsEqual(a, b color.HSLA) bool {
 	if !FloatsEqual(a.H, b.H, MinErrColor) {
@@ -53,4 +48,9 @@ func StructsEqual(expected, actual interface{}) bool {
 		return false
 	}
 	return true
+}
+
+// FloatsEqual compares floats
+func FloatsEqual(a, b float64, err float64) bool {
+	return float64(math.Abs(float64(a-b))) < err
 }

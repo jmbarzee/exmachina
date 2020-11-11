@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/span"
 )
 

@@ -1,2 +1,5 @@
 # exclude example from parent directory
 example/*
+
+# binaries
+*/main

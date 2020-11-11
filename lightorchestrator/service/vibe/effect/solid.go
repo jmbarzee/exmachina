@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // Solid is an Effect which displays all lights as a single color
@@ -17,7 +16,7 @@ type Solid struct {
 var _ ifaces.Effect = (*Solid)(nil)
 
 // Render will produce a slice of lights based on the time and properties of lights
-func (e Solid) Render(t time.Time, lights []light.Light) []light.Light {
+func (e Solid) Render(t time.Time, lights []ifaces.Light) []ifaces.Light {
 	if len(lights) == 0 {
 		return lights
 	}

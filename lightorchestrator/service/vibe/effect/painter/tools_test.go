@@ -5,8 +5,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
-	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
 )
 
@@ -19,7 +18,7 @@ type (
 
 	Instant struct {
 		Time          time.Time
-		Light         light.Light
+		Light         ifaces.Light
 		ExpectedColor color.HSLA
 	}
 )

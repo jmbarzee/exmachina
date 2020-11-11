@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // Group represents a group of devices who's effects will share traits

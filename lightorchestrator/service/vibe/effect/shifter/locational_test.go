@@ -3,11 +3,11 @@ package shifter
 import (
 	"testing"
 
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/space"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
+	"github.com/jmbarzee/space"
 )
 
 func TestLocationalShift(t *testing.T) {
@@ -29,7 +29,7 @@ func TestLocationalShift(t *testing.T) {
 			Instants: []Instant{
 				{
 					Light: &light.Basic{
-						Location: space.Vector{
+						Location: space.Cartesian{
 							X: 1,
 							Y: 2,
 							Z: 3,
@@ -39,7 +39,7 @@ func TestLocationalShift(t *testing.T) {
 				},
 				{
 					Light: &light.Basic{
-						Location: space.Vector{
+						Location: space.Cartesian{
 							X: -1,
 							Y: -2,
 							Z: -3,
@@ -49,7 +49,7 @@ func TestLocationalShift(t *testing.T) {
 				},
 				{
 					Light: &light.Basic{
-						Location: space.Vector{
+						Location: space.Cartesian{
 							X: 0,
 							Y: 0,
 							Z: 0,

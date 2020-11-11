@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/span"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
 )

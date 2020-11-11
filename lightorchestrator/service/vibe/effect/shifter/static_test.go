@@ -3,7 +3,7 @@ package shifter
 import (
 	"testing"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
 )
 

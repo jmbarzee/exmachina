@@ -10,10 +10,12 @@ var FindParentNodeError = errors.New("Failed to find parent node with matching I
 var FindChildNodeError = errors.New("Failed to find child node with matching ID")
 var ParentCantHaveChildrenError = errors.New("Found node with matching ID, but node can't hold children")
 
+// Basic implements some traits and features which are shared between all nodes
 type Basic struct {
 	ID string
 }
 
+// NewBasic creates a Basic with a new UUID
 func NewBasic() Basic {
 	return Basic{
 		ID: uuid.New().String(),

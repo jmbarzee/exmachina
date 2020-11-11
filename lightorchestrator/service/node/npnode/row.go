@@ -1,11 +1,10 @@
-package neopixel
+package npnode
 
 import (
 	"sort"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 const (
@@ -25,13 +24,13 @@ type Row struct {
 	// Effects is the array of effects from materializing Vibes in calls to Allocate
 	Effects []ifaces.Effect
 
-	GetLights func() []light.Light
+	GetLights func() []ifaces.Light
 }
 
 // NewRow creates a new Row
 func NewRow(
 	length int,
-	getLights func() []light.Light,
+	getLights func() []ifaces.Light,
 ) *Row {
 	return &Row{
 		Length:    length,
@@ -63,7 +62,7 @@ func (d *Row) Clean(t time.Time) {
 }
 
 // Render uses the stored effects from allocate(feeling)s to produce an array of lights
-func (d *Row) Render(t time.Time) []light.Light {
+func (d *Row) Render(t time.Time) []ifaces.Light {
 	runningEffects := make([]ifaces.Effect, 0)
 	for _, f := range d.Effects {
 		if f.Start().After(time.Now()) {

@@ -6,9 +6,8 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
-	"github.com/jmbarzee/services/lightorchestrator/service/light"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/repeatable"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 )
 
 // Bounce is a Painter which provides produces colors bouncing between ColorStart and ColorEnd,
@@ -23,7 +22,7 @@ type Bounce struct {
 var _ ifaces.Painter = (*Bounce)(nil)
 
 // Paint returns a color based on t
-func (p Bounce) Paint(t time.Time, l light.Light) color.HSLA {
+func (p Bounce) Paint(t time.Time, l ifaces.Light) color.HSLA {
 	if *p.Up {
 		if p.ColorStart.H < p.ColorEnd.H {
 			hDistance := p.ColorEnd.H - p.ColorStart.H

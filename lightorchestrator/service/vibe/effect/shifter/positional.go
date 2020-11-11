@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // Positional is a Shifter which provides shifts that relate to changing time, Directionally
@@ -16,7 +15,7 @@ type Positional struct {
 var _ ifaces.Shifter = (*Positional)(nil)
 
 // Shift returns a value representing some change or shift
-func (s Positional) Shift(t time.Time, l light.Light) float64 {
+func (s Positional) Shift(t time.Time, l ifaces.Light) float64 {
 	pos, numPos := l.GetPosition()
 	bend := s.Bender.Bend(float64(pos) / float64(numPos))
 	return bend

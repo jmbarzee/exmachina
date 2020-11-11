@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // Locational is a Shifter which provides shifts that relate to changing time, Directionally
@@ -18,7 +17,7 @@ type Locational struct {
 var _ ifaces.Shifter = (*Locational)(nil)
 
 // Shift returns a value representing some change or shift
-func (s Locational) Shift(t time.Time, l light.Light) float64 {
+func (s Locational) Shift(t time.Time, l ifaces.Light) float64 {
 	loc := l.GetLocation()
 	bendX := s.XBender.Bend(loc.X)
 	bendY := s.YBender.Bend(loc.Y)

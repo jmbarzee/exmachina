@@ -5,11 +5,10 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
-	"github.com/jmbarzee/services/lightorchestrator/service/light"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/painter"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/shifter"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
 )
 
@@ -71,7 +70,7 @@ func TestFutureEffect(t *testing.T) {
 			Instants: []Instant{
 				{
 					Time: aTime.Add(time.Second * 0 / 24),
-					ExpectedLights: []light.Light{
+					ExpectedLights: []ifaces.Light{
 						&TestLight{
 							Color: color.Blue,
 						},
@@ -85,7 +84,7 @@ func TestFutureEffect(t *testing.T) {
 				},
 				{
 					Time: aTime.Add(time.Second * 1 / 24),
-					ExpectedLights: []light.Light{
+					ExpectedLights: []ifaces.Light{
 						&TestLight{
 							Color: color.WarmBlue,
 						},
@@ -99,7 +98,7 @@ func TestFutureEffect(t *testing.T) {
 				},
 				{
 					Time: aTime.Add(time.Second * 2 / 24),
-					ExpectedLights: []light.Light{
+					ExpectedLights: []ifaces.Light{
 						&TestLight{
 							Color: color.Violet,
 						},

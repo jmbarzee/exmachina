@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // OneShift is just 1
@@ -21,10 +20,10 @@ type Directional struct {
 var _ ifaces.Shifter = (*Directional)(nil)
 
 // Shift returns a value representing some change or shift
-func (s Directional) Shift(t time.Time, l light.Light) float64 {
+func (s Directional) Shift(t time.Time, l ifaces.Light) float64 {
 	ori := l.GetOrientation()
-	bendPhi := s.PhiBender.Bend(ori.Phi)
-	bendTheta := s.ThetaBender.Bend(ori.Theta)
+	bendPhi := s.PhiBender.Bend(ori.P)
+	bendTheta := s.ThetaBender.Bend(ori.T)
 	return bendPhi + bendTheta
 }
 

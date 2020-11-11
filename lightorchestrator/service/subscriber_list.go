@@ -9,17 +9,19 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 	"github.com/jmbarzee/services/lightorchestrator/service/device"
+	"github.com/jmbarzee/services/lightorchestrator/service/node"
 )
 
-func NewStructs() (*SubscriberList, *DeviceNodeTree) {
-	root := device.NewGroupOption()
+// NewStructs produces a SubscriberList and NodeTree which share an underlying lock for thread safety
+func NewStructs() (*SubscriberList, *NodeTree) {
+	root := node.NewGroupOption()
 	rwmutex := sync.RWMutex{}
 
 	return &SubscriberList{
 			rwmutex: &rwmutex,
 			subs:    []Subscriber{},
 		},
-		&DeviceNodeTree{
+		&NodeTree{
 			root:    root,
 			rwmutex: &rwmutex,
 		}
@@ -52,11 +54,6 @@ func (s Subscriber) DispatchRender(t time.Time) error {
 		Colors:      colors,
 	}
 	return s.Server.Send(reply)
-}
-
-// CleanBefore removes all effects which have finished by t
-func (s Subscriber) CleanBefore(t time.Time) {
-	s.Device.PruneEffects(t)
 }
 
 // SubscriberList thread-safe list of subscribers

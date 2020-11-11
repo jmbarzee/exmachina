@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // Future is an Effect which displays each consecutive light
@@ -19,7 +18,7 @@ type Future struct {
 var _ ifaces.Effect = (*Future)(nil)
 
 // Render will produce a slice of lights based on the time and properties of lights
-func (e Future) Render(t time.Time, lights []light.Light) []light.Light {
+func (e Future) Render(t time.Time, lights []ifaces.Light) []ifaces.Light {
 	for i, l := range lights {
 		distanceInFuture := *e.TimePerLight * time.Duration(i)
 		c := e.Painter.Paint(t.Add(distanceInFuture), l)

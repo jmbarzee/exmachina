@@ -3,13 +3,15 @@ package service
 import (
 	"context"
 	"errors"
+	"math"
 
 	"github.com/jmbarzee/dominion/system"
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 	"github.com/jmbarzee/services/lightorchestrator/service/device"
-	"github.com/jmbarzee/services/lightorchestrator/service/device/neopixel"
+	"github.com/jmbarzee/services/lightorchestrator/service/device/npdevice"
+	"github.com/jmbarzee/services/lightorchestrator/service/node"
 	"github.com/jmbarzee/services/lightorchestrator/service/pbconvert"
-	"github.com/jmbarzee/services/lightorchestrator/service/space"
+	"github.com/jmbarzee/space"
 )
 
 // SubscribeLights requests a stream of lights
@@ -22,11 +24,11 @@ func (l *LightOrch) SubscribeLights(request *pb.SubscribeLightsRequest, server p
 	var device device.Device
 	switch serviceType {
 	case "npBar":
-		device = neopixel.NewBar(
+		device = npdevice.NewBar(
 			serviceUUID,
-			space.Vector{X: 0, Y: 0, Z: 0},
-			space.Orientation{Phi: 0, Theta: 0},
-			space.Orientation{Phi: 0, Theta: 0},
+			space.Cartesian{X: 0, Y: 0, Z: 0},
+			space.Spherical{R: 1, P: 0, T: 0},
+			space.Spherical{R: 1, P: math.Pi / 2, T: 0},
 		)
 		// TODO @jmbarzee add other devices for start up here
 	}
@@ -104,21 +106,26 @@ func (l *LightOrch) InsertDeviceInHierarchy(ctx context.Context, request *pb.Ins
 	parentUUID := request.ParentUUID
 	childUUID := request.ChildUUID
 
-	var targetDevice device.Device
+	var targetNode node.Node
 	l.Subscribers.Range(func(sub Subscriber) bool {
-		device := sub.Device
-		if device.GetID() != childUUID {
+		nodes := sub.Device.GetNodes()
+		for _, n := range nodes {
+			if n.GetID() == childUUID {
+				targetNode = n
+			}
+		}
+
+		if targetNode == nil {
 			return true
 		}
-		targetDevice = sub.Device
 		return false
 	})
 
-	if targetDevice == nil {
+	if targetNode == nil {
 		return nil, errors.New("Could not find specified Child")
 	}
 
-	err := l.DeviceHierarchy.Insert(parentUUID, targetDevice)
+	err := l.DeviceHierarchy.Insert(parentUUID, targetNode)
 
 	system.LogRPCf(rpcName, "Sending reply")
 	return &pb.Empty{}, err

@@ -5,28 +5,28 @@ import (
 
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/device"
+	"github.com/jmbarzee/services/lightorchestrator/service/node"
 	"github.com/jmbarzee/services/lightorchestrator/service/pbconvert"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
-// DeviceNodeTree thread-safe tree of allocaters
-type DeviceNodeTree struct {
+// NodeTree thread-safe tree of allocaters
+type NodeTree struct {
 	// RWMutex gates changes to the tree
 	rwmutex *sync.RWMutex
 	// root is the root allocater
-	root device.DeviceNode
+	root node.Node
 }
 
 // Allocate passes a vibe into the tree where it will be allocated to sub devices as it is Stabilized
-func (t DeviceNodeTree) Allocate(vibe ifaces.Vibe) {
+func (t NodeTree) Allocate(vibe ifaces.Vibe) {
 	t.rwmutex.Lock()
 	t.root.Allocate(vibe)
 	t.rwmutex.Unlock()
 }
 
 // Insert places a device in the tree underneath the device with parentID
-func (t DeviceNodeTree) Insert(parentID string, newNode device.DeviceNode) error {
+func (t NodeTree) Insert(parentID string, newNode node.Node) error {
 	t.rwmutex.Lock()
 	err := t.root.Insert(parentID, newNode)
 	t.rwmutex.Unlock()
@@ -34,9 +34,9 @@ func (t DeviceNodeTree) Insert(parentID string, newNode device.DeviceNode) error
 }
 
 // ToPBDeviceNode converts the nodes in the tree to pb.DeviceNode
-func (t DeviceNodeTree) ToPBDeviceNode() *pb.DeviceNode {
+func (t NodeTree) ToPBDeviceNode() *pb.Node {
 	t.rwmutex.RLock()
-	node := pbconvert.NewPBDeviceNode(t.root)
+	node := pbconvert.NewPBNode(t.root)
 	t.rwmutex.RUnlock()
 	return node
 }

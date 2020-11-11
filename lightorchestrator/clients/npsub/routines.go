@@ -22,7 +22,7 @@ Loop:
 				continue
 			}
 			if len(idents) > 1 {
-				system.Logf("Found multiple lightOrchestrator, %v", idents)
+				system.Logf("Found Multiplyiple lightOrchestrator, %v", idents)
 				continue
 			}
 			if len(idents) < 1 {

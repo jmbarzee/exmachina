@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/repeatable"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // GroupOption represents a series of groups

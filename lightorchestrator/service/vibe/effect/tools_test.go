@@ -5,23 +5,22 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
-	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/space"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
+	"github.com/jmbarzee/space"
 )
 
 type (
 	EffectTest struct {
 		Name         string
 		Effect       ifaces.Effect
-		IntialLights []light.Light
+		IntialLights []ifaces.Light
 		Instants     []Instant
 	}
 
 	Instant struct {
 		Time           time.Time
-		ExpectedLights []light.Light
+		ExpectedLights []ifaces.Light
 	}
 )
 
@@ -41,8 +40,8 @@ func RunEffectTests(t *testing.T, cases []EffectTest) {
 	}
 }
 
-func GetLights(length int, c color.HSLA) []light.Light {
-	lights := make([]light.Light, length)
+func GetLights(length int, c color.HSLA) []ifaces.Light {
+	lights := make([]ifaces.Light, length)
 	for i := range lights {
 		lights[i] = &TestLight{
 			Color: c,
@@ -71,11 +70,11 @@ func (l TestLight) GetPosition() (int, int) {
 }
 
 // GetLocation returns the point in space where the Light is
-func (l TestLight) GetLocation() space.Vector {
-	return space.Vector{}
+func (l TestLight) GetLocation() space.Cartesian {
+	return space.Cartesian{}
 }
 
 // GetOrientation returns the direction the Light points
-func (l TestLight) GetOrientation() space.Orientation {
-	return space.Orientation{}
+func (l TestLight) GetOrientation() space.Spherical {
+	return space.Spherical{}
 }

@@ -3,7 +3,7 @@ package bender
 import (
 	"fmt"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // Linear is a Bender which provides a single unchanging bend

@@ -1,18 +1,23 @@
-package space
+package ifaces
 
+import "github.com/jmbarzee/space"
+
+var _ Tangible = (*space.Object)(nil)
+
+// Tangible is the interface to something exists in space
 type Tangible interface {
 	// GetLocation returns the physical location of the device
-	GetLocation() Vector
+	GetLocation() space.Cartesian
 	// SetLocation changes the physical location of the device
-	SetLocation(Vector)
+	SetLocation(space.Cartesian)
 
 	// GetOrientation returns the physical orientation of the device
-	GetOrientation() Orientation
+	GetOrientation() space.Spherical
 	// SetOrientation changes the physical orientation of the device
-	SetOrientation(Orientation)
+	SetOrientation(space.Spherical)
 
 	// GetRotation returns the physical rotation of the device
-	GetRotation() Orientation
+	GetRotation() space.Spherical
 	// SetRotationchanges the physical rotation of the device
-	SetRotation(Orientation)
+	SetRotation(space.Spherical)
 }

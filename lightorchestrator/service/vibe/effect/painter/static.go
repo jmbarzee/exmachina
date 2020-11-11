@@ -5,8 +5,7 @@ import (
 	"time"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/color"
-	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // Static is a Painter which provides unchangeing colors
@@ -17,7 +16,7 @@ type Static struct {
 var _ ifaces.Painter = (*Static)(nil)
 
 // Paint returns a color based on t
-func (p Static) Paint(t time.Time, l light.Light) color.HSLA {
+func (p Static) Paint(t time.Time, l ifaces.Light) color.HSLA {
 	return *p.Color
 }
 

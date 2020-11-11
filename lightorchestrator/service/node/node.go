@@ -3,7 +3,7 @@ package node
 import (
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // A Node is a node in the tree

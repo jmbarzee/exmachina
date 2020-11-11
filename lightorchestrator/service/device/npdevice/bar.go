@@ -1,26 +1,44 @@
-package neopixel
+package npdevice
 
 import (
-	"github.com/jmbarzee/services/lightorchestrator/service/space"
+	"github.com/jmbarzee/services/lightorchestrator/service/device"
+	"github.com/jmbarzee/services/lightorchestrator/service/node"
+	"github.com/jmbarzee/services/lightorchestrator/service/node/npnode"
+	"github.com/jmbarzee/space"
 )
 
 const (
-	npBarLength = 2
+	npBarLength  = 2
+	ledsPerMeter = 60
 
 	ledsPerNPBar = npBarLength * ledsPerMeter
 )
 
+// Bar is a strait bar of lights
 type Bar struct {
-	*Line
+	device.Basic
+
+	*npnode.Line
 }
 
-func NewBar(uuid string, start space.Vector, direction, rotation space.Orientation) Bar {
+var _ device.Device = (*Bar)(nil)
+
+// NewBar creates a new Bar
+func NewBar(uuid string, start space.Cartesian, direction, rotation space.Spherical) Bar {
 	return Bar{
-		Line: NewLine(start, direction, rotation, ledsPerNPBar),
+		Basic: device.NewBasic(uuid),
+		Line:  npnode.NewLine(ledsPerNPBar, start, direction, rotation),
+	}
+}
+
+// GetNodes returns all the Nodes which the device holds
+func (b Bar) GetNodes() []node.Node {
+	return []node.Node{
+		b.Line,
 	}
 }
 
 // GetType returns the type
-func (d Bar) GetType() string {
+func (Bar) GetType() string {
 	return "npBar"
 }

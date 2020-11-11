@@ -3,7 +3,7 @@ package bender
 import (
 	"fmt"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // Combo is a Bender which provides a single unchanging bend

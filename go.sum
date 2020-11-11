@@ -48,6 +48,7 @@ github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMyw
 github.com/google/go-cmp v0.3.1/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
 github.com/google/go-cmp v0.4.0 h1:xsAVV57WRhGj6kEIi8ReJzQlHHqcBYCElAvkovg3B/4=
 github.com/google/go-cmp v0.4.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
+github.com/google/go-cmp v0.5.0 h1:/QaMHBdZ26BB3SSst0Iwl10Epc+xhTquomWX0oZEB6w=
 github.com/google/go-cmp v0.5.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/uuid v1.1.2 h1:EVhdT+1Kseyi1/pUmXKaFxYsDNy9RQYkMWRH68J/W7Y=
 github.com/google/uuid v1.1.2/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
@@ -59,13 +60,17 @@ github.com/jmbarzee/domain v0.0.0-20200628231130-6db7017f3127 h1:c7bccUYFOG/Z16s
 github.com/jmbarzee/domain v0.0.0-20200628231130-6db7017f3127/go.mod h1:7tiDMphvqITjiHRO3Vza3FVk/z9sYl1N7lVbgAckisg=
 github.com/jmbarzee/dominion v0.0.0-20201007010044-c3155ac46310 h1:zuXUIWQ257tWnXpn2VCmaxMZCWVzVFHhNoqnIizw+6M=
 github.com/jmbarzee/dominion v0.0.0-20201007010044-c3155ac46310/go.mod h1:+ItHo5GvhFJRwixJI+5AGx+FHkuH0d09Q3XsIxYFXeI=
-github.com/jmbarzee/dominion v0.0.0-20201019162148-9938885d338c h1:XUrRHvlPcLSYZhIX7swiVEmMMFrkDOtZEggPFqKXV1s=
-github.com/jmbarzee/dominion v0.0.0-20201019162148-9938885d338c/go.mod h1:PC9Sr2KsAFK2iatR5L1CRdgCMFjudLDP7YHwm3AOGpc=
 github.com/jmbarzee/dominion v0.0.0-20201019190308-0a080c81272f h1:gCiwYtgTHIIcp6S3CgSH9W0VqVEWGp6aZSfNoLQWbp0=
 github.com/jmbarzee/dominion v0.0.0-20201019190308-0a080c81272f/go.mod h1:PC9Sr2KsAFK2iatR5L1CRdgCMFjudLDP7YHwm3AOGpc=
 github.com/jmbarzee/rpi_ws281x v0.0.0-20181120233232-1c302014b520 h1:aty96dKOZ2J8navVI1jgYAN4auHTk2IOykof5yFIp+I=
 github.com/jmbarzee/rpi_ws281x v0.0.0-20181120233232-1c302014b520/go.mod h1:DmSm72tX3WbTthKFLeKzfLLoNQ+qdJZY6Si1Sznbe50=
 github.com/jmbarzee/services v0.0.0-20201007024902-d0213d1a203a/go.mod h1:GeDmjJk9fKZVrKTW+Un9RGCz79yXUKF0NZ8WQnwVyTc=
+github.com/jmbarzee/space v0.0.0-20201110161722-1a98f568277f h1:4mKIroyZdZD3RSEewPllv+9ZiH8baXlfa+XgEpz658k=
+github.com/jmbarzee/space v0.0.0-20201110161722-1a98f568277f/go.mod h1:nt2DEDCCVVnBUaJ9OmwF8mb303yD6W9l1pymrla3vg0=
+github.com/jmbarzee/space v0.0.0-20201110163643-af63f7b494a4 h1:tHMxucM2+R5dJekp7EbyGPW6si9LDAiJ0N7jdBURfU4=
+github.com/jmbarzee/space v0.0.0-20201110163643-af63f7b494a4/go.mod h1:nt2DEDCCVVnBUaJ9OmwF8mb303yD6W9l1pymrla3vg0=
+github.com/jmbarzee/space v0.0.0-20201110195717-c35a2ebfead5 h1:aYq6LWPufHFN/71NLJApc74iWGpDxY3vHabZML+rb7w=
+github.com/jmbarzee/space v0.0.0-20201110195717-c35a2ebfead5/go.mod h1:nt2DEDCCVVnBUaJ9OmwF8mb303yD6W9l1pymrla3vg0=
 github.com/miekg/dns v1.1.15/go.mod h1:W1PPwlIAgtquWBMBEV9nkV9Cazfe8ScdGz/Lj7v3Nrg=
 github.com/miekg/dns v1.1.27/go.mod h1:KNUDUusw/aVsxyTYZM1oqvCicbwhgbNgztCETuNZ7xM=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=

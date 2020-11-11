@@ -3,11 +3,11 @@ package shifter
 import (
 	"testing"
 
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/light"
-	"github.com/jmbarzee/services/lightorchestrator/service/space"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
-	"github.com/jmbarzee/services/lightorchestrator/service/vibe/ifaces"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
+	"github.com/jmbarzee/space"
 )
 
 func TestDirectionalShift(t *testing.T) {
@@ -26,27 +26,30 @@ func TestDirectionalShift(t *testing.T) {
 			Instants: []Instant{
 				{
 					Light: &light.Basic{
-						Orientation: space.Orientation{
-							Phi:   1,
-							Theta: 2,
+						Orientation: space.Spherical{
+							R: 1,
+							P: 1,
+							T: 2,
 						},
 					},
 					ExpectedShift: aFloat * 2,
 				},
 				{
 					Light: &light.Basic{
-						Orientation: space.Orientation{
-							Phi:   -1,
-							Theta: -2,
+						Orientation: space.Spherical{
+							R: 1,
+							P: -1,
+							T: -2,
 						},
 					},
 					ExpectedShift: aFloat * 2,
 				},
 				{
 					Light: &light.Basic{
-						Orientation: space.Orientation{
-							Phi:   0,
-							Theta: 0,
+						Orientation: space.Spherical{
+							R: 1,
+							P: 0,
+							T: 0,
 						},
 					},
 					ExpectedShift: aFloat * 2,

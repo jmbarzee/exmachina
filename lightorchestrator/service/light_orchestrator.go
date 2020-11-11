@@ -20,7 +20,7 @@ type LightOrch struct {
 
 	Subscribers *SubscriberList
 
-	DeviceHierarchy *DeviceNodeTree
+	DeviceHierarchy *NodeTree
 }
 
 func NewLightOrch(config config.ServiceConfig) (*LightOrch, error) {
