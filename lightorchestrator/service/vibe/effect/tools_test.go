@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
 	"github.com/jmbarzee/space"
@@ -40,7 +40,7 @@ func RunEffectTests(t *testing.T, cases []EffectTest) {
 	}
 }
 
-func GetLights(length int, c color.HSLA) []ifaces.Light {
+func GetLights(length int, c color.HSL) []ifaces.Light {
 	lights := make([]ifaces.Light, length)
 	for i := range lights {
 		lights[i] = &TestLight{
@@ -51,16 +51,16 @@ func GetLights(length int, c color.HSLA) []ifaces.Light {
 }
 
 type TestLight struct {
-	Color color.HSLA
+	Color color.Color
 }
 
 // GetColor returns the color of the light
-func (l TestLight) GetColor() color.HSLA {
+func (l TestLight) GetColor() color.Color {
 	return l.Color
 }
 
 // SetColor changes the color of the light
-func (l *TestLight) SetColor(newColor color.HSLA) {
+func (l *TestLight) SetColor(newColor color.Color) {
 	l.Color = newColor
 }
 

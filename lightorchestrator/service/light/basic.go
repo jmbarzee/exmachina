@@ -1,13 +1,13 @@
 package light
 
 import (
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
 	"github.com/jmbarzee/space"
 )
 
 // Basic represents a NeoPixel Light in a line
 type Basic struct {
-	Color        color.HSLA
+	Color        color.Color
 	Position     int
 	NumPositions int
 	Location     space.Cartesian
@@ -15,12 +15,12 @@ type Basic struct {
 }
 
 // GetColor returns the color of the light
-func (l Basic) GetColor() color.HSLA {
+func (l Basic) GetColor() color.Color {
 	return l.Color
 }
 
 // SetColor changes the color of the light
-func (l *Basic) SetColor(newColor color.HSLA) {
+func (l *Basic) SetColor(newColor color.Color) {
 	l.Color = newColor
 }
 

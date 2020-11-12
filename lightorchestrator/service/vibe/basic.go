@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/repeatable"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/painter"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/shifter"
-	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/span"
 )
 
@@ -107,11 +107,11 @@ func (v *Basic) SelectBender() ifaces.Bender {
 }
 
 // SelectColor returns a Color
-func (v *Basic) SelectColor() *color.HSLA {
+func (v *Basic) SelectColor() color.Color {
 	length := len(color.AllColors)
 	option := repeatable.Option(v.randSeed(), length)
 	c := color.AllColors[option]
-	return &c
+	return c.HSL()
 }
 
 // SelectDuration returns a Duration

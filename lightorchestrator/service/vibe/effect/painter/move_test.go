@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/shifter"
-	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/span"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
 )
@@ -21,7 +21,7 @@ func TestMovePaint(t *testing.T) {
 		{
 			Name: "Paint all the colors",
 			Painter: &Move{
-				ColorStart: &color.Red,
+				ColorStart: color.Red,
 				Shifter: &shifter.Temporal{
 					Start:    &aTime,
 					Interval: &aSecond,
@@ -53,27 +53,27 @@ func TestMoveGetStabilizeFuncs(t *testing.T) {
 		Stabalizable: &Move{},
 		ExpectedVersions: []ifaces.Stabalizable{
 			&Move{
-				ColorStart: &color.Red,
+				ColorStart: color.Red,
 			},
 			&Move{
-				ColorStart: &color.Red,
+				ColorStart: color.Red,
 				Shifter:    &shifter.Temporal{},
 			},
 			&Move{
-				ColorStart: &color.Red,
+				ColorStart: color.Red,
 				Shifter: &shifter.Temporal{
 					Start: &aTime,
 				},
 			},
 			&Move{
-				ColorStart: &color.Red,
+				ColorStart: color.Red,
 				Shifter: &shifter.Temporal{
 					Start:    &aTime,
 					Interval: &aDuration,
 				},
 			},
 			&Move{
-				ColorStart: &color.Red,
+				ColorStart: color.Red,
 				Shifter: &shifter.Temporal{
 					Start:    &aTime,
 					Interval: &aDuration,
@@ -81,7 +81,7 @@ func TestMoveGetStabilizeFuncs(t *testing.T) {
 				},
 			},
 			&Move{
-				ColorStart: &color.Red,
+				ColorStart: color.Red,
 				Shifter: &shifter.Temporal{
 					Start:    &aTime,
 					Interval: &aDuration,

@@ -1,16 +1,16 @@
 package ifaces
 
 import (
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
 	"github.com/jmbarzee/space"
 )
 
 type Light interface {
 
 	// GetColor returns the color of the light
-	GetColor() color.HSLA
+	GetColor() color.Color
 	// SetColor changes the color of the light
-	SetColor(newColor color.HSLA)
+	SetColor(newColor color.Color)
 
 	// GetPosition returns the position of the Light (in a string)
 	GetPosition() (int, int)

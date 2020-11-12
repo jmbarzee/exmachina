@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
 )
@@ -15,7 +15,7 @@ func TestStaticPaint(t *testing.T) {
 		{
 			Name: "Paint Black",
 			Painter: &Static{
-				Color: &color.Black,
+				Color: color.Black,
 			},
 			Instants: []Instant{
 				{
@@ -43,7 +43,7 @@ func TestStaticPaint(t *testing.T) {
 		{
 			Name: "Paint White",
 			Painter: &Static{
-				Color: &color.White,
+				Color: color.White,
 			},
 			Instants: []Instant{
 				{
@@ -71,7 +71,7 @@ func TestStaticPaint(t *testing.T) {
 		{
 			Name: "Paint Blue",
 			Painter: &Static{
-				Color: &color.Blue,
+				Color: color.Blue,
 			},
 			Instants: []Instant{
 				{
@@ -105,7 +105,7 @@ func TestStaticGetStabilizeFuncs(t *testing.T) {
 		Stabalizable: &Static{},
 		ExpectedVersions: []ifaces.Stabalizable{
 			&Static{
-				Color: &color.Blue,
+				Color: color.Blue,
 			},
 		},
 		Palette: helper.TestPalette{

@@ -4,12 +4,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/painter"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/shifter"
-	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/span"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
 )
@@ -69,7 +69,7 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorEnd: &color.RedMagenta,
+								ColorEnd: color.RedMagenta,
 							},
 						},
 					},
@@ -81,7 +81,7 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorEnd: &color.RedMagenta,
+								ColorEnd: color.RedMagenta,
 								Shifter:  &shifter.Combo{},
 							},
 						},
@@ -94,7 +94,7 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorEnd: &color.RedMagenta,
+								ColorEnd: color.RedMagenta,
 								Shifter: &shifter.Combo{
 									B: &shifter.Locational{},
 								},
@@ -109,8 +109,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Shifter: &shifter.Combo{
 									B: &shifter.Locational{},
 								},
@@ -125,8 +125,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Up:         &theTruth,
 								Shifter: &shifter.Combo{
 									B: &shifter.Locational{},
@@ -142,8 +142,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Up:         &theTruth,
 								Shifter: &shifter.Combo{
 									B: &shifter.Locational{
@@ -161,8 +161,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Up:         &theTruth,
 								Shifter: &shifter.Combo{
 									B: &shifter.Locational{
@@ -181,8 +181,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Up:         &theTruth,
 								Shifter: &shifter.Combo{
 									A: &shifter.Positional{},
@@ -202,8 +202,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Up:         &theTruth,
 								Shifter: &shifter.Combo{
 									A: &shifter.Positional{},
@@ -225,8 +225,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Up:         &theTruth,
 								Shifter: &shifter.Combo{
 									A: &shifter.Positional{},
@@ -249,8 +249,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Up:         &theTruth,
 								Shifter: &shifter.Combo{
 									A: &shifter.Positional{
@@ -275,8 +275,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Up:         &theTruth,
 								Shifter: &shifter.Combo{
 									A: &shifter.Positional{
@@ -303,8 +303,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Up:         &theTruth,
 								Shifter: &shifter.Combo{
 									A: &shifter.Positional{
@@ -333,8 +333,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Up:         &theTruth,
 								Shifter: &shifter.Combo{
 									A: &shifter.Positional{
@@ -365,8 +365,8 @@ func TestBasicStabilize(t *testing.T) {
 							BasicEffect:  effect.BasicEffect{Span: aSpan1},
 							TimePerLight: &aDuration,
 							Painter: &painter.Bounce{
-								ColorStart: &color.Red,
-								ColorEnd:   &color.RedMagenta,
+								ColorStart: color.Red,
+								ColorEnd:   color.RedMagenta,
 								Up:         &theTruth,
 								Shifter: &shifter.Combo{
 									A: &shifter.Positional{
@@ -422,7 +422,7 @@ func TestBasicMaterialize(t *testing.T) {
 						BasicEffect:  effect.BasicEffect{Span: aSpan},
 						TimePerLight: &aDuration,
 						Painter: &painter.Move{
-							ColorStart: &color.WarmCyan,
+							ColorStart: color.WarmCyan,
 							Shifter: &shifter.Positional{
 								Bender: &bender.Sinusoidal{
 									Offset:    &aFloat1,
@@ -459,7 +459,7 @@ func TestBasicGetStabilizeFuncs(t *testing.T) {
 				Effects: []ifaces.Effect{
 					&effect.Solid{
 						Painter: &painter.Static{
-							Color: &color.Blue,
+							Color: color.Blue,
 						},
 					},
 				},

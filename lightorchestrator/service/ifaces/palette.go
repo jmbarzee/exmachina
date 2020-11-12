@@ -3,7 +3,7 @@ package ifaces
 import (
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
 )
 
 type Palette interface {
@@ -12,7 +12,7 @@ type Palette interface {
 	// SelectBender returns a Bender
 	SelectBender() Bender
 	// SelectColor returns a Color
-	SelectColor() *color.HSLA
+	SelectColor() color.Color
 	// SelectDuration returns a Duration
 	// Should generally range from 0.1s to 10s
 	SelectDuration() *time.Duration

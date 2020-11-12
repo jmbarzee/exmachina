@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/ptypes"
+	"github.com/jmbarzee/color"
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 	"github.com/jmbarzee/services/lightorchestrator/service/device"
 	"github.com/jmbarzee/services/lightorchestrator/service/node"
@@ -65,11 +66,12 @@ func (s *Subscriber) Disconnect() error {
 
 // DispatchRender sends lights after a subscriber's device renders them based on t
 func (s Subscriber) DispatchRender(t time.Time) error {
-	lights := s.Device.Render(t)
+	lights := s.Render(t)
 
 	colors := make([]uint32, len(lights))
 	for i, light := range lights {
-		colors[i] = light.GetColor().ToRGBA().ToUInt32WGRB()
+		rgb := light.GetColor().RGB()
+		colors[i] = color.RGBA{RGB: rgb}.ToUInt32WGRB()
 	}
 
 	timestamp, err := ptypes.TimestampProto(t)

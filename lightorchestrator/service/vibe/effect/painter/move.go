@@ -4,21 +4,21 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // Move is a Painter which provides shifting colors starting at colorStart
 type Move struct {
-	ColorStart *color.HSLA
+	ColorStart color.Color
 	Shifter    ifaces.Shifter
 }
 
 var _ ifaces.Painter = (*Move)(nil)
 
 // Paint returns a color based on t
-func (p Move) Paint(t time.Time, l ifaces.Light) color.HSLA {
-	newColor := *p.ColorStart
+func (p Move) Paint(t time.Time, l ifaces.Light) color.Color {
+	newColor := p.ColorStart.HSL()
 	shift := p.Shifter.Shift(t, l)
 	newColor.ShiftHue(shift)
 	return newColor

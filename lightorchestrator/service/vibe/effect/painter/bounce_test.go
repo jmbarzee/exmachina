@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/shifter"
-	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/span"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
 )
@@ -23,8 +23,8 @@ func TestBouncePaint(t *testing.T) {
 		{
 			Name: "Bounce from Green to Cyan ",
 			Painter: &Bounce{
-				ColorStart: &color.Green,
-				ColorEnd:   &color.Cyan,
+				ColorStart: color.Green,
+				ColorEnd:   color.Cyan,
 				Up:         &theTruth,
 				Shifter: &shifter.Temporal{
 					Start:    &aTime,
@@ -80,8 +80,8 @@ func TestBouncePaint(t *testing.T) {
 		{
 			Name: "Bounce from Cyan to Green ",
 			Painter: &Bounce{
-				ColorStart: &color.Cyan,
-				ColorEnd:   &color.Green,
+				ColorStart: color.Cyan,
+				ColorEnd:   color.Green,
 				Up:         &theFalsehood,
 				Shifter: &shifter.Temporal{
 					Start:    &aTime,
@@ -137,8 +137,8 @@ func TestBouncePaint(t *testing.T) {
 		{
 			Name: "Bounce from Orange to RedMagenta ",
 			Painter: &Bounce{
-				ColorStart: &color.Orange,
-				ColorEnd:   &color.RedMagenta,
+				ColorStart: color.Orange,
+				ColorEnd:   color.RedMagenta,
 				Up:         &theFalsehood,
 				Shifter: &shifter.Temporal{
 					Start:    &aTime,
@@ -194,8 +194,8 @@ func TestBouncePaint(t *testing.T) {
 		{
 			Name: "Bounce from RedMagenta to Orange ",
 			Painter: &Bounce{
-				ColorStart: &color.RedMagenta,
-				ColorEnd:   &color.Orange,
+				ColorStart: color.RedMagenta,
+				ColorEnd:   color.Orange,
 				Up:         &theTruth,
 				Shifter: &shifter.Temporal{
 					Start:    &aTime,
@@ -261,34 +261,34 @@ func TestBounceGetStabilizeFuncs(t *testing.T) {
 		Stabalizable: &Bounce{},
 		ExpectedVersions: []ifaces.Stabalizable{
 			&Bounce{
-				ColorStart: &color.Red,
+				ColorStart: color.Red,
 			},
 			&Bounce{
-				ColorStart: &color.Red,
-				ColorEnd:   &color.Red,
+				ColorStart: color.Red,
+				ColorEnd:   color.Red,
 			},
 			&Bounce{
-				ColorStart: &color.Red,
-				ColorEnd:   &color.Red,
+				ColorStart: color.Red,
+				ColorEnd:   color.Red,
 				Up:         &theTruth,
 			},
 			&Bounce{
-				ColorStart: &color.Red,
-				ColorEnd:   &color.Red,
+				ColorStart: color.Red,
+				ColorEnd:   color.Red,
 				Up:         &theTruth,
 				Shifter:    &shifter.Temporal{},
 			},
 			&Bounce{
-				ColorStart: &color.Red,
-				ColorEnd:   &color.Red,
+				ColorStart: color.Red,
+				ColorEnd:   color.Red,
 				Up:         &theTruth,
 				Shifter: &shifter.Temporal{
 					Start: &aTime,
 				},
 			},
 			&Bounce{
-				ColorStart: &color.Red,
-				ColorEnd:   &color.Red,
+				ColorStart: color.Red,
+				ColorEnd:   color.Red,
 				Up:         &theTruth,
 				Shifter: &shifter.Temporal{
 					Start:    &aTime,
@@ -296,8 +296,8 @@ func TestBounceGetStabilizeFuncs(t *testing.T) {
 				},
 			},
 			&Bounce{
-				ColorStart: &color.Red,
-				ColorEnd:   &color.Red,
+				ColorStart: color.Red,
+				ColorEnd:   color.Red,
 				Up:         &theTruth,
 				Shifter: &shifter.Temporal{
 					Start:    &aTime,
@@ -306,8 +306,8 @@ func TestBounceGetStabilizeFuncs(t *testing.T) {
 				},
 			},
 			&Bounce{
-				ColorStart: &color.Red,
-				ColorEnd:   &color.Red,
+				ColorStart: color.Red,
+				ColorEnd:   color.Red,
 				Up:         &theTruth,
 				Shifter: &shifter.Temporal{
 					Start:    &aTime,

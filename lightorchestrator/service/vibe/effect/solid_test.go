@@ -4,11 +4,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
+	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/bender"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/painter"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/effect/shifter"
-	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	helper "github.com/jmbarzee/services/lightorchestrator/service/vibe/testhelper"
 )
 
@@ -22,7 +22,7 @@ func TestSolidEffect(t *testing.T) {
 			Name: "Solid Effect with Static Painter",
 			Effect: &Solid{
 				Painter: &painter.Static{
-					Color: &color.Blue,
+					Color: color.Blue,
 				},
 			},
 			IntialLights: GetLights(numLights, color.Black),
@@ -53,7 +53,7 @@ func TestSolidEffect(t *testing.T) {
 			Name: "Solid Effect with Moving Painter",
 			Effect: &Solid{
 				Painter: &painter.Move{
-					ColorStart: &color.Blue,
+					ColorStart: color.Blue,
 					Shifter: &shifter.Temporal{
 						Start:    &aTime,
 						Interval: &aSecond,
@@ -108,7 +108,7 @@ func TestSolidGetStabilizeFuncs(t *testing.T) {
 			},
 			&Solid{
 				Painter: &painter.Static{
-					Color: &color.Blue,
+					Color: color.Blue,
 				},
 			},
 		},

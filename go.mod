@@ -8,6 +8,7 @@ require (
 	github.com/golang/protobuf v1.4.3
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/mux v1.8.0
+	github.com/jmbarzee/color v0.0.0-20201112195959-b5653c792701
 	github.com/jmbarzee/dominion v0.0.0-20201019190308-0a080c81272f
 	github.com/jmbarzee/space v0.0.0-20201110195717-c35a2ebfead5
 	github.com/rpi-ws281x/rpi-ws281x-go v1.0.5

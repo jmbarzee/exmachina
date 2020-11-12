@@ -5,7 +5,7 @@ import (
 	"math"
 
 	"github.com/go-test/deep"
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
 )
 
 const (
@@ -13,7 +13,9 @@ const (
 )
 
 // ColorsEqual compares and diffs colors
-func ColorsEqual(a, b color.HSLA) bool {
+func ColorsEqual(aC, bC color.Color) bool {
+	a := aC.HSL()
+	b := bC.HSL()
 	if !FloatsEqual(a.H, b.H, MinErrColor) {
 		if a.H > 0.99 {
 			if !FloatsEqual(1-a.H, b.H, MinErrColor) {
@@ -31,9 +33,6 @@ func ColorsEqual(a, b color.HSLA) bool {
 		return false
 	}
 	if !FloatsEqual(a.L, b.L, MinErrColor) {
-		return false
-	}
-	if !FloatsEqual(a.A, b.A, MinErrColor) {
 		return false
 	}
 	return true

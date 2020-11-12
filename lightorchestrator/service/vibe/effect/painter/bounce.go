@@ -5,7 +5,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/repeatable"
 )
@@ -13,8 +13,8 @@ import (
 // Bounce is a Painter which provides produces colors bouncing between ColorStart and ColorEnd,
 // starting at p.ColorStart and shifting in the direction specified by Up
 type Bounce struct {
-	ColorStart *color.HSLA
-	ColorEnd   *color.HSLA
+	ColorStart color.Color
+	ColorEnd   color.Color
 	Up         *bool
 	Shifter    ifaces.Shifter
 }
@@ -22,12 +22,14 @@ type Bounce struct {
 var _ ifaces.Painter = (*Bounce)(nil)
 
 // Paint returns a color based on t
-func (p Bounce) Paint(t time.Time, l ifaces.Light) color.HSLA {
+func (p Bounce) Paint(t time.Time, l ifaces.Light) color.Color {
+	start := p.ColorStart.HSL()
+	end := p.ColorEnd.HSL()
 	if *p.Up {
-		if p.ColorStart.H < p.ColorEnd.H {
-			hDistance := p.ColorEnd.H - p.ColorStart.H
-			sDistance := p.ColorStart.S - p.ColorEnd.S
-			lDistance := p.ColorStart.L - p.ColorEnd.L
+		if start.H < end.H {
+			hDistance := end.H - start.H
+			sDistance := start.S - end.S
+			lDistance := start.L - end.L
 			totalShift := p.Shifter.Shift(t, l)
 			bounces := int(totalShift / hDistance)
 			remainingShift := math.Mod(totalShift, hDistance)
@@ -44,16 +46,16 @@ func (p Bounce) Paint(t time.Time, l ifaces.Light) color.HSLA {
 			sShift := sDistance * hShiftRatio
 			lShift := lDistance * hShiftRatio
 
-			c := *p.ColorStart
+			c := start
 			c.ShiftHue(hShift)
 			c.SetSaturation(c.S + sShift)
 			c.SetLightness(c.L + lShift)
 
 			return c
 		} else {
-			hDistance := (1 - p.ColorStart.H) + p.ColorEnd.H
-			sDistance := p.ColorStart.S - p.ColorEnd.S
-			lDistance := p.ColorStart.L - p.ColorEnd.L
+			hDistance := (1 - start.H) + end.H
+			sDistance := start.S - end.S
+			lDistance := start.L - end.L
 			totalShift := p.Shifter.Shift(t, l)
 			bounces := int(totalShift / hDistance)
 			remainingShift := math.Mod(totalShift, hDistance)
@@ -70,7 +72,7 @@ func (p Bounce) Paint(t time.Time, l ifaces.Light) color.HSLA {
 			sShift := sDistance * hShiftRatio
 			lShift := lDistance * hShiftRatio
 
-			c := *p.ColorStart
+			c := start
 			c.ShiftHue(-hShift) // shifting past 0
 			c.SetSaturation(c.S + sShift)
 			c.SetLightness(c.L + lShift)
@@ -78,10 +80,10 @@ func (p Bounce) Paint(t time.Time, l ifaces.Light) color.HSLA {
 			return c
 		}
 	} else {
-		if p.ColorStart.H > p.ColorEnd.H {
-			hDistance := p.ColorStart.H - p.ColorEnd.H
-			sDistance := p.ColorStart.S - p.ColorEnd.S
-			lDistance := p.ColorStart.L - p.ColorEnd.L
+		if start.H > end.H {
+			hDistance := start.H - end.H
+			sDistance := start.S - end.S
+			lDistance := start.L - end.L
 			totalShift := p.Shifter.Shift(t, l)
 			bounces := int(totalShift / hDistance)
 			remainingShift := math.Mod(totalShift, hDistance)
@@ -98,16 +100,16 @@ func (p Bounce) Paint(t time.Time, l ifaces.Light) color.HSLA {
 			sShift := sDistance * hShiftRatio
 			lShift := lDistance * hShiftRatio
 
-			c := *p.ColorStart
+			c := start
 			c.ShiftHue(hShift)
 			c.SetSaturation(c.S + sShift)
 			c.SetLightness(c.L + lShift)
 
 			return c
 		} else {
-			hDistance := p.ColorStart.H + (1 - p.ColorEnd.H)
-			sDistance := p.ColorStart.S - p.ColorEnd.S
-			lDistance := p.ColorStart.L - p.ColorEnd.L
+			hDistance := start.H + (1 - end.H)
+			sDistance := start.S - end.S
+			lDistance := start.L - end.L
 			totalShift := p.Shifter.Shift(t, l)
 			bounces := int(totalShift / hDistance)
 			remainingShift := math.Mod(totalShift, hDistance)
@@ -124,7 +126,7 @@ func (p Bounce) Paint(t time.Time, l ifaces.Light) color.HSLA {
 			sShift := sDistance * hShiftRatio
 			lShift := lDistance * hShiftRatio
 
-			c := *p.ColorStart
+			c := start
 			c.ShiftHue(hShift) // shifting past 0
 			c.SetSaturation(c.S + sShift)
 			c.SetLightness(c.L + lShift)
@@ -139,12 +141,12 @@ func (p *Bounce) GetStabilizeFuncs() []func(p ifaces.Palette) {
 	sFuncs := []func(p ifaces.Palette){}
 	if p.ColorStart == nil {
 		sFuncs = append(sFuncs, func(pa ifaces.Palette) {
-			p.ColorStart = pa.SelectColor()
+			p.ColorStart = pa.SelectColor().HSL()
 		})
 	}
 	if p.ColorEnd == nil {
 		sFuncs = append(sFuncs, func(pa ifaces.Palette) {
-			p.ColorEnd = pa.SelectColor()
+			p.ColorEnd = pa.SelectColor().HSL()
 		})
 	}
 	if p.Up == nil {

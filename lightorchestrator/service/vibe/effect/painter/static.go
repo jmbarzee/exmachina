@@ -4,20 +4,20 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
 // Static is a Painter which provides unchangeing colors
 type Static struct {
-	Color *color.HSLA
+	Color color.Color
 }
 
 var _ ifaces.Painter = (*Static)(nil)
 
 // Paint returns a color based on t
-func (p Static) Paint(t time.Time, l ifaces.Light) color.HSLA {
-	return *p.Color
+func (p Static) Paint(t time.Time, l ifaces.Light) color.Color {
+	return p.Color.HSL()
 }
 
 // GetStabilizeFuncs returns StabilizeFunc for all remaining unstablaized traits

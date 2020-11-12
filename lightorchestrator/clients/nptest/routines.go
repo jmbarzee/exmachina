@@ -6,7 +6,7 @@ import (
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
+	"github.com/jmbarzee/color"
 )
 
 func (l *NPTest) updateLights(ctx context.Context, t time.Time) {
@@ -15,7 +15,7 @@ func (l *NPTest) updateLights(ctx context.Context, t time.Time) {
 	if next != nil {
 		imd := imdraw.New(nil)
 		for i, wrgb := range next.Lights {
-			rgba := color.FromUInt32WGRB(wrgb)
+			rgba := color.FromUInt32WRGB(wrgb)
 			x := float64(i * pixelsPerLight)
 			y := 0.0
 
@@ -38,12 +38,12 @@ func (l *NPTest) updateLights(ctx context.Context, t time.Time) {
 
 		}
 		for i, c := range color.AllColors {
-			rgba := c.ToRGBA()
+			rgb := c.RGB()
 			x := float64(i * pixelsPerLight)
 			y := pixelsPerLight * 2.0
 
 			// draw the colored lights
-			imd.Color = pixel.RGB(rgba.R, rgba.G, rgba.B)
+			imd.Color = pixel.RGB(rgb.R, rgb.G, rgb.B)
 			imd.Push(pixel.V(x, y))
 			imd.Push(pixel.V(x, y+pixelsPerLight))
 			imd.Push(pixel.V(x+pixelsPerLight, y+pixelsPerLight))

@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jmbarzee/color"
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
-	"github.com/jmbarzee/services/lightorchestrator/service/color"
 	"github.com/jmbarzee/services/lightorchestrator/service/vibe/span"
 )
 
@@ -32,7 +32,7 @@ func RunStabilizeableTest(t *testing.T, c StabilizeableTest) {
 type TestPalette struct {
 	span.Span
 	Bender   ifaces.Bender
-	Color    color.HSLA
+	Color    color.HSL
 	Duration time.Duration
 	Shift    float64
 	Shifter  ifaces.Shifter
@@ -46,8 +46,8 @@ func (p TestPalette) SelectBender() ifaces.Bender {
 }
 
 // SelectColor returns a Color
-func (p TestPalette) SelectColor() *color.HSLA {
-	return &p.Color
+func (p TestPalette) SelectColor() color.Color {
+	return p.Color
 }
 
 // SelectDuration returns a Duration
