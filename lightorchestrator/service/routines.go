@@ -14,10 +14,14 @@ const (
 )
 
 func (l *LightOrch) dispatchRender(ctx context.Context, t time.Time) {
-	l.Subscribers.Range(func(sub Subscriber) bool {
-		// sub.CleanBefore(t.Add(tickLength * -2))
+	l.Subscribers.Range(func(sub *Subscriber) bool {
+		if !sub.IsConnected() {
+			return true
+		}
+
 		if err := sub.DispatchRender(t); err != nil {
 			system.Errorf("Failed to dispatch Render: %w", err)
+			sub.Disconnect()
 		}
 		return true
 	})
