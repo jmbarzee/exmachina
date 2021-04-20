@@ -1,4 +1,4 @@
-[![License: AGPL](https://img.shields.io/badge/license-AGPL-blue.svg)](https://opensource.org/licenses/GPL-3.0/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Documentation](https://godoc.org/github.com/jmbarzee/services?status.svg)](https://godoc.org/github.com/jmbarzee/services)
 [![Code Quality](https://goreportcard.com/badge/github.com/jmbarzee/services)](https://goreportcard.com/report/github.com/jmbarzee/services)
 [![Build Status](https://github.com/jmbarzee/services/workflows/build/badge.svg)](https://github.com/jmbarzee/services/actions)
