@@ -3,6 +3,7 @@
 [![Code Quality](https://goreportcard.com/badge/github.com/jmbarzee/services)](https://goreportcard.com/report/github.com/jmbarzee/services)
 [![Build Status](https://github.com/jmbarzee/services/workflows/build/badge.svg)](https://github.com/jmbarzee/services/actions)
 [![Coverage](https://codecov.io/gh/jmbarzee/services/branch/master/graph/badge.svg)](https://codecov.io/gh/jmbarzee/services)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fjmbarzee%2Fservices.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fjmbarzee%2Fservices?ref=badge_shield)
 
 
 # Services
