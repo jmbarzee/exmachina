@@ -4,13 +4,18 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/jmbarzee/dominion/identity"
+	"github.com/jmbarzee/dominion/ident"
 )
 
 func (s WebServer) HandleService(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
-	uuid := vars["domain"]
+	uuid, err := uuid.Parse(vars["domain"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	stype := vars["service"]
 
 	domains, err := s.rpcGetDomains(req.Context()) //sampleIdentities()
@@ -19,15 +24,15 @@ func (s WebServer) HandleService(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var domain identity.DomainIdentity
+	var domain ident.DomainRecord
 	for _, d := range domains {
-		if d.UUID == uuid {
+		if d.ID == uuid {
 			domain = d
 			break
 		}
 	}
 
-	var service identity.ServiceIdentity
+	var service ident.ServiceIdentity
 	for _, s := range domain.Services {
 		if s.Type == stype {
 			service = s
@@ -44,10 +49,10 @@ func (s WebServer) HandleService(w http.ResponseWriter, req *http.Request) {
 	page := &struct {
 		Header     Header
 		Breadcrumb Breadcrumb
-		Service    identity.ServiceIdentity
+		Service    ident.ServiceIdentity
 	}{
 		Header: Header{
-			Title:  "Dominion: Domain " + domain.UUID,
+			Title:  "Dominion: Domain " + domain.ID.String(),
 			NavBar: newNavBar("Domains"),
 		},
 		Breadcrumb: Breadcrumb{
@@ -57,12 +62,12 @@ func (s WebServer) HandleService(w http.ResponseWriter, req *http.Request) {
 					Link:  "/",
 				},
 				{
-					Title: domain.UUID,
-					Link:  "/domain/" + domain.UUID,
+					Title: domain.ID.String(),
+					Link:  "/domain/" + domain.ID.String(),
 				},
 				{
 					Title:  service.Type,
-					Link:   "/domain/" + domain.UUID + "/service/" + service.Type,
+					Link:   "/domain/" + domain.ID.String() + "/service/" + service.Type,
 					Active: true,
 				},
 			},

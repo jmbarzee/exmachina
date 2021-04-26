@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/jmbarzee/dominion/identity"
+	"github.com/jmbarzee/dominion/ident"
 )
 
 func (s WebServer) Handle(w http.ResponseWriter, req *http.Request) {
@@ -23,7 +23,7 @@ func (s WebServer) Handle(w http.ResponseWriter, req *http.Request) {
 	page := &struct {
 		Header     Header
 		Breadcrumb Breadcrumb
-		Domains    []identity.DomainIdentity
+		Domains    []ident.DomainRecord
 	}{
 		Header: Header{
 			Title:  "Dominion",

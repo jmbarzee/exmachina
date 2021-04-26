@@ -1,5 +1,5 @@
-# exclude example from parent directory
-example/*
-
 # binaries
 */main
+
+# vscode
+.history

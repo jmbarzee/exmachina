@@ -333,7 +333,7 @@
 	var MathUtils = {
 		DEG2RAD: Math.PI / 180,
 		RAD2DEG: 180 / Math.PI,
-		generateUUID: function generateUUID() {
+		generateID: function generateID() {
 			// http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript/21963136#21963136
 			var d0 = Math.random() * 0xffffffff | 0;
 			var d1 = Math.random() * 0xffffffff | 0;
@@ -1168,7 +1168,7 @@
 		Object.defineProperty(this, 'id', {
 			value: textureId++
 		});
-		this.uuid = MathUtils.generateUUID();
+		this.uuid = MathUtils.generateID();
 		this.name = '';
 		this.image = image !== undefined ? image : Texture.DEFAULT_IMAGE;
 		this.mipmaps = [];
@@ -1275,7 +1275,7 @@
 				var image = this.image;
 
 				if (image.uuid === undefined) {
-					image.uuid = MathUtils.generateUUID(); // UGH
+					image.uuid = MathUtils.generateID(); // UGH
 				}
 
 				if (!isRootObject && meta.images[image.uuid] === undefined) {
@@ -5035,7 +5035,7 @@
 		Object.defineProperty(this, 'id', {
 			value: _object3DId++
 		});
-		this.uuid = MathUtils.generateUUID();
+		this.uuid = MathUtils.generateID();
 		this.name = '';
 		this.type = 'Object3D';
 		this.parent = null;
@@ -6631,7 +6631,7 @@
 		Object.defineProperty(this, 'id', {
 			value: materialId++
 		});
-		this.uuid = MathUtils.generateUUID();
+		this.uuid = MathUtils.generateID();
 		this.name = '';
 		this.type = 'Material';
 		this.fog = true;
@@ -7576,7 +7576,7 @@
 		Object.defineProperty(this, 'id', {
 			value: _bufferGeometryId += 2
 		});
-		this.uuid = MathUtils.generateUUID();
+		this.uuid = MathUtils.generateID();
 		this.name = '';
 		this.type = 'BufferGeometry';
 		this.index = null;
@@ -18608,7 +18608,7 @@
 			count: -1
 		};
 		this.version = 0;
-		this.uuid = MathUtils.generateUUID();
+		this.uuid = MathUtils.generateID();
 	}
 
 	Object.defineProperty(InterleavedBuffer.prototype, 'needsUpdate', {
@@ -18651,7 +18651,7 @@
 			}
 
 			if (this.array.buffer._uuid === undefined) {
-				this.array.buffer._uuid = MathUtils.generateUUID();
+				this.array.buffer._uuid = MathUtils.generateID();
 			}
 
 			if (data.arrayBuffers[this.array.buffer._uuid] === undefined) {
@@ -18670,11 +18670,11 @@
 		toJSON: function toJSON(data) {
 			if (data.arrayBuffers === undefined) {
 				data.arrayBuffers = {};
-			} // generate UUID for array buffer if necessary
+			} // generate ID for array buffer if necessary
 
 
 			if (this.array.buffer._uuid === undefined) {
-				this.array.buffer._uuid = MathUtils.generateUUID();
+				this.array.buffer._uuid = MathUtils.generateID();
 			}
 
 			if (data.arrayBuffers[this.array.buffer._uuid] === undefined) {
@@ -20007,7 +20007,7 @@
 		Object.defineProperty(this, 'id', {
 			value: _geometryId += 2
 		});
-		this.uuid = MathUtils.generateUUID();
+		this.uuid = MathUtils.generateID();
 		this.name = '';
 		this.type = 'Geometry';
 		this.vertices = [];
@@ -26128,7 +26128,7 @@
 		this.tracks = tracks;
 		this.duration = duration !== undefined ? duration : -1;
 		this.blendMode = blendMode !== undefined ? blendMode : NormalAnimationBlendMode;
-		this.uuid = MathUtils.generateUUID(); // this means it should figure out its duration by scanning the tracks
+		this.uuid = MathUtils.generateID(); // this means it should figure out its duration by scanning the tracks
 
 		if (this.duration < 0) {
 			this.resetDuration();
@@ -28336,7 +28336,7 @@
 
 	function Shape(points) {
 		Path.call(this, points);
-		this.uuid = MathUtils.generateUUID();
+		this.uuid = MathUtils.generateID();
 		this.type = 'Shape';
 		this.holes = [];
 	}
@@ -31892,14 +31892,14 @@
 	 */
 
 	function AnimationObjectGroup() {
-		this.uuid = MathUtils.generateUUID(); // cached objects followed by the active ones
+		this.uuid = MathUtils.generateID(); // cached objects followed by the active ones
 
 		this._objects = Array.prototype.slice.call(arguments);
 		this.nCachedObjects_ = 0; // threshold
 		// note: read by PropertyBinding.Composite
 
 		var indices = {};
-		this._indicesByUUID = indices; // for bookkeeping
+		this._indicesByID = indices; // for bookkeeping
 
 		for (var i = 0, n = arguments.length; i !== n; ++i) {
 			indices[arguments[i].uuid] = i;
@@ -31937,7 +31937,7 @@
 		isAnimationObjectGroup: true,
 		add: function add() {
 			var objects = this._objects,
-					indicesByUUID = this._indicesByUUID,
+					indicesByID = this._indicesByID,
 					paths = this._paths,
 					parsedPaths = this._parsedPaths,
 					bindings = this._bindings,
@@ -31949,12 +31949,12 @@
 			for (var i = 0, n = arguments.length; i !== n; ++i) {
 				var object = arguments[i],
 						uuid = object.uuid;
-				var index = indicesByUUID[uuid];
+				var index = indicesByID[uuid];
 
 				if (index === undefined) {
 					// unknown object -> add it to the ACTIVE region
 					index = nObjects++;
-					indicesByUUID[uuid] = index;
+					indicesByID[uuid] = index;
 					objects.push(object); // accounting is done, now do the same for all bindings
 
 					for (var j = 0, m = nBindings; j !== m; ++j) {
@@ -31965,9 +31965,9 @@
 
 					var firstActiveIndex = --nCachedObjects,
 							lastCachedObject = objects[firstActiveIndex];
-					indicesByUUID[lastCachedObject.uuid] = index;
+					indicesByID[lastCachedObject.uuid] = index;
 					objects[index] = lastCachedObject;
-					indicesByUUID[uuid] = firstActiveIndex;
+					indicesByID[uuid] = firstActiveIndex;
 					objects[firstActiveIndex] = object; // accounting is done, now do the same for all bindings
 
 					for (var _j = 0, _m = nBindings; _j !== _m; ++_j) {
@@ -31986,7 +31986,7 @@
 						bindingsForPath[firstActiveIndex] = binding;
 					}
 				} else if (objects[index] !== knownObject) {
-					console.error('THREE.AnimationObjectGroup: Different objects with the same UUID ' + 'detected. Clean the caches or recreate your infrastructure when reloading scenes.');
+					console.error('THREE.AnimationObjectGroup: Different objects with the same ID ' + 'detected. Clean the caches or recreate your infrastructure when reloading scenes.');
 				} // else the object is already where we want it to be
 
 			} // for arguments
@@ -31996,7 +31996,7 @@
 		},
 		remove: function remove() {
 			var objects = this._objects,
-					indicesByUUID = this._indicesByUUID,
+					indicesByID = this._indicesByID,
 					bindings = this._bindings,
 					nBindings = bindings.length;
 			var nCachedObjects = this.nCachedObjects_;
@@ -32004,15 +32004,15 @@
 			for (var i = 0, n = arguments.length; i !== n; ++i) {
 				var object = arguments[i],
 						uuid = object.uuid,
-						index = indicesByUUID[uuid];
+						index = indicesByID[uuid];
 
 				if (index !== undefined && index >= nCachedObjects) {
 					// move existing object into the CACHED region
 					var lastCachedIndex = nCachedObjects++,
 							firstActiveObject = objects[lastCachedIndex];
-					indicesByUUID[firstActiveObject.uuid] = index;
+					indicesByID[firstActiveObject.uuid] = index;
 					objects[index] = firstActiveObject;
-					indicesByUUID[uuid] = lastCachedIndex;
+					indicesByID[uuid] = lastCachedIndex;
 					objects[lastCachedIndex] = object; // accounting is done, now do the same for all bindings
 
 					for (var j = 0, m = nBindings; j !== m; ++j) {
@@ -32031,7 +32031,7 @@
 		// remove & forget
 		uncache: function uncache() {
 			var objects = this._objects,
-					indicesByUUID = this._indicesByUUID,
+					indicesByID = this._indicesByID,
 					bindings = this._bindings,
 					nBindings = bindings.length;
 			var nCachedObjects = this.nCachedObjects_,
@@ -32040,10 +32040,10 @@
 			for (var i = 0, n = arguments.length; i !== n; ++i) {
 				var object = arguments[i],
 						uuid = object.uuid,
-						index = indicesByUUID[uuid];
+						index = indicesByID[uuid];
 
 				if (index !== undefined) {
-					delete indicesByUUID[uuid];
+					delete indicesByID[uuid];
 
 					if (index < nCachedObjects) {
 						// object is cached, shrink the CACHED region
@@ -32052,10 +32052,10 @@
 								lastIndex = --nObjects,
 								lastObject = objects[lastIndex]; // last cached object takes this object's place
 
-						indicesByUUID[lastCachedObject.uuid] = index;
+						indicesByID[lastCachedObject.uuid] = index;
 						objects[index] = lastCachedObject; // last object goes to the activated slot and pop
 
-						indicesByUUID[lastObject.uuid] = firstActiveIndex;
+						indicesByID[lastObject.uuid] = firstActiveIndex;
 						objects[firstActiveIndex] = lastObject;
 						objects.pop(); // accounting is done, now do the same for all bindings
 
@@ -32072,7 +32072,7 @@
 						var _lastIndex = --nObjects,
 								_lastObject = objects[_lastIndex];
 
-						indicesByUUID[_lastObject.uuid] = index;
+						indicesByID[_lastObject.uuid] = index;
 						objects[index] = _lastObject;
 						objects.pop(); // accounting is done, now do the same for all bindings
 

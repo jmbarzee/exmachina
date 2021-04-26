@@ -9,14 +9,14 @@
             <div class="col mb-4">
                 <div class="card">
                     <div class="card-header">
-                        <a href="/domain/{{$domain.UUID}}">{{$domain.UUID}}</a>
+                        <a href="/domain/{{$domain.ID}}">{{$domain.ID}}</a>
                     </div>
                     <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">v{{$domain.Version}}</h6>
                         <h6 class="card-subtitle mb-2 text-muted">{{$domain.Address}}</h6>
                         <div class="btn-group mr-2" role="group" aria-label="First group"></div>
                         {{range $type, $service := $domain.Services}}
-                            <a href="/domain/{{$domain.UUID}}/service/{{$type}}" class="btn btn-primary">{{$type}}</a>
+                            <a href="/domain/{{$domain.ID}}/service/{{$type}}" class="btn btn-primary">{{$type}}</a>
                         {{end}}
                     </div>
                 </div>

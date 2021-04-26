@@ -4,13 +4,18 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/jmbarzee/dominion/identity"
+	"github.com/jmbarzee/dominion/ident"
 )
 
 func (s WebServer) HandleDomain(w http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
-	uuid := vars["domain"]
+	uuid, err := uuid.Parse(vars["domain"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
 	domains, err := s.rpcGetDomains(req.Context()) //sampleIdentities()
 	if err != nil {
@@ -18,9 +23,9 @@ func (s WebServer) HandleDomain(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var domain identity.DomainIdentity
+	var domain ident.DomainRecord
 	for _, d := range domains {
-		if d.UUID == uuid {
+		if d.ID == uuid {
 			domain = d
 			break
 		}
@@ -35,10 +40,10 @@ func (s WebServer) HandleDomain(w http.ResponseWriter, req *http.Request) {
 	page := &struct {
 		Header     Header
 		Breadcrumb Breadcrumb
-		Domain     identity.DomainIdentity
+		Domain     ident.DomainRecord
 	}{
 		Header: Header{
-			Title:  "Dominion: Domain " + domain.UUID,
+			Title:  "Dominion: Domain " + domain.ID.String(),
 			NavBar: newNavBar("Dominion"),
 		},
 		Breadcrumb: Breadcrumb{
@@ -48,8 +53,8 @@ func (s WebServer) HandleDomain(w http.ResponseWriter, req *http.Request) {
 					Link:  "/",
 				},
 				{
-					Title:  domain.UUID,
-					Link:   "/domain/" + domain.UUID,
+					Title:  domain.ID.String(),
+					Link:   "/domain/" + domain.ID.String(),
 					Active: true,
 				},
 			},
