@@ -3,6 +3,7 @@ package device
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/node"
 )
@@ -19,7 +20,7 @@ type Device interface {
 	// GetType returns the type
 	GetType() string
 	// GetID will return the ID of a device node.
-	GetID() string
+	GetID() uuid.UUID
 
 	ifaces.Tangible
 }

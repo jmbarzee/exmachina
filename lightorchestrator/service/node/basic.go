@@ -12,13 +12,13 @@ var ParentCantHaveChildrenError = errors.New("Found node with matching ID, but n
 
 // Basic implements some traits and features which are shared between all nodes
 type Basic struct {
-	ID string
+	id uuid.UUID
 }
 
-// NewBasic creates a Basic with a new UUID
+// NewBasic creates a Basic with a new ID
 func NewBasic() Basic {
 	return Basic{
-		ID: uuid.New().String(),
+		id: uuid.New(),
 	}
 }
 
@@ -28,21 +28,21 @@ func (Basic) GetChildren() []Node {
 }
 
 // Insert will insert a node underneath a parent node.
-func (d Basic) Insert(parentID string, newNode Node) error {
-	if parentID == d.ID {
+func (d Basic) Insert(parentID uuid.UUID, newNode Node) error {
+	if parentID == d.id {
 		return ParentCantHaveChildrenError
 	}
 	return FindParentNodeError
 }
 
 // Delete will delete a node underneath a parent node.
-func (d Basic) Delete(parentID, childID string) error {
-	if parentID == d.ID {
+func (d Basic) Delete(parentID, childID uuid.UUID) error {
+	if parentID == d.id {
 		return ParentCantHaveChildrenError
 	}
 	return FindParentNodeError
 }
 
-func (d Basic) GetID() string {
-	return d.ID
+func (d Basic) GetID() uuid.UUID {
+	return d.id
 }

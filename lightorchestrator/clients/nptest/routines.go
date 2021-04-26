@@ -15,12 +15,12 @@ func (l *NPTest) updateLights(ctx context.Context, t time.Time) {
 	if next != nil {
 		imd := imdraw.New(nil)
 		for i, wrgb := range next.Lights {
-			rgba := color.FromUInt32WRGB(wrgb)
+			rgb := color.FromUInt32RGBW(wrgb)
 			x := float64(i * pixelsPerLight)
 			y := 0.0
 
 			// draw the colored lights
-			imd.Color = pixel.RGB(float64(rgba.R), float64(rgba.G), float64(rgba.B))
+			imd.Color = pixel.RGB(float64(rgb.R), float64(rgb.G), float64(rgb.B))
 			imd.Push(pixel.V(x, y))
 			imd.Push(pixel.V(x, y+pixelsPerLight))
 			imd.Push(pixel.V(x+pixelsPerLight, y+pixelsPerLight))
@@ -29,7 +29,7 @@ func (l *NPTest) updateLights(ctx context.Context, t time.Time) {
 
 			y = pixelsPerLight
 			// draw the white lights
-			imd.Color = pixel.RGB(float64(rgba.A), float64(rgba.A), float64(rgba.A))
+			imd.Color = pixel.RGB(float64(rgb.A), float64(rgb.A), float64(rgb.A))
 			imd.Push(pixel.V(x, y))
 			imd.Push(pixel.V(x, y+pixelsPerLight))
 			imd.Push(pixel.V(x+pixelsPerLight, y+pixelsPerLight))

@@ -7,7 +7,7 @@ import (
 	"github.com/jmbarzee/dominion/service"
 	"github.com/jmbarzee/dominion/service/config"
 	"github.com/jmbarzee/dominion/system"
-	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
+	"github.com/jmbarzee/services/lightorchestrator/grpc"
 )
 
 const (
@@ -16,6 +16,9 @@ const (
 )
 
 type LightOrch struct {
+	// UnimplementedLightOrchestratorServer is embedded to enable forwards compatability
+	grpc.UnimplementedLightOrchestratorServer
+
 	*service.Service
 
 	Subscribers *SubscriberList
@@ -37,7 +40,7 @@ func NewLightOrch(config config.ServiceConfig) (*LightOrch, error) {
 		NodeTree:    deviceNodeTree,
 	}
 
-	pb.RegisterLightOrchestratorServer(service.Server, lightOrch)
+	grpc.RegisterLightOrchestratorServer(service.Server, lightOrch)
 	return lightOrch, nil
 }
 

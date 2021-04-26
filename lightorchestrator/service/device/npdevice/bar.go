@@ -1,6 +1,7 @@
 package npdevice
 
 import (
+	"github.com/google/uuid"
 	"github.com/jmbarzee/services/lightorchestrator/service/device"
 	"github.com/jmbarzee/services/lightorchestrator/service/node"
 	"github.com/jmbarzee/services/lightorchestrator/service/node/npnode"
@@ -24,9 +25,9 @@ type Bar struct {
 var _ device.Device = (*Bar)(nil)
 
 // NewBar creates a new Bar
-func NewBar(uuid string, start space.Cartesian, direction, rotation space.Spherical) Bar {
+func NewBar(id uuid.UUID, start space.Cartesian, direction, rotation space.Spherical) Bar {
 	return Bar{
-		Basic: device.NewBasic(uuid),
+		Basic: device.NewBasic(id),
 		Line:  npnode.NewLine(ledsPerNPBar, start, direction, rotation),
 	}
 }

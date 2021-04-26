@@ -3,6 +3,7 @@ package node
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
@@ -19,12 +20,12 @@ type Node interface {
 	// GetChildren returns any children under the node
 	GetChildren() []Node
 	// Insert will insert a node underneath a parent node.
-	Insert(parentID string, newNode Node) error
+	Insert(parentID uuid.UUID, newNode Node) error
 	// Delete will delete a node underneath a parent node.
-	Delete(parentID, childID string) error
+	Delete(parentID, childID uuid.UUID) error
 
 	// GetType returns the type
 	GetType() string
 	// GetID will return the ID of a device node.
-	GetID() string
+	GetID() uuid.UUID
 }

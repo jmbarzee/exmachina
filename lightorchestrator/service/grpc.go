@@ -3,8 +3,10 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"math"
 
+	"github.com/google/uuid"
 	"github.com/jmbarzee/dominion/system"
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 	"github.com/jmbarzee/services/lightorchestrator/service/device"
@@ -21,14 +23,18 @@ func (l *LightOrch) SubscribeLights(request *pb.SubscribeLightsRequest, server p
 	system.LogRPCf(rpcName, "Receiving request")
 
 	serviceType := request.Type
-	serviceUUID := request.UUID
+	serviceID, err := uuid.FromBytes(request.ID)
+	if err != nil {
+		system.Errorf("Failed to parse id %w", err)
+		return err
+	}
+
 	foundPreviousDevice := false
-	var err error
 	var ctx context.Context
 	l.Subscribers.Range(func(sub *Subscriber) bool {
-		if sub.Device.GetID() == serviceUUID && sub.Device.GetType() == serviceType {
+		if sub.Device.GetID() == serviceID && sub.Device.GetType() == serviceType {
 			if sub.IsConnected() {
-				err = errors.New("UUID and Type matched an existing subscriber, but connection was still active")
+				err = errors.New("ID and Type matched an existing subscriber, but connection was still active")
 				return false
 			}
 			foundPreviousDevice = true
@@ -44,14 +50,14 @@ func (l *LightOrch) SubscribeLights(request *pb.SubscribeLightsRequest, server p
 			return err
 		}
 
-		system.Logf("Reconnected old Device %s!", serviceUUID)
+		system.Logf("Reconnected old Device %s!", serviceID)
 	} else {
 		// No previous device found, build new subscriber
 		var device device.Device
 		switch serviceType {
 		case "npBar":
 			device = npdevice.NewBar(
-				serviceUUID,
+				serviceID,
 				space.Cartesian{X: 0, Y: 0, Z: 0},
 				space.Spherical{R: 1, P: 0, T: 0},
 				space.Spherical{R: 1, P: math.Pi / 2, T: 0},
@@ -65,7 +71,7 @@ func (l *LightOrch) SubscribeLights(request *pb.SubscribeLightsRequest, server p
 		ctx = (&sub).Connect(server)
 
 		l.Subscribers.Append(sub)
-		system.Logf("Added new Device %s!", serviceUUID)
+		system.Logf("Added new Device %s!", serviceID)
 	}
 
 	// hold connection open until it is ended elsewhere
@@ -101,15 +107,20 @@ func (l *LightOrch) MoveDevice(ctx context.Context, request *pb.MoveDeviceReques
 	system.LogRPCf(rpcName, "Receiving request")
 
 	pbDevice := request.Device
+	deviceID, err := uuid.FromBytes(pbDevice.GetID())
+	if err != nil {
+		err = fmt.Errorf("failed to move device: %w", err)
+		system.LogRPCf(rpcName, err.Error())
+		return nil, err
+	}
 
-	var err error
 	l.Subscribers.Range(func(sub *Subscriber) bool {
 		device := sub.Device
-		if device.GetID() != pbDevice.GetUUID() {
+		if device.GetID() != deviceID {
 			return true
 		}
 		if device.GetType() != pbDevice.GetType() {
-			err = errors.New("Found matching UUID, but type did not match")
+			err = errors.New("Found matching ID, but type did not match")
 			return false
 		}
 		device.SetLocation(pbconvert.NewVector(pbDevice.GetLocation()))
@@ -127,14 +138,25 @@ func (l *LightOrch) InsertNode(ctx context.Context, request *pb.InsertNodeReques
 	rpcName := "InsertNode"
 	system.LogRPCf(rpcName, "Receiving request")
 
-	parentUUID := request.ParentUUID
-	childUUID := request.ChildUUID
+	parentID, err := uuid.FromBytes(request.GetParentID())
+	if err != nil {
+		err = fmt.Errorf("failed to insert node : %w", err)
+		system.LogRPCf(rpcName, err.Error())
+		return nil, err
+	}
+
+	childID, err := uuid.FromBytes(request.GetChildID())
+	if err != nil {
+		err = fmt.Errorf("failed to insert node : %w", err)
+		system.LogRPCf(rpcName, err.Error())
+		return nil, err
+	}
 
 	var targetNode node.Node
 	l.Subscribers.Range(func(sub *Subscriber) bool {
 		nodes := sub.Device.GetNodes()
 		for _, n := range nodes {
-			if n.GetID() == childUUID {
+			if n.GetID() == childID {
 				targetNode = n
 			}
 		}
@@ -149,7 +171,7 @@ func (l *LightOrch) InsertNode(ctx context.Context, request *pb.InsertNodeReques
 		return nil, errors.New("Could not find specified Child")
 	}
 
-	err := l.NodeTree.Insert(parentUUID, targetNode)
+	err = l.NodeTree.Insert(parentID, targetNode)
 
 	system.LogRPCf(rpcName, "Sending reply")
 	return &pb.Empty{}, err
@@ -161,10 +183,21 @@ func (l *LightOrch) DeleteNode(ctx context.Context, request *pb.DeleteNodeReques
 	rpcName := "DeleteNode"
 	system.LogRPCf(rpcName, "Receiving request")
 
-	parentUUID := request.ParentUUID
-	childUUID := request.ChildUUID
+	parentID, err := uuid.FromBytes(request.GetParentID())
+	if err != nil {
+		err = fmt.Errorf("failed to insert node : %w", err)
+		system.LogRPCf(rpcName, err.Error())
+		return nil, err
+	}
 
-	err := l.NodeTree.Delete(parentUUID, childUUID)
+	childID, err := uuid.FromBytes(request.GetChildID())
+	if err != nil {
+		err = fmt.Errorf("failed to insert node : %w", err)
+		system.LogRPCf(rpcName, err.Error())
+		return nil, err
+	}
+
+	err = l.NodeTree.Delete(parentID, childID)
 
 	system.LogRPCf(rpcName, "Sending reply")
 	return &pb.Empty{}, err

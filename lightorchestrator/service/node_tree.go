@@ -3,6 +3,7 @@ package service
 import (
 	"sync"
 
+	"github.com/google/uuid"
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
@@ -26,7 +27,7 @@ func (t NodeTree) Allocate(vibe ifaces.Vibe) {
 }
 
 // Insert places a device into the tree underneath the device with parentID
-func (t NodeTree) Insert(parentID string, newNode node.Node) error {
+func (t NodeTree) Insert(parentID uuid.UUID, newNode node.Node) error {
 	t.rwmutex.Lock()
 	err := t.root.Insert(parentID, newNode)
 	t.rwmutex.Unlock()
@@ -34,7 +35,7 @@ func (t NodeTree) Insert(parentID string, newNode node.Node) error {
 }
 
 // Delete removes a device from the tree underneath the device with parentID
-func (t NodeTree) Delete(parentID, childID string) error {
+func (t NodeTree) Delete(parentID, childID uuid.UUID) error {
 	t.rwmutex.Lock()
 	err := t.root.Delete(parentID, childID)
 	t.rwmutex.Unlock()

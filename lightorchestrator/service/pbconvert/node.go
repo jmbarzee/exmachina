@@ -7,8 +7,9 @@ import (
 
 // NewPBNode Builds a Node for grpc requests
 func NewPBNode(n node.Node) *pb.Node {
+	id := n.GetID()
 	pbNode := &pb.Node{
-		UUID:     n.GetID(),
+		ID:       id[:],
 		Type:     n.GetType(),
 		Children: NewPBNodeList(n.GetChildren()),
 	}

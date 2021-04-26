@@ -4,6 +4,7 @@ import (
 	"math"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jmbarzee/services/lightorchestrator/service/device"
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 	"github.com/jmbarzee/services/lightorchestrator/service/node"
@@ -24,11 +25,11 @@ type ChandelierSmall struct {
 var _ device.Device = (*ChandelierSmall)(nil)
 
 // NewChandelierSmall returns a new Small Chandelier
-func NewChandelierSmall(uuid string, top space.Cartesian, theta float64) ChandelierSmall {
+func NewChandelierSmall(id uuid.UUID, top space.Cartesian, theta float64) ChandelierSmall {
 	orientation := space.NewSpherical(1, theta, 0)
 	rotation := space.NewSpherical(1, theta, math.Pi/2)
 	d := ChandelierSmall{
-		Basic:  device.NewBasic(uuid),
+		Basic:  device.NewBasic(id),
 		Object: space.NewObject(top, orientation, rotation),
 	}
 

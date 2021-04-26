@@ -3,15 +3,13 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 	"sync"
 	"time"
 
-	"github.com/golang/protobuf/ptypes"
-	"github.com/jmbarzee/color"
 	pb "github.com/jmbarzee/services/lightorchestrator/grpc"
 	"github.com/jmbarzee/services/lightorchestrator/service/device"
 	"github.com/jmbarzee/services/lightorchestrator/service/node"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // NewStructs produces a SubscriberList and NodeTree which share an underlying lock for thread safety
@@ -71,13 +69,10 @@ func (s Subscriber) DispatchRender(t time.Time) error {
 	colors := make([]uint32, len(lights))
 	for i, light := range lights {
 		rgb := light.GetColor().RGB()
-		colors[i] = color.RGBA{RGB: rgb}.ToUInt32WGRB()
+		colors[i] = rgb.ToUInt32RGBW()
 	}
 
-	timestamp, err := ptypes.TimestampProto(t)
-	if err != nil {
-		return fmt.Errorf("Failed to create timestamp: %w", err)
-	}
+	timestamp := timestamppb.New(t)
 
 	reply := &pb.SubscribeLightsReply{
 		DisplayTime: timestamp,

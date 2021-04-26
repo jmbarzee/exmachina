@@ -1,17 +1,19 @@
 package device
 
+import "github.com/google/uuid"
+
 // Basic implements some traits and features which are shared between all nodes
 type Basic struct {
-	ID string
+	id uuid.UUID
 }
 
 // NewBasic creates a Basic
-func NewBasic(uuid string) Basic {
+func NewBasic(id uuid.UUID) Basic {
 	return Basic{
-		ID: uuid,
+		id: id,
 	}
 }
 
-func (d Basic) GetID() string {
-	return d.ID
+func (d Basic) GetID() uuid.UUID {
+	return d.id
 }

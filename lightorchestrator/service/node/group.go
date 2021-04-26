@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
 )
 
@@ -50,8 +51,8 @@ func (n Group) GetChildren() []Node {
 }
 
 // Insert will insert a node underneath a parent node.
-func (n *Group) Insert(parentID string, newNode Node) error {
-	if parentID == n.ID {
+func (n *Group) Insert(parentID uuid.UUID, newNode Node) error {
+	if parentID == n.id {
 		n.Children = append(n.Children, newNode)
 		return nil
 	}
@@ -67,8 +68,8 @@ func (n *Group) Insert(parentID string, newNode Node) error {
 }
 
 // Delete will delete a node underneath a parent node.
-func (n *Group) Delete(parentID, childID string) error {
-	if parentID == n.ID {
+func (n *Group) Delete(parentID, childID uuid.UUID) error {
+	if parentID == n.id {
 		for i, child := range n.Children {
 			if child.GetID() == childID {
 				length := len(n.Children)

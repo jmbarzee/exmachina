@@ -7,8 +7,9 @@ import (
 
 // NewPBDevice Builds a Device for grpc requests
 func NewPBDevice(d device.Device) *pb.Device {
+	id := d.GetID()
 	return &pb.Device{
-		UUID:        d.GetID(),
+		ID:          id[:],
 		Type:        d.GetType(),
 		Location:    NewPBVector(d.GetLocation()),
 		Orientation: NewPBOrientation(d.GetOrientation()),

@@ -4,8 +4,9 @@ import (
 	"errors"
 	"time"
 
-	"github.com/jmbarzee/services/lightorchestrator/service/repeatable"
+	"github.com/google/uuid"
 	"github.com/jmbarzee/services/lightorchestrator/service/ifaces"
+	"github.com/jmbarzee/services/lightorchestrator/service/repeatable"
 )
 
 // GroupOption represents a series of groups
@@ -54,8 +55,8 @@ func (n GroupOption) GetChildren() []Node {
 }
 
 // Insert will insert a node underneath a parent node.
-func (n *GroupOption) Insert(parentID string, newNode Node) error {
-	if parentID == n.ID {
+func (n *GroupOption) Insert(parentID uuid.UUID, newNode Node) error {
+	if parentID == n.id {
 		group := NewGroup(newNode)
 		n.Groups = append(n.Groups, group)
 		return nil
@@ -73,8 +74,8 @@ func (n *GroupOption) Insert(parentID string, newNode Node) error {
 }
 
 // Delete will delete a node underneath a parent node.
-func (n *GroupOption) Delete(parentID, childID string) error {
-	if parentID == n.ID {
+func (n *GroupOption) Delete(parentID, childID uuid.UUID) error {
+	if parentID == n.id {
 		for i, group := range n.Groups {
 			if group.GetID() == childID {
 				length := len(n.Groups)

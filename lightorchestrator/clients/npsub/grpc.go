@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/golang/protobuf/ptypes"
-	"github.com/jmbarzee/dominion/identity"
+	"github.com/jmbarzee/dominion/ident"
 	"github.com/jmbarzee/dominion/service/config"
 	"github.com/jmbarzee/dominion/system"
 	"github.com/jmbarzee/services/lightorchestrator/clients/npsub/lightplan"
@@ -13,7 +12,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-func (s *NPSub) rpcSubscribeLights(ctx context.Context, lightOrchestrator identity.ServiceIdentity) error {
+func (s *NPSub) rpcSubscribeLights(ctx context.Context, lightOrchestrator ident.ServiceIdentity) error {
 	rpcName := "SubscribeLights"
 	conn, err := grpc.DialContext(
 		ctx,
@@ -28,7 +27,7 @@ func (s *NPSub) rpcSubscribeLights(ctx context.Context, lightOrchestrator identi
 
 	request := &pb.SubscribeLightsRequest{
 		Type: s.Type,
-		UUID: s.UUID,
+		ID:   s.ID[:],
 	}
 
 	system.LogRPCf(rpcName, "Sending request")
@@ -58,10 +57,7 @@ func (s *NPSub) rpcSubscribeLights(ctx context.Context, lightOrchestrator identi
 }
 
 func (s *NPSub) convertDLRtoLightChange(reply *pb.SubscribeLightsReply) (lightplan.LightChange, error) {
-	t, err := ptypes.Timestamp(reply.GetDisplayTime())
-	if err != nil {
-		return lightplan.LightChange{}, err
-	}
+	t := reply.GetDisplayTime().AsTime()
 
 	change := lightplan.LightChange{
 		Time:   t,

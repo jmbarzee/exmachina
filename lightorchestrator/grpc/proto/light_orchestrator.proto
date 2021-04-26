@@ -1,16 +1,9 @@
 syntax = "proto3";
 
-package grpcdomain;
+package grpc;
 
+option go_package = "github.com/jmbarzee/services/lightorchestrator/grpc";
 import "google/protobuf/timestamp.proto";
-
-/*		Command to rebuild from parent directory
-=========================================================
-
-protoc -I grpc/ --go_out=plugins=grpc:grpc \
-	light_orchestrator.proto 
-=========================================================
-*/
 
 service LightOrchestrator {
 	// SubscribeLights requests a stream of lights
@@ -34,8 +27,8 @@ service LightOrchestrator {
 message SubscribeLightsRequest {
 	// Type is the Type of the Subscriber
 	string Type = 1;
-	// UUID is a Unique Identifier for the Subscriber
-	string UUID = 2;
+	// ID is a Unique Identifier for the Subscriber
+	bytes ID = 2;
 
 } 
 
@@ -61,34 +54,34 @@ message GetDevicesReply {
 
 // MoveDeviceRequest contains the new position and orientation 
 message MoveDeviceRequest {
-	// Device contians the UUID and type of the device to help find the device to move
+	// Device contians the ID and type of the device to help find the device to move
 	// the Location and Orientation are where the device should be moved to
 	Device Device = 1;
 } 
 
 
-// InsertNodeRequest contains the UUID of the parent and the child
+// InsertNodeRequest contains the ID of the parent and the child
 message InsertNodeRequest {
-	// ParentUUID is the UUID of the parent for the new child
-	string ParentUUID = 1;
+	// ParentID is the ID of the parent for the new child
+	bytes ParentID = 1;
 
-	// ChildUUID is the UUID of the new child 
-	string ChildUUID = 2;
+	// ChildID is the IIDD of the new child 
+	bytes ChildID = 2;
 } 
 
-// DeleteNodeRequest contains the UUID of the parent and the child
+// DeleteNodeRequest contains the ID of the parent and the child
 message DeleteNodeRequest {
-	// ParentUUID is the UUID of the parent for the new child
-	string ParentUUID = 1;
+	// ParentID is the ID of the parent for the new child
+	bytes ParentID = 1;
 
-	// ChildUUID is the UUID of the new child 
-	string ChildUUID = 2;
+	// ChildID is the ID of the new child 
+	bytes ChildID = 2;
 } 
 
 // DeviceNNodeode represents a Node in the Node hierarchy
 message Node {
-	// UUID is the UUID of the Node
-	string UUID = 1;
+	// ID is the ID of the Node
+	bytes ID = 1;
 
 	// Type is the Type of the Node
 	string Type = 2;
@@ -99,8 +92,8 @@ message Node {
 
 // Device represents a subscriber in the list of subscribers
 message Device {
-	// UUID is the UUID of the Device
-	string UUID = 1;
+	// ID is the ID of the Device
+	bytes ID = 1;
 
 	// Type is the Type of the Device
 	string Type = 2;
