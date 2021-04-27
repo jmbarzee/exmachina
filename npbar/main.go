@@ -1,6 +1,6 @@
 package main
 
-// +build !test
+// +build !demo
 
 import (
 	"context"

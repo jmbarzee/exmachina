@@ -1,7 +1,5 @@
 package main
 
-// +build test
-
 import (
 	"context"
 	"runtime"
