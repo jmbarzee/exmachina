@@ -1,5 +1,4 @@
 # Example Config to create a domain/dominion
-uuid = "GUID-2" # unique UUID
 
 port = 9200 # doesn't matter for the most part, the domain will find other domains on any functioning port
 
